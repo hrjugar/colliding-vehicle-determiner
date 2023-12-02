@@ -1,6 +1,3 @@
-import { useContext } from "react";
-import { useMutation, useQueryClient } from "react-query"
-import { ModalContext } from "../../contexts/ModalContext";
 import { useModal } from "../../globals/hooks";
 import { ModalType } from "../../globals/enums";
 import { getFileNameFromPath } from "../../globals/utils";
@@ -10,17 +7,16 @@ interface VideoCardProps {
 }
 
 const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
-
   const { openModal } = useModal();
 
-  const thumbnailPath = `thumbnail://${video.id}`
+  console.log(`thumbnail: thumbnail://${video.id}`)
   return (
     <div 
       title={video.path}
       className='group/video-card flex flex-col items-start p-2 hover:bg-gray-200 hover:cursor-pointer w-64'
     >
       <div className="relative">
-        <img className="w-full h-40" src={thumbnailPath} />
+        <img className="w-full h-40 bg-gray-400" src={`thumbnail://${video.id}`}/>
         <button
           type="button"
           className="hidden group/video-card-delete-btn group-hover/video-card:flex absolute right-2 top-2 flex-col justify-center items-center p-2 border-none rounded-sm bg-red-500 hover:bg-red-600"

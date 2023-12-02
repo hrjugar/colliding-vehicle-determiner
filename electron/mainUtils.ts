@@ -6,26 +6,34 @@ import fs from "node:fs"
 
 
 export function createThumbnail(filePath: string, id: number | bigint) {
-  ffmpeg(filePath).screenshots({
-    timestamps: ['50%'],
-    count: 1,
-    filename: `${id}.png`,
-  }, path.join(app.getPath('userData'), path.sep, 'thumbnails'));
+  const thumbnailFolderPath = path.join(app.getPath('userData'), path.sep, 'thumbnails');
+  console.log(`createThumbnail: thumbnail folder path is ${thumbnailFolderPath}`)
 
-  console.log("Created thumbnail.");
+  return new Promise((resolve, _) => {
+    ffmpeg(filePath)
+      .screenshots({
+        timestamps: ['50%'],
+        count: 1,
+        filename: `${id}.png`,
+      }, thumbnailFolderPath)
+      .on('error', () => {
+        console.log("Error in creating thumbnail.")
+      })
+      .on('end', () => {
+        resolve(filePath)``
+        console.log("createThumbnail: Created thumbnail.");
+        console.log(`createThumbnail: file exists = ${fs.existsSync(path.join(thumbnailFolderPath, path.sep, `${id}.png`))}`)
+      });
+  })
 }
 
-export function createThumbnailFromId(db: Database.Database, id: number | bigint) {
+export async function createThumbnailFromId(db: Database.Database, id: number | bigint) {
   const video: any = db.prepare(`SELECT * FROM videos WHERE id = ?`).get(id);
 
   if (video) {
-    createThumbnail(video.path, id)
+    await createThumbnail(video.path, id)
+    console.log("createThumbnailFromId: Created thumbnail from ID")
   }
-}
-
-export function getThumbnail(id: number | bigint) {
-  const thumbnailPath = path.join(app.getPath('userData'), path.sep, 'thumbnails', path.sep, `${id}.png`)
-  return `file://${thumbnailPath}`
 }
 
 export async function handleInsertVideo(db: Database.Database) {
@@ -38,14 +46,12 @@ export async function handleInsertVideo(db: Database.Database) {
   if (!canceled) {
     const filePath = filePaths[0]
     const statement = db.prepare('INSERT INTO videos (path) VALUES (?)').run(filePath)
-    createThumbnail(filePath, statement.lastInsertRowid)
+    await createThumbnail(filePath, statement.lastInsertRowid)
     return filePath
   }
 }
 
 export function selectAllVideos(db: Database.Database) {
-  console.log("Selected all videos")
-  console.log(app.getPath('userData'))
   const videos = db.prepare('SELECT * FROM videos').all()
   return videos
 }

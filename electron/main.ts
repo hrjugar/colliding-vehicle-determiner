@@ -83,15 +83,24 @@ app.on('activate', () => {
 })
 
 app.whenReady().then(() => {
-  protocol.handle('thumbnail', (request) => {
+  protocol.handle('thumbnail', async (request) => {
     const id = request.url.replace('thumbnail://', '')
     const src = app.getPath('userData') + path.sep + 'thumbnails' + path.sep + id + '.png'
 
+    console.log(`thumbnail: id is ${id}`)
+    console.log("thumbnail: acquired src")
+
     if (fs.existsSync(src)) {
+      console.log("thumbnail: file exists")
       return net.fetch(src)
     }
 
-    createThumbnailFromId(db, parseInt(id))
+    console.log("thumbnail: file does not exist")
+
+    await createThumbnailFromId(db, parseInt(id))
+    console.log("thumbnail: created thumbnail")
+
+    console.log(`thumbnail: src exists: ${fs.existsSync(src)}`)
     return net.fetch(src);
   })
   // ipcMain.on('magic-protocol', (_, imageName) => {
