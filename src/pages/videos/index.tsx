@@ -1,13 +1,15 @@
 import { ipcRenderer } from "electron";
 import { useQuery } from "react-query";
 import VideoCard from "./VideoCard";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const VideosPage: React.FC = () => {
   const { isLoading, isError, data, error } = useQuery<{
     videos: Video[],
     thumbnailFolderPath: string
   }>('videos', window.electronAPI.selectAllVideos);
+
+  const deleteDialogRef = useRef<HTMLDialogElement>(null);
 
   return (
     <div className='page gap-4'>

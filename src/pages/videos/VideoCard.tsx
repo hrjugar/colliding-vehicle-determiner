@@ -1,19 +1,19 @@
+import { useContext } from "react";
 import { useMutation, useQueryClient } from "react-query"
+import { ModalContext } from "../../contexts/ModalContext";
+import { useModal } from "../../globals/hooks";
+import { ModalType } from "../../globals/enums";
+import { getFileNameFromPath } from "../../globals/utils";
 
 interface VideoCardProps {
   video: Video,
 }
 
 const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
-  const queryClient = useQueryClient();
-  const deleteMutation = useMutation(window.electronAPI.deleteVideo, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('videos');
-    }
-  })
+
+  const { openModal } = useModal();
 
   const thumbnailPath = `thumbnail://${video.id}`
-  console.log(thumbnailPath)
   return (
     <div 
       title={video.path}
@@ -24,7 +24,8 @@ const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
         <button
           type="button"
           className="hidden group/video-card-delete-btn group-hover/video-card:flex absolute right-2 top-2 flex-col justify-center items-center p-2 border-none rounded-sm bg-red-500 hover:bg-red-600"
-          onClick={() => deleteMutation.mutate(video.id)}
+          // onClick={() => deleteMutation.mutate(video.id)}
+          onClick={() => openModal(ModalType.DeleteVideo, { video })}
         >
           <svg 
             width="64" 
@@ -42,7 +43,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
         </button>
       </div>
       {/* <div className='w-full h-40 bg-gray-200 group-hover/video-card:bg-gray-100'></div> */}
-      <p className='group-hover/video-card:font-semibold'>{video.path.split('\\').pop()?.split('/').pop()?.slice(0, -4)}</p>
+      <p className='group-hover/video-card:font-semibold'>{getFileNameFromPath(video.path, true)}</p>
       <p className='group-hover/video-card:underline text-gray-400 text-sm text-left w-full line-clamp-1'>{video.path}</p>
     </div>    
   )
