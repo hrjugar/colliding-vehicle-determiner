@@ -43,7 +43,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
         </button>
       </div>
       {/* <div className='w-full h-40 bg-gray-200 group-hover/video-card:bg-gray-100'></div> */}
-      <p className='group-hover/video-card:font-semibold'>{getFileNameFromPath(video.path, true)}</p>
+      <p className='group-hover/video-card:font-semibold text-left w-full line-clamp-1'>{getFileNameFromPath(video.path, true)}</p>
       <p className='group-hover/video-card:underline text-gray-400 text-sm text-left w-full line-clamp-1'>{video.path}</p>
     </div>    
   )
