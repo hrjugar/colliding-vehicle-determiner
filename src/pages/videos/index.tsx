@@ -1,13 +1,9 @@
-import { ipcRenderer } from "electron";
 import { useQuery } from "react-query";
 import VideoCard from "./VideoCard";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 const VideosPage: React.FC = () => {
-  const { isLoading, isError, data, error } = useQuery<{
-    videos: Video[],
-    thumbnailFolderPath: string
-  }>('videos', window.electronAPI.selectAllVideos);
+  const { isLoading, isError, data: videos, error } = useQuery<Video[]>('videos', window.electronAPI.selectAllVideos);
 
   const deleteDialogRef = useRef<HTMLDialogElement>(null);
 
@@ -30,13 +26,13 @@ const VideosPage: React.FC = () => {
         <div className="w-full h-full flex flex-col justify-center items-center">
           <p>Error: {(error as any).message}</p>
         </div>        
-      ) : data?.videos.length === 0 ? (
+      ) : videos?.length === 0 ? (
         <div className="w-full h-full flex flex-col justify-center items-center">
           <p>No videos found.</p>
         </div>
       ) : (
         <div className='flex flex-row flex-wrap gap-4 overflow-y-auto px-4'>
-          {data?.videos.map((video) => {
+          {videos?.map((video) => {
             return (
               <VideoCard key={video.id} video={video} />
             )

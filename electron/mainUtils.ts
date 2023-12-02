@@ -47,10 +47,7 @@ export function selectAllVideos(db: Database.Database) {
   console.log("Selected all videos")
   console.log(app.getPath('userData'))
   const videos = db.prepare('SELECT * FROM videos').all()
-  return {
-    videos: videos,
-    thumbnailFolderPath: app.getPath('userData') + path.sep + 'thumbnails' + path.sep
-  }
+  return videos
 }
 
 export function deleteVideo(db: Database.Database, id: number | bigint) {
