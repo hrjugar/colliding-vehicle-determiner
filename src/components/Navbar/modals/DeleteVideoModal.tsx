@@ -22,7 +22,10 @@ const DeleteVideoModal: React.FC<DeleteVideoModalProps> = ({ video }) => {
     // Add your JSX code for the component here
     <div className='fixed bg-white w-96 flex flex-col items-stretch rounded-sm gap-2 p-4'>
       <img src={`thumbnail://${video.id}`} className='border-gray-600 border-[1px]' />
-      <p className='text-left text-gray-600 font-semibold mb-4'>Are you sure you want to delete the analysis data for <span>{getFileNameFromPath(video.path)}</span>?</p>
+      <div className='flex flex-col items-start mb-8 text-left gap-1'>
+        <p className='text-gray-800 text-lg font-bold leading-tight'>Delete video data</p>
+        <p className='text-gray-500 text-sm'>Are you sure you want to delete the collected data from <span className='font-bold'>{getFileNameFromPath(video.path)}</span>? The video itself will not be deleted, and only the data made by the program will be erased.</p>
+      </div>
       
       <div className='flex flex-row gap-4 self-end'>
         <button 
