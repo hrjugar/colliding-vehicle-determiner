@@ -9,5 +9,11 @@ export const theme = {
   extend: {},
 };
 
+export const variants = {
+  extend: {
+    fill: ['hover', 'focus', 'group-hover', 'group-focus']
+  }
+}
+
 export const plugins = [];
 

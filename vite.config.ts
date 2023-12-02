@@ -8,6 +8,7 @@ import {
 import electron from 'vite-plugin-electron/simple'
 import react from '@vitejs/plugin-react'
 import alias from '@rollup/plugin-alias'
+import svgr from 'vite-plugin-svgr'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -48,6 +49,7 @@ export default defineConfig({
       renderer: {},
     }),
     bindingSqlite3(),
+    svgr(),
   ],
 })
 

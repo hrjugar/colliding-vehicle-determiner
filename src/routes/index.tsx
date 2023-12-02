@@ -1,7 +1,7 @@
 import { createHashRouter } from "react-router-dom";
 import App from "../App";
-import VideosPage from "../pages/VideosPage";
-import AnalysisPage from "../pages/AnalysisPage";
+import VideosPage from "../pages/videos";
+import AnalysisPage from "../pages/analysis";
 
 export const router = createHashRouter([
   {
