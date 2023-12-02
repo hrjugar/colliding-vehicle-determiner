@@ -24,7 +24,8 @@ declare namespace NodeJS {
 interface ElectronAPI {
   insertVideo(): Promise<string | undefined>,
   selectAllVideos(): Promise,
-  getAppPath(): Promise<string>
+  getAppPath(): Promise<string>,
+  deleteVideo(id: number | bigint): Promise
 }
 
 // Used in Renderer process, expose in `preload.ts`

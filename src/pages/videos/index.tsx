@@ -1,6 +1,7 @@
 import { ipcRenderer } from "electron";
 import { useQuery } from "react-query";
 import VideoCard from "./VideoCard";
+import { useState } from "react";
 
 const VideosPage: React.FC = () => {
   const { isLoading, isError, data, error } = useQuery<{

@@ -2,6 +2,7 @@ import { app, dialog } from "electron"
 import Database from "better-sqlite3"
 import path from "node:path"
 import ffmpeg from "fluent-ffmpeg"
+import fs from "node:fs"
 
 
 export function createThumbnail(filePath: string, id: number | bigint) {
@@ -52,3 +53,13 @@ export function selectAllVideos(db: Database.Database) {
   }
 }
 
+export function deleteVideo(db: Database.Database, id: number | bigint) {
+  const video: any = db.prepare(`SELECT * FROM videos WHERE id = ?`).get(id);
+  if (video) {
+    db.prepare('DELETE FROM videos WHERE id = ?').run(id)
+    console.log(`Removed video ${id} from database.`)
+    const thumbnailPath = path.join(app.getPath('userData'), path.sep, 'thumbnails', path.sep, `${id}.png`)
+    fs.unlinkSync(thumbnailPath)
+    console.log(`Deleted thumbnail file.`)
+  }
+}
