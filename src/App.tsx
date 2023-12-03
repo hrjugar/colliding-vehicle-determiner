@@ -3,6 +3,8 @@ import Navbar from './components/Navbar';
 import { Outlet } from 'react-router-dom';
 import { ModalProvider } from './contexts/ModalContext';
 import ModalGate from './routes/gates/ModalGate';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const queryClient = new QueryClient();
 
@@ -23,6 +25,12 @@ function App() {
             <p>{test}</p>
             <Outlet />
           </main>
+          <ToastContainer 
+            hideProgressBar={true} 
+            position='bottom-right' 
+            closeOnClick={true} 
+            autoClose={2000}
+          />
         </ModalGate>
       </ModalProvider>
     </QueryClientProvider>

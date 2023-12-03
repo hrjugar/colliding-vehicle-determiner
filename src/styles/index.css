@@ -68,6 +68,7 @@ button {
   flex-direction: row;
   justify-content: flex-start;
   text-align: center;
+  position: relative;
 }
 
 .page {

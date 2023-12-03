@@ -3,6 +3,7 @@ import { ModalType } from "../../globals/enums";
 import { getFileNameFromPath } from "../../globals/utils";
 import { useState, useRef } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import { toast } from "react-toastify";
 
 interface VideoCardProps {
   video: Video,
@@ -127,6 +128,9 @@ const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
             onClick={() => {
               renameMutation.mutate(renameInputRef.current?.value as string);
               setIsRenaming(false);
+              toast(`Renamed ${getFileNameFromPath(video.path, true)} to ${renameInputRef.current?.value as string}`, {
+                type: 'success',
+              })
             }}
           >
             <svg 
