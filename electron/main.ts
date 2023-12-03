@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, Menu, MenuItem, net, protocol, shell } fro
 import path from 'node:path'
 import fs from 'node:fs'
 import { getSqlite3 } from './better-sqlite3'
-import { createThumbnailFromId, deleteVideo, handleInsertVideo, openVideoFolder, renameVideo, selectAllVideos } from './mainUtils'
+import { createThumbnailFromId, deleteVideo, insertVideo, openVideoFolder, renameVideo, selectAllVideos } from './mainUtils'
 import Database from 'better-sqlite3'
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
@@ -113,7 +113,7 @@ app.whenReady().then(() => {
   //   })
   // })
 
-  ipcMain.handle('dialog:insertVideo', () => handleInsertVideo(db))
+  ipcMain.handle('dialog:insertVideo', () => insertVideo(db))
   ipcMain.handle('selectAllVideos', () => selectAllVideos(db))
   ipcMain.handle('getAppPath', () => app.getPath('userData'))
   ipcMain.handle('deleteVideo', (_, id) => deleteVideo(db, id))

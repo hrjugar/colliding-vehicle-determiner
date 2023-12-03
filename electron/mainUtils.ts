@@ -36,7 +36,7 @@ export async function createThumbnailFromId(db: Database.Database, id: number | 
   }
 }
 
-export async function handleInsertVideo(db: Database.Database) {
+export async function insertVideo(db: Database.Database) {
   const { canceled, filePaths } = await dialog.showOpenDialog({
     filters: [
       { name: 'MP4 Files', extensions: ['mp4'] }
@@ -47,8 +47,9 @@ export async function handleInsertVideo(db: Database.Database) {
     const filePath = filePaths[0]
     const statement = db.prepare('INSERT INTO videos (path) VALUES (?)').run(filePath)
     await createThumbnail(filePath, statement.lastInsertRowid)
-    return filePath
   }
+
+  return !canceled
 }
 
 export function selectAllVideos(db: Database.Database) {
