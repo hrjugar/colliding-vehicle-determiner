@@ -1,4 +1,4 @@
-import { app, dialog } from "electron"
+import { app, dialog, shell } from "electron"
 import Database from "better-sqlite3"
 import path from "node:path"
 import ffmpeg from "fluent-ffmpeg"
@@ -20,7 +20,7 @@ export function createThumbnail(filePath: string, id: number | bigint) {
         console.log("Error in creating thumbnail.")
       })
       .on('end', () => {
-        resolve(filePath)``
+        resolve(filePath)
         console.log("createThumbnail: Created thumbnail.");
         console.log(`createThumbnail: file exists = ${fs.existsSync(path.join(thumbnailFolderPath, path.sep, `${id}.png`))}`)
       });
@@ -65,4 +65,10 @@ export function deleteVideo(db: Database.Database, id: number | bigint) {
     fs.unlinkSync(thumbnailPath)
     console.log(`Deleted thumbnail file.`)
   }
+}
+
+export function openVideoFolder(filePath: string) {
+  const folder = path.dirname(filePath);
+  console.log(`openVideoFolder: folder = ${folder}`);
+  shell.openPath(folder);
 }
