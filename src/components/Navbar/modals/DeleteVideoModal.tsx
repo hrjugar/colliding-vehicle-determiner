@@ -3,7 +3,7 @@ import { getFileNameFromPath } from '../../../globals/utils';
 import { useModal } from '../../../globals/hooks';
 import { useQueryClient, useMutation } from 'react-query';
 import { toast } from 'react-toastify';
-import deleteIcon from '../../../assets/svg/delete.svg?react';
+import { QueryKey } from '../../../globals/enums';
 
 interface DeleteVideoModalProps {
   video: Video
@@ -13,7 +13,7 @@ const DeleteVideoModal: React.FC<DeleteVideoModalProps> = ({ video }) => {
   const queryClient = useQueryClient();
   const deleteMutation = useMutation(window.electronAPI.deleteVideo, {
     onSuccess: () => {
-      queryClient.invalidateQueries('videos');
+      queryClient.invalidateQueries(QueryKey.Videos);
       toast(`Deleted collected data from ${video.path}.`, {
         type: 'success'
       })

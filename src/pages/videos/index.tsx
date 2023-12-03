@@ -1,9 +1,10 @@
 import { useQuery } from "react-query";
 import VideoCard from "./VideoCard";
 import { useRef } from "react";
+import { QueryKey } from "../../globals/enums";
 
 const VideosPage: React.FC = () => {
-  const { isLoading, isError, data: videos, error } = useQuery<Video[]>('videos', window.electronAPI.selectAllVideos);
+  const { isLoading, isError, data: videos, error } = useQuery<Video[]>(QueryKey.Videos, window.electronAPI.selectAllVideos);
 
   const deleteDialogRef = useRef<HTMLDialogElement>(null);
 

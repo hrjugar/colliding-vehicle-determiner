@@ -1,5 +1,5 @@
 import { useModal, useOutsideAlerter } from "../../globals/hooks";
-import { ModalType } from "../../globals/enums";
+import { ModalType, QueryKey } from "../../globals/enums";
 import { getFileNameFromPath } from "../../globals/utils";
 import { useState, useRef } from "react";
 import { useMutation, useQueryClient } from "react-query";
@@ -13,7 +13,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
   const queryClient = useQueryClient();
   const renameMutation = useMutation((newFileName: string) => window.electronAPI.renameVideo(video.id, video.path, newFileName), {
     onSuccess: () => {
-      queryClient.invalidateQueries('videos');
+      queryClient.invalidateQueries(QueryKey.Videos);
     }
   })
 

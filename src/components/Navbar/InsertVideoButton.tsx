@@ -2,12 +2,13 @@
 import React from 'react';
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from 'react-toastify';
+import { QueryKey } from '../../globals/enums';
 
 const InsertVideoButton: React.FC = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation(window.electronAPI.insertVideo, {
     onSuccess: (data) => {
-      queryClient.invalidateQueries('videos');
+      queryClient.invalidateQueries(QueryKey.Videos);
       if (data) {
         toast('Successfully added video.', {
           type: 'success'
