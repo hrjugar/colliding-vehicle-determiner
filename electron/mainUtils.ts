@@ -72,3 +72,21 @@ export function openVideoFolder(filePath: string) {
   console.log(`openVideoFolder: folder = ${folder}`);
   shell.openPath(folder);
 }
+
+export function renameVideo(db: Database.Database, id: number | bigint, oldFilePath: string, newFileName: string) {
+  const folder = path.dirname(oldFilePath);
+  const newFilePath = path.join(folder, path.sep, `${newFileName}.mp4`)
+  console.log(`renameVideo: oldFilePath = ${oldFilePath}`)
+  console.log(`renameVideo: newFilePath = ${newFilePath}`)
+  fs.renameSync(oldFilePath, newFilePath)
+
+  db
+    .prepare(`
+      UPDATE videos
+        SET path = (?)
+        WHERE id = (?)
+    `)
+    .run(newFilePath, id)
+  
+  console.log(`renameVideo: Renamed video ${id} from ${oldFilePath} to ${newFilePath}.`)
+}
