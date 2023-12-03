@@ -91,3 +91,31 @@ export function renameVideo(db: Database.Database, id: number | bigint, oldFileP
   
   console.log(`renameVideo: Renamed video ${id} from ${oldFilePath} to ${newFilePath}.`)
 }
+
+export function isFileExisting(filePath: string) {
+  return fs.existsSync(filePath)
+}
+
+export async function updateVideo(db: Database.Database, id: number | bigint) {
+  const { canceled, filePaths } = await dialog.showOpenDialog({
+    filters: [
+      { name: 'MP4 Files', extensions: ['mp4'] }
+    ]
+  })
+
+  if (!canceled) {
+    const filePath = filePaths[0]
+    db
+      .prepare(`
+        UPDATE videos
+          SET path = (?)
+          WHERE id = (?)
+      `)
+      .run(filePath, id)
+    await createThumbnail(filePath, id)
+    return filePath
+  }
+
+  console.log("updateVideo: Updated video.")
+  return ''
+}

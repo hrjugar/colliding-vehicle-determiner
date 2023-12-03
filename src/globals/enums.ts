@@ -4,4 +4,5 @@ export enum ModalType {
 
 export enum QueryKey {
   Videos = 'videos',
+  IsFileExisting = 'isFileExisting',
 }

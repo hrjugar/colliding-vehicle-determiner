@@ -27,7 +27,9 @@ interface ElectronAPI {
   getAppPath(): Promise<string>,
   deleteVideo(id: number | bigint): Promise,
   openVideoFolder(filePath: string): Promise,
-  renameVideo(id: number | bigint, oldFilePath: string, newFileName: string): Promise
+  renameVideo(id: number | bigint, oldFilePath: string, newFileName: string): Promise,
+  isFileExisting(filePath: string): Promise<boolean>,
+  updateVideo(id: number | bigint): Promise<string>,
 }
 
 // Used in Renderer process, expose in `preload.ts`

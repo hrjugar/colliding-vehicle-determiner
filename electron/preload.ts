@@ -10,7 +10,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getAppPath: () => ipcRenderer.invoke('getAppPath'),
   deleteVideo: (id: number | bigint) => ipcRenderer.invoke('deleteVideo', id),
   openVideoFolder: (filePath: string) => ipcRenderer.invoke('openVideoFolder', filePath),
-  renameVideo: (id: number | bigint, oldFilePath: string, newFileName: string) => ipcRenderer.invoke('renameVideo', id, oldFilePath, newFileName)
+  renameVideo: (id: number | bigint, oldFilePath: string, newFileName: string) => ipcRenderer.invoke('renameVideo', id, oldFilePath, newFileName),
+  isFileExisting: (filePath: string) => ipcRenderer.invoke('isFileExisting', filePath),
+  updateVideo: (id: number | bigint) => ipcRenderer.invoke('updateVideo', id),
 })
 
 // `exposeInMainWorld` can't detect attributes and methods of `prototype`, manually patching it.
