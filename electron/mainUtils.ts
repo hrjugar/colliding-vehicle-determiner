@@ -4,25 +4,38 @@ import path from "node:path"
 import ffmpeg from "fluent-ffmpeg"
 import fs from "node:fs"
 
+export const THUMBNAIL_FILENAME = "thumbnail.png"
+
+export function getVideoDataFolder(id: number | bigint) {
+  return path.join(app.getPath('userData'), path.sep, id.toString());
+}
+
+export function isFileExisting(filePath: string) {
+  return fs.existsSync(filePath)
+}
 
 export function createThumbnail(filePath: string, id: number | bigint) {
-  const thumbnailFolderPath = path.join(app.getPath('userData'), path.sep, 'thumbnails');
-  console.log(`createThumbnail: thumbnail folder path is ${thumbnailFolderPath}`)
+  const videoDataFolder = getVideoDataFolder(id)
+  if (!isFileExisting(videoDataFolder)) {
+    fs.mkdirSync(videoDataFolder)
+  }
+
+  console.log(`createThumbnail: thumbnail folder path is ${videoDataFolder}`)
 
   return new Promise((resolve, _) => {
     ffmpeg(filePath)
       .screenshots({
         timestamps: ['50%'],
         count: 1,
-        filename: `${id}.png`,
-      }, thumbnailFolderPath)
+        filename: THUMBNAIL_FILENAME,
+      }, videoDataFolder)
       .on('error', () => {
         console.log("Error in creating thumbnail.")
       })
       .on('end', () => {
         resolve(filePath)
         console.log("createThumbnail: Created thumbnail.");
-        console.log(`createThumbnail: file exists = ${fs.existsSync(path.join(thumbnailFolderPath, path.sep, `${id}.png`))}`)
+        console.log(`createThumbnail: file exists = ${fs.existsSync(path.join(videoDataFolder, path.sep, THUMBNAIL_FILENAME))}`)
       });
   })
 }
@@ -46,6 +59,7 @@ export async function insertVideo(db: Database.Database) {
   if (!canceled) {
     const filePath = filePaths[0]
     const statement = db.prepare('INSERT INTO videos (path) VALUES (?)').run(filePath)
+    fs.mkdirSync(getVideoDataFolder(statement.lastInsertRowid))
     await createThumbnail(filePath, statement.lastInsertRowid)
   }
 
@@ -62,8 +76,9 @@ export function deleteVideo(db: Database.Database, id: number | bigint) {
   if (video) {
     db.prepare('DELETE FROM videos WHERE id = ?').run(id)
     console.log(`Removed video ${id} from database.`)
-    const thumbnailPath = path.join(app.getPath('userData'), path.sep, 'thumbnails', path.sep, `${id}.png`)
-    fs.unlinkSync(thumbnailPath)
+    fs.rmSync(getVideoDataFolder(id), {
+      recursive: true
+    })
     console.log(`Deleted thumbnail file.`)
   }
 }
@@ -90,10 +105,6 @@ export function renameVideo(db: Database.Database, id: number | bigint, oldFileP
     .run(newFilePath, id)
   
   console.log(`renameVideo: Renamed video ${id} from ${oldFilePath} to ${newFilePath}.`)
-}
-
-export function isFileExisting(filePath: string) {
-  return fs.existsSync(filePath)
 }
 
 export async function updateVideo(db: Database.Database, id: number | bigint) {

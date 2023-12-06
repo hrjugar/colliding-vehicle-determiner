@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, Menu, MenuItem, net, protocol, shell } fro
 import path from 'node:path'
 import fs from 'node:fs'
 import { getSqlite3 } from './better-sqlite3'
-import { createThumbnailFromId, deleteVideo, insertVideo, isFileExisting, openVideoFolder, renameVideo, selectAllVideos, updateVideo } from './mainUtils'
+import { createThumbnailFromId, deleteVideo, insertVideo, isFileExisting, openVideoFolder, renameVideo, selectAllVideos, THUMBNAIL_FILENAME, updateVideo } from './mainUtils'
 import Database from 'better-sqlite3'
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
@@ -86,7 +86,7 @@ app.on('activate', () => {
 app.whenReady().then(() => {
   protocol.handle('thumbnail', async (request) => {
     const id = request.url.replace('thumbnail://', '')
-    const src = app.getPath('userData') + path.sep + 'thumbnails' + path.sep + id + '.png'
+    const src = path.join(app.getPath('userData'), path.sep, id, path.sep, THUMBNAIL_FILENAME)
 
     console.log(`thumbnail: id is ${id}`)
     console.log("thumbnail: acquired src")
@@ -104,15 +104,6 @@ app.whenReady().then(() => {
     console.log(`thumbnail: src exists: ${fs.existsSync(src)}`)
     return net.fetch(src);
   })
-  // ipcMain.on('magic-protocol', (_, imageName) => {
-  //   imageName = imageName.replace('magic-protocol://getThumbnail/', '')
-  //   let imagePath = path.join(app.getPath('userData'), path.sep, 'thumbnails', path.sep, imageName, ".png")
-  //   let imageUrl = url.pathToFileURL(imagePath).toString()
-
-  //   protocol.handle('thumbnail', (_) => {
-  //     return net.fetch(imageUrl)
-  //   })
-  // })
 
   ipcMain.handle('dialog:insertVideo', () => insertVideo(db))
   ipcMain.handle('selectAllVideos', () => selectAllVideos(db))
