@@ -1,18 +1,27 @@
 
 import React from 'react';
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from 'react-toastify';
-import { QueryKey } from '../../globals/enums';
+import { ModalType, QueryKey } from '../../globals/enums';
+import { useModal } from '../../globals/hooks';
 
 const InsertVideoButton: React.FC = () => {
-  const queryClient = useQueryClient();
-  const mutation = useMutation(window.electronAPI.insertVideo, {
+  // const queryClient = useQueryClient();
+  // const mutation = useMutation(window.electronAPI.insertVideo, {
+  //   onSuccess: (data) => {
+  //     queryClient.invalidateQueries(QueryKey.Videos);
+  //     if (data) {
+  //       toast('Successfully added video.', {
+  //         type: 'success'
+  //       })
+  //     }
+  //   }
+  // })
+  const { openModal } = useModal();
+  const mutation = useMutation(window.electronAPI.findNewVideo, {
     onSuccess: (data) => {
-      queryClient.invalidateQueries(QueryKey.Videos);
       if (data) {
-        toast('Successfully added video.', {
-          type: 'success'
-        })
+        openModal(ModalType.EditVideo, { videoPath: data });
       }
     }
   })

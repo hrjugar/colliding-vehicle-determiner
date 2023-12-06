@@ -14,6 +14,18 @@ export function isFileExisting(filePath: string) {
   return fs.existsSync(filePath)
 }
 
+export async function findNewVideo() {
+  const { canceled, filePaths } = await dialog.showOpenDialog({
+    filters: [
+      { name: 'MP4 Files', extensions: ['mp4'] }
+    ]
+  })
+
+  if (!canceled) {
+    return filePaths[0]
+  }
+}
+
 export function createThumbnail(filePath: string, id: number | bigint) {
   const videoDataFolder = getVideoDataFolder(id)
   if (!isFileExisting(videoDataFolder)) {

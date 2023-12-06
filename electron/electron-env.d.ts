@@ -22,6 +22,7 @@ declare namespace NodeJS {
 }
 
 interface ElectronAPI {
+  findNewVideo(): Promise<string| undefined>,
   insertVideo(): Promise<boolean>,
   selectAllVideos(): Promise,
   getAppPath(): Promise<string>,

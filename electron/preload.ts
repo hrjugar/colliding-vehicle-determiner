@@ -5,6 +5,7 @@ import { contextBridge, ipcRenderer } from 'electron'
 contextBridge.exposeInMainWorld('ipcRenderer', withPrototype(ipcRenderer));
 // contextBridge.exposeInMainWorld('testExpose', "testExpose");
 contextBridge.exposeInMainWorld('electronAPI', {
+  findNewVideo: () => ipcRenderer.invoke('findNewVideo'),
   insertVideo: () => ipcRenderer.invoke('dialog:insertVideo'),
   selectAllVideos: () => ipcRenderer.invoke('selectAllVideos'),
   getAppPath: () => ipcRenderer.invoke('getAppPath'),

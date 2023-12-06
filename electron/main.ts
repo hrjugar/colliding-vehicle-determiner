@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, Menu, MenuItem, net, protocol, shell } fro
 import path from 'node:path'
 import fs from 'node:fs'
 import { getSqlite3 } from './better-sqlite3'
-import { createThumbnailFromId, deleteVideo, insertVideo, isFileExisting, openVideoFolder, renameVideo, selectAllVideos, THUMBNAIL_FILENAME, updateVideo } from './mainUtils'
+import { createThumbnailFromId, deleteVideo, findNewVideo, insertVideo, isFileExisting, openVideoFolder, renameVideo, selectAllVideos, THUMBNAIL_FILENAME, updateVideo } from './mainUtils'
 import Database from 'better-sqlite3'
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
@@ -29,6 +29,16 @@ let win: BrowserWindow | null
 let db: Database.Database
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
+
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: 'video',
+    privileges: {
+      bypassCSP: true,
+      stream: true
+    }
+  }
+])
 
 function createWindow() {
   win = new BrowserWindow({
@@ -85,7 +95,9 @@ app.on('activate', () => {
 
 app.whenReady().then(() => {
   protocol.handle('thumbnail', async (request) => {
+    console.log(`thumbnail: request url = ${request.url}`)
     const id = request.url.replace('thumbnail://', '')
+    console.log(`thumbnail: userdata path = ${app.getPath('userData')}`)
     const src = path.join(app.getPath('userData'), path.sep, id, path.sep, THUMBNAIL_FILENAME)
 
     console.log(`thumbnail: id is ${id}`)
@@ -105,6 +117,15 @@ app.whenReady().then(() => {
     return net.fetch(src);
   })
 
+  protocol.handle('video', (request) => {
+    console.log(`video: request url = ${request.url} `)
+    const src = decodeURI(request.url.replace('video:///', '')).replace(/\//g, '\\')
+    console.log(`video: file path = ${src}`)
+    console.log(`video: file exists = ${fs.existsSync(src)}`)
+    return net.fetch(src);
+  })
+
+  ipcMain.handle('findNewVideo', () => findNewVideo())
   ipcMain.handle('dialog:insertVideo', () => insertVideo(db))
   ipcMain.handle('selectAllVideos', () => selectAllVideos(db))
   ipcMain.handle('getAppPath', () => app.getPath('userData'))
