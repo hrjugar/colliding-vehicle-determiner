@@ -29,12 +29,12 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({ videoPath }) => {
         </svg>
       </div>
 
-      <div className="w-full h-full p-4 bg-white">
-        <video controls>
-          <source src={`video:///${videoPath}`} />
-        </video>
-        <p>Text in Edit Video Modal</p>
-        <p>{videoPath}</p>
+      <div className="w-full h-full bg-white">
+        <div className="w-full p-4 flex flex-col items-center">
+          <video muted className="rounded-md">
+            <source src={`video:///${videoPath}`} type="video/mp4"/>
+          </video>
+        </div>
       </div>
     </div>
   );
