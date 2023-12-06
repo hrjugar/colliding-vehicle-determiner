@@ -1,5 +1,6 @@
 export enum ModalType {
   DeleteVideo,
+  EditVideo
 }
 
 export enum QueryKey {

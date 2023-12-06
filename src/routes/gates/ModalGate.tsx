@@ -4,6 +4,7 @@ import { Outlet } from 'react-router-dom';
 import { useModal } from '../../globals/hooks';
 import { ModalType } from '../../globals/enums';
 import DeleteVideoModal from '../../components/Navbar/modals/DeleteVideoModal';
+import EditVideoModal from '../../components/Navbar/modals/EditVideoModal';
 
 interface ModalGateProps {
   children: React.ReactNode;
@@ -17,6 +18,9 @@ const ModalGate: React.FC<ModalGateProps> = ({ children }) => {
   switch (currentModal.type) {
     case ModalType.DeleteVideo:
       currentModalElement = <DeleteVideoModal video={currentModal.props.video} />
+      break;
+    case ModalType.EditVideo:
+      currentModalElement = <EditVideoModal videoPath={currentModal.props.videoPath} />
       break;
   }
   

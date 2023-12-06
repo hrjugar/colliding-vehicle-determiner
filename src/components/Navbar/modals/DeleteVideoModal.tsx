@@ -1,4 +1,3 @@
-import React from 'react';
 import { getFileNameFromPath } from '../../../globals/utils';
 import { useModal } from '../../../globals/hooks';
 import { useQueryClient, useMutation } from 'react-query';
