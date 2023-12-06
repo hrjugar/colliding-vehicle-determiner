@@ -119,7 +119,7 @@ app.whenReady().then(() => {
 
   protocol.handle('video', (request) => {
     console.log(`video: request url = ${request.url} `)
-    const src = decodeURI(request.url.replace('video:///', '')).replace(/\//g, '\\')
+    const src = decodeURI(request.url.replace('video:///', ''))
     console.log(`video: file path = ${src}`)
     console.log(`video: file exists = ${fs.existsSync(src)}`)
     return net.fetch(src);

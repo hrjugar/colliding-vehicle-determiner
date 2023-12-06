@@ -7,8 +7,7 @@ interface EditVideoModalProps {
 const EditVideoModal: React.FC<EditVideoModalProps> = ({ videoPath }) => {
   const { closeModal } = useModal();
   console.log(`EditVideoModal: videoPath = ${videoPath}`)
-  const adjustedVideoPath = videoPath.replace(/\\/g, "/")
-  console.log(`EditVideoModal: adjustedVideoPath = ${adjustedVideoPath}`)
+  console.log(`EditVideoModal: adjustedVideoPath = ${videoPath}`)
 
   return (
     <div className="fixed bg-white w-full h-full flex flex-col rounded-sm animate-slide-appear">
@@ -32,7 +31,7 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({ videoPath }) => {
 
       <div className="w-full h-full p-4 bg-white">
         <video controls>
-          <source src={`video:///${adjustedVideoPath}`} />
+          <source src={`video:///${videoPath}`} />
         </video>
         <p>Text in Edit Video Modal</p>
         <p>{videoPath}</p>
