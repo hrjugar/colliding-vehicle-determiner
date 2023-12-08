@@ -22,7 +22,7 @@ function App() {
       <ModalProvider>
         <ModalGate>
           <Navbar />
-          <main className='w-full min-h-screen'>
+          <main className='w-full min-h-screen bg-white'>
             <CustomTitleBar />
             <p>{test}</p>
             <Outlet />

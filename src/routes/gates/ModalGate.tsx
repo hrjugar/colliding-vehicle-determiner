@@ -3,8 +3,8 @@ import { ModalContext } from '../../contexts/ModalContext';
 import { Outlet } from 'react-router-dom';
 import { useModal } from '../../globals/hooks';
 import { ModalType } from '../../globals/enums';
-import DeleteVideoModal from '../../components/Navbar/modals/DeleteVideoModal';
-import EditVideoModal from '../../components/Navbar/modals/EditVideoModal';
+import DeleteVideoModal from '../../components/modals/DeleteVideoModal';
+import EditVideoModal from '../../components/modals/EditVideoModal';
 
 interface ModalGateProps {
   children: React.ReactNode;

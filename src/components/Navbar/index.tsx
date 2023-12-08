@@ -3,11 +3,9 @@ import { NavLinkIcon } from "./NavLinkIcon";
 
 export default function Navbar() {
   return (
-    <nav className="flex flex-col justify-between bg-color-primary h-screen pb-2 gap-2">
-      <div className="flex flex-col items-center ">
-        <div className="p-3">
-          <InsertVideoButton />
-        </div>
+    <nav className="flex flex-col justify-between bg-color-primary h-screen gap-2">
+      <div className="flex flex-col items-center">
+        <InsertVideoButton />
         <NavLinkIcon 
           title="Videos"
           tailwindGroup="videos-icon"
@@ -17,7 +15,7 @@ export default function Navbar() {
           link={"/"}
         />
         <NavLinkIcon 
-          title="Videos"
+          title="Analysis"
           tailwindGroup="analysis-icon"
           shapesCoordinates={[
             "M29.3333 5.33337V58.6667C15.7333 57.3334 5.33331 45.8667 5.33331 32C5.33331 18.1334 15.7333 6.66671 29.3333 5.33337ZM34.6666 5.33337V29.3334H58.6666C57.3333 16.5334 47.4666 6.66671 34.6666 5.33337ZM34.6666 34.6667V58.6667C47.2 57.3334 57.3333 47.4667 58.6666 34.6667H34.6666Z"

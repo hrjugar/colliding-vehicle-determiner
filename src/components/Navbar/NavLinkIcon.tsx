@@ -12,27 +12,22 @@ export function NavLinkIcon({
   shapesCoordinates,
   link,
 }: NavLinkIconProps) {
-  const iconSize = 8;
-
   return (
-    <NavLink to={link} title={title} className={`group/${tailwindGroup}`}>
+    <NavLink to={link} title={title} className={`w-full`}>
       {({ isActive }) => {
         return (
-          <div className={isActive ? (
-            `bg-white p-3`
-          ) : (
-            `p-3`
-          )}>
+          <div 
+            className={`group p-4 flex flex-col justify-center items-center ${isActive ? 'bg-white' : 'bg-transparent'}`}
+          >
             <svg
               width="64" 
               height="64" 
               viewBox="0 0 64 64"
               xmlns="http://www.w3.org/2000/svg"
-              className={isActive ? (
-                `w-8 h-8 text-color-primary`
-              ) : (
-                `w-8 h-8 text-color-primary-inactive hover:text-color-primary-active`
-              )}
+              className={`w-8 h-8 ${isActive ? 
+                'text-color-primary' : 
+                'text-color-primary-inactive group-hover:text-color-primary-active'
+              }`}
             >
               {shapesCoordinates.map((shapeCoordinates, index) => {
                 return (

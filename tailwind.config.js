@@ -20,13 +20,14 @@ export const theme = {
       'color-primary': '#171C46',
       'color-primary-inactive': '#626484',
       'color-primary-active': '#BABFE8',
-    }
+    },
   },
 };
 
 export const variants = {
   extend: {
-    fill: ['hover', 'focus', 'group-hover', 'group-focus']
+    fill: ['hover', 'focus', 'group-hover', 'group-focus'],
+    textColor: ['group-hover'],
   }
 }
 

@@ -1,4 +1,4 @@
-import { useModal } from "../../../globals/hooks";
+import { useModal } from "../../globals/hooks";
 
 interface EditVideoModalProps {
   videoPath: string

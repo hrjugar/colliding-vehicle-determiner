@@ -1,8 +1,8 @@
-import { getFileNameFromPath } from '../../../globals/utils';
-import { useModal } from '../../../globals/hooks';
+import { getFileNameFromPath } from '../../globals/utils';
+import { useModal } from '../../globals/hooks';
 import { useQueryClient, useMutation } from 'react-query';
 import { toast } from 'react-toastify';
-import { QueryKey } from '../../../globals/enums';
+import { QueryKey } from '../../globals/enums';
 
 interface DeleteVideoModalProps {
   video: Video
