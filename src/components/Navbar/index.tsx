@@ -3,9 +3,11 @@ import { NavLinkIcon } from "./NavLinkIcon";
 
 export default function Navbar() {
   return (
-    <nav className="flex flex-col justify-between bg-white h-screen py-5 px-4 gap-4">
-      <div className="flex flex-col gap-4">
-        <InsertVideoButton />
+    <nav className="flex flex-col justify-between bg-color-primary h-screen pb-2 gap-2">
+      <div className="flex flex-col items-center ">
+        <div className="p-3">
+          <InsertVideoButton />
+        </div>
         <NavLinkIcon 
           title="Videos"
           tailwindGroup="videos-icon"
@@ -24,7 +26,7 @@ export default function Navbar() {
         />
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
         {/* {navButton("Dark Mode")} */}
       </div>
     </nav>

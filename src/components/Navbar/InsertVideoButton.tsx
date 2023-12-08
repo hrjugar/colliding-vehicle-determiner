@@ -30,12 +30,23 @@ const InsertVideoButton: React.FC = () => {
     <button 
       type="button" 
       title="Add Video"
-      className="group/add-button w-10 h-10 rounded-lg bg-blue-400 hover:bg-blue-500 hover:cursor-pointer flex justify-center items-center"
+      className="w-8 h-8 rounded-full bg-gray-200 hover:bg-color-primary-active cursor-pointer flex justify-center items-center p-2 drop-shadow-xl"
       onClick={() => {
         mutation.mutate()
       }}
     >
-      <span className="group-hover/add-button:text-gray-100 text-white text-2xl font-light text-center">+</span>
+      <svg 
+        width="64" 
+        height="64" 
+        viewBox="0 0 64 64" 
+        xmlns="http://www.w3.org/2000/svg"
+        className='text-color-primary w-4 h-4'
+      >
+        <path 
+          d="M50.6667 34.6667H34.6667V50.6667H29.3333V34.6667H13.3333V29.3334H29.3333V13.3334H34.6667V29.3334H50.6667V34.6667Z"
+          className='fill-current'
+        />
+      </svg>    
     </button>
   );
 };

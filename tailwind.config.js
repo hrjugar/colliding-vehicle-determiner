@@ -15,6 +15,11 @@ export const theme = {
     },
     animation: {
       'slide-appear': 'slideAppear 0.2s ease-out'
+    },
+    colors: {
+      'color-primary': '#171C46',
+      'color-primary-inactive': '#626484',
+      'color-primary-active': '#BABFE8',
     }
   },
 };
