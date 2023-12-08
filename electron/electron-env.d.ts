@@ -22,6 +22,9 @@ declare namespace NodeJS {
 }
 
 interface ElectronAPI {
+  minimizeWindow(): void,
+  maximizeWindow(): void,
+  closeWindow(): void,
   findNewVideo(): Promise<string| undefined>,
   insertVideo(): Promise<boolean>,
   selectAllVideos(): Promise,

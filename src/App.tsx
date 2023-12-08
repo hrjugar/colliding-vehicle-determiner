@@ -5,6 +5,7 @@ import { ModalProvider } from './contexts/ModalContext';
 import ModalGate from './routes/gates/ModalGate';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import CustomTitleBar from './components/CustomTitleBar';
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ function App() {
         <ModalGate>
           <Navbar />
           <main className='w-full min-h-screen'>
+            <CustomTitleBar />
             <p>{test}</p>
             <Outlet />
           </main>

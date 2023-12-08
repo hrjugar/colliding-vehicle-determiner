@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, Menu, MenuItem, net, protocol, shell } fro
 import path from 'node:path'
 import fs from 'node:fs'
 import { getSqlite3 } from './better-sqlite3'
-import { createThumbnailFromId, deleteVideo, findNewVideo, insertVideo, isFileExisting, openVideoFolder, renameVideo, selectAllVideos, THUMBNAIL_FILENAME, updateVideo } from './mainUtils'
+import { closeWindow, createThumbnailFromId, deleteVideo, findNewVideo, insertVideo, isFileExisting, maximizeWindow, minimizeWindow, openVideoFolder, renameVideo, selectAllVideos, THUMBNAIL_FILENAME, updateVideo } from './mainUtils'
 import Database from 'better-sqlite3'
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
@@ -43,6 +43,7 @@ protocol.registerSchemesAsPrivileged([
 function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    frame: false,
     webPreferences: {
       preload: path.join(__dirname, './preload.js'),
       // webSecurity: false // TODO: Change this to true later! Currently needed in false to read file data
@@ -66,12 +67,25 @@ function createWindow() {
     win?.webContents.send('sqlite3', db);
   })
 
+
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL)
   } else {
     // win.loadFile('dist/index.html')
     win.loadFile(path.join(process.env.DIST, 'index.html'))
   }
+
+  ipcMain.on('titleBar:minimizeWindow', () => minimizeWindow(win!));
+  ipcMain.on('titleBar:maximizeWindow', () => maximizeWindow(win!));
+  ipcMain.on('titleBar:closeWindow', () => closeWindow(win!));
+
+  win.on('maximize', () => {
+    win?.webContents.send('window-maximized')
+  })
+  
+  win.on('unmaximize', () => {
+    win?.webContents.send('window-unmaximized')
+  })
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common

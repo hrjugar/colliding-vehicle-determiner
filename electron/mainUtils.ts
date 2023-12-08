@@ -1,10 +1,27 @@
-import { app, dialog, shell } from "electron"
+import { BrowserWindow, app, dialog, shell } from "electron"
 import Database from "better-sqlite3"
 import path from "node:path"
 import ffmpeg from "fluent-ffmpeg"
 import fs from "node:fs"
 
 export const THUMBNAIL_FILENAME = "thumbnail.png"
+
+export function minimizeWindow(window: BrowserWindow) {
+  window.minimize()
+}
+
+export function maximizeWindow(window: BrowserWindow) {
+  console.log(`maximizeWindow: window is maximized = ${window.isMaximized()}`)
+  if (window.isMaximized()) {
+    window.unmaximize()
+  } else {
+    window.maximize()
+  }
+}
+
+export function closeWindow(window: BrowserWindow) {
+  window.close()
+}
 
 export function getVideoDataFolder(id: number | bigint) {
   return path.join(app.getPath('userData'), path.sep, id.toString());
