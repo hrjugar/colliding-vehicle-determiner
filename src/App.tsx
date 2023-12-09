@@ -1,8 +1,6 @@
 import { QueryClient, QueryClientProvider } from 'react-query';
 import Navbar from './components/Navbar';
 import { Outlet } from 'react-router-dom';
-import { ModalProvider } from './contexts/ModalContext';
-import ModalGate from './routes/gates/ModalGate';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CustomTitleBar from './components/CustomTitleBar';
@@ -19,22 +17,19 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ModalProvider>
-        <ModalGate>
-          <Navbar />
-          <main className='w-full min-h-screen bg-white'>
-            <CustomTitleBar />
-            <p>{test}</p>
-            <Outlet />
-          </main>
-          <ToastContainer 
-            hideProgressBar={true} 
-            position='bottom-right' 
-            closeOnClick={true} 
-            autoClose={2000}
-          />
-        </ModalGate>
-      </ModalProvider>
+      <Navbar />
+      <main className='w-full min-h-screen bg-white'>
+        <CustomTitleBar />
+        <p>{test}</p>
+        <Outlet />
+      </main>
+      <ToastContainer 
+        hideProgressBar={true} 
+        position='bottom-right' 
+        closeOnClick={true} 
+        autoClose={2000}
+      />
+      <div id="popover-root"></div>
     </QueryClientProvider>
   )
 }

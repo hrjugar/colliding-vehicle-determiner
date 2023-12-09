@@ -1,10 +1,4 @@
-import { useContext, useEffect } from "react";
-import { ModalContext } from "../contexts/ModalContext";
-
-export function useModal() {
-  const context = useContext(ModalContext)!
-  return context
-}
+import { useEffect } from "react";
 
 export function useOutsideAlerter(ref: React.MutableRefObject<any>, callback: Function) {
   useEffect(() => {
