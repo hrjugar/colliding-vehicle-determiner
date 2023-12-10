@@ -1,11 +1,40 @@
 
-import React, { useState } from 'react';
+import React, { useState, useReducer } from 'react';
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from 'react-toastify';
-import { ModalType, QueryKey } from '../../globals/enums';
-import { Dialog } from '@headlessui/react';
+import EditVideoModal from '../modals/EditVideoModal';
+
+interface EditVideoModalState {
+  isOpen: boolean;
+  videoPath: string;
+}
+
+type EditVideoModalAction = 
+  { 
+    type: 'OPEN',
+    payload: string
+  } |
+  { 
+    type: 'CLOSE',
+  };
+
+const reducer = (state: EditVideoModalState, action: EditVideoModalAction): EditVideoModalState => {
+  switch (action.type) {
+    case 'OPEN':
+      return { ...state, isOpen: true, videoPath: action.payload };
+    case 'CLOSE':
+      return { ...state, isOpen: false, videoPath: '' };
+    default:
+      return state;
+  }
+};
 
 const InsertVideoButton: React.FC = () => {
+  const [state, dispatch] = useReducer(reducer, { 
+    isOpen: false, 
+    videoPath: '' 
+  });
+
   // const queryClient = useQueryClient();
   // const mutation = useMutation(window.electronAPI.insertVideo, {
   //   onSuccess: (data) => {
@@ -17,12 +46,12 @@ const InsertVideoButton: React.FC = () => {
   //     }
   //   }
   // })
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  
 
   const mutation = useMutation(window.electronAPI.findNewVideo, {
     onSuccess: (data) => {
       if (data) {
-        setIsDialogOpen(true);
+        dispatch({ type: 'OPEN', payload: data });
         // openModal(ModalType.EditVideo, { videoPath: data });
       }
     }
@@ -54,23 +83,11 @@ const InsertVideoButton: React.FC = () => {
         </button>
       </div>
 
-      <Dialog 
-        open={isDialogOpen} 
-        onClose={() => setIsDialogOpen(false)}
-      >
-        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
-
-        <div className='fixed inset-0 flex w-screen items-center justify-center p-4'>
-          <Dialog.Panel className='bg-white'>
-            <Dialog.Title>Edit Video</Dialog.Title>
-            <Dialog.Description>
-              Editing video...
-            </Dialog.Description>
-
-            <button type='button' onClick={() => setIsDialogOpen(false)}>Cancel</button>
-          </Dialog.Panel>
-        </div>
-      </Dialog>
+      <EditVideoModal 
+        videoPath={state.videoPath}
+        isOpen={state.isOpen}
+        close={() => dispatch({ type: 'CLOSE' })}
+      />
     </>
   );
 };
