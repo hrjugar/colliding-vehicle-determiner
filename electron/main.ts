@@ -4,6 +4,7 @@ import fs from 'node:fs'
 import { getSqlite3 } from './better-sqlite3'
 import { closeWindow, createThumbnailFromId, deleteVideo, findNewVideo, insertVideo, isFileExisting, maximizeWindow, minimizeWindow, openVideoFolder, renameVideo, selectAllVideos, THUMBNAIL_FILENAME, updateVideo } from './mainUtils'
 import Database from 'better-sqlite3'
+import { stopServer } from './server'
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 // The built directory structure
@@ -50,8 +51,6 @@ function createWindow() {
     }
   })
 
-  // win.removeMenu();
-
   // Opens external links in browser instead of new Electron window
   win.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
@@ -88,11 +87,14 @@ function createWindow() {
   })
 }
 
+app.disableHardwareAcceleration()
+
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
+    stopServer()
     app.quit()
     win = null
     db.close()
@@ -128,14 +130,6 @@ app.whenReady().then(() => {
     console.log("thumbnail: created thumbnail")
 
     console.log(`thumbnail: src exists: ${fs.existsSync(src)}`)
-    return net.fetch(src);
-  })
-
-  protocol.handle('video', (request) => {
-    console.log(`video: request url = ${request.url} `)
-    const src = decodeURI(request.url.replace('video:///', ''))
-    console.log(`video: file path = ${src}`)
-    console.log(`video: file exists = ${fs.existsSync(src)}`)
     return net.fetch(src);
   })
 
