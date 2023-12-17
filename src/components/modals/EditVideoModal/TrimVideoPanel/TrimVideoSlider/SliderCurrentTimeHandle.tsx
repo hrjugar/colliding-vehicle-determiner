@@ -1,6 +1,6 @@
 import React from 'react';
 import { GetHandleProps } from 'react-compound-slider';
-import { convertSecondsToMinutes } from '../../../../../globals/utils';
+import { convertSecondsAndMillisecondsToString, convertSecondsToMinutes } from '../../../../../globals/utils';
 
 interface SliderCurrentTimeHandleProps {
   handle: {
@@ -20,7 +20,7 @@ const SliderCurrentTimeHandle: React.FC<SliderCurrentTimeHandleProps> = ({ handl
       }}
       {...getHandleProps(handle.id)}
     >
-      <span className='text-xs font-bold text-color-primary px-2 py-1'>{convertSecondsToMinutes(handle.value)}</span>
+      <span className='text-xs font-bold text-color-primary px-2 py-1'>{convertSecondsAndMillisecondsToString(handle.value)}</span>
       {/* <div className='w-3 h-3 bg-color-primary rounded-full'/> */}
       <div className='w-[1px] h-8 bg-white'/>
     </div>

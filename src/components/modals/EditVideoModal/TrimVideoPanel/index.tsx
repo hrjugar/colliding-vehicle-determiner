@@ -11,6 +11,7 @@ interface VideoState {
   duration: number
 }
 
+// TODO: Fix part where going to previous tab and then back to this tab causes the states to not reset
 const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({ videoPath }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [videoMetadata, setVideoMetadata] = useState<VideoState>({
@@ -36,14 +37,17 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({ videoPath }) => {
     }
   }
 
-  const handleSliderOnChange = (newValues: readonly number[]) => {
+  const handleSliderOnSlideEnd = (newValues: readonly number[]) => {
     const oldTime = sliderHandleValues[1];
-    const newTime = Math.round(newValues[1]);
+    const newTime = newValues[1];
 
-    setSliderHandleValues(Array.from(newValues));
-
-    console.log(`TrimVideoSlider: oldTime: ${oldTime}, newTime: ${newTime}`)
-    if (videoRef.current && oldTime !== newTime) {
+    console.log(`oldTime: ${oldTime}, newTime: ${newTime}`)
+    
+    if (Math.abs(newTime - oldTime) < 0.01) {
+      console.log('Handling start/end marker change')
+      setSliderHandleValues(Array.from(newValues))
+    } else if (videoRef.current) {
+      console.log('Handling current time marker change')
       videoRef.current.currentTime = newTime;
     }
   }
@@ -69,10 +73,10 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({ videoPath }) => {
 
     const handleTimeUpdate = () => {
       if (videoRef.current) {
-        const currentTime = Math.round(videoRef.current.currentTime)
+        const currentTime = videoRef.current.currentTime
 
         if (currentTime > sliderHandleValuesRef.current[2]) {
-          console.log(`currentTime : ${currentTime}, handle values: ${sliderHandleValues.join(" - ")}`)
+          console.log(`currentTime : ${currentTime}, handle values: ${sliderHandleValuesRef.current.join(" - ")}`)
           console.log("current time is greater than filter")
           videoRef.current.currentTime = sliderHandleValuesRef.current[0];
           videoRef.current.pause();
@@ -176,7 +180,7 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({ videoPath }) => {
           <TrimVideoSlider
             values={sliderHandleValues}
             duration={videoMetadata.duration}
-            handleSliderOnChange={handleSliderOnChange}
+            handleSliderOnSlideEnd={handleSliderOnSlideEnd}
           />
           
         </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { GetHandleProps } from 'react-compound-slider';
-import { convertSecondsToMinutes } from '../../../../../globals/utils';
+import { convertSecondsAndMillisecondsToString } from '../../../../../globals/utils';
 
 interface SliderStartEndHandleProps {
   handle: {
@@ -22,7 +22,7 @@ const SliderStartEndHandle: React.FC<SliderStartEndHandleProps> = ({ handle, get
       {...getHandleProps(handle.id)}
     >
       <span className='text-xs bg-color-primary/90 text-white px-2 py-1 rounded-full'>
-        {convertSecondsToMinutes(handle.value)}
+        {convertSecondsAndMillisecondsToString(handle.value)}
       </span>
       {/* <div className='w-3 h-3 bg-color-primary rounded-full'/> */}
       <div className='w-[1px] h-14 bg-color-primary'/>

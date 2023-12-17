@@ -13,3 +13,11 @@ export function convertSecondsToMinutes(seconds: number) {
 
   return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
 }
+
+export function convertSecondsAndMillisecondsToString(time: number) {
+  const minutes = Math.floor(time / 60);
+  const seconds = Math.floor(time % 60);
+  const milliseconds = Math.floor((time % 1) * 100);
+
+  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}:${milliseconds < 10 ? '0' : ''}${milliseconds}`;
+}

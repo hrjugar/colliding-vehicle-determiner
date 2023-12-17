@@ -16,19 +16,19 @@ const sliderStyle: React.CSSProperties = {
 interface TrimVideoSliderProps {
   values: number[],
   duration: number,
-  handleSliderOnChange: (newValues: readonly number[]) => void
+  handleSliderOnSlideEnd: (newValues: readonly number[]) => void
 }
 
-const TrimVideoSlider: React.FC<TrimVideoSliderProps> = ({ values, duration, handleSliderOnChange }) => {
+const TrimVideoSlider: React.FC<TrimVideoSliderProps> = ({ values, duration, handleSliderOnSlideEnd }) => {
   return (
     <div className='flex flex-col w-full h-full pt-12'>
       <Slider
         rootStyle={sliderStyle}
         domain={[0, duration]}
-        step={1}
+        step={0.01}
         mode={1}
         values={values}
-        onChange={(newValues: readonly number[]) => handleSliderOnChange(newValues)}
+        onSlideEnd={(newValues: readonly number[]) => handleSliderOnSlideEnd(newValues)}
       >
         <Handles>
           {({ handles, getHandleProps }) => (
