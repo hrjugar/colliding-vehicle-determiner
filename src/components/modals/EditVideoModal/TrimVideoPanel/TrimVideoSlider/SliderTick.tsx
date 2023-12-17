@@ -1,11 +1,11 @@
 import { SliderItem } from "react-compound-slider";
 import { convertSecondsToMinutes } from "../../../../../globals/utils";
 
-interface TrimVideoSliderTickProps {
+interface SliderTickProps {
   tick: SliderItem,
 };
 
-const TrimVideoSliderTick: React.FC<TrimVideoSliderTickProps> = ({ tick }) => {
+const SliderTick: React.FC<SliderTickProps> = ({ tick }) => {
   return (
     <span
       className="absolute z-[5] top-4 h-full text-xs text-gray-400 transform -translate-x-1/2 pointer-events-none select-none flex justify-center items-end"
@@ -18,4 +18,4 @@ const TrimVideoSliderTick: React.FC<TrimVideoSliderTickProps> = ({ tick }) => {
   );
 };
 
-export default TrimVideoSliderTick;
+export default SliderTick;

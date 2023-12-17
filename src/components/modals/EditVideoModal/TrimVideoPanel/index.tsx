@@ -37,8 +37,9 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({ videoPath }) => {
   }
 
   const handleSliderOnChange = (newValues: readonly number[]) => {
-    const [oldStart, oldTime, oldEnd] = sliderHandleValues;
-    const [newStart, newTime, newEnd] = newValues;
+    const oldTime = sliderHandleValues[1];
+    const newTime = Math.round(newValues[1]);
+
     setSliderHandleValues(Array.from(newValues));
 
     console.log(`TrimVideoSlider: oldTime: ${oldTime}, newTime: ${newTime}`)

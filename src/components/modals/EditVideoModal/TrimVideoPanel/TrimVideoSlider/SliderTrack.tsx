@@ -1,6 +1,6 @@
 import { GetTrackProps, SliderItem } from "react-compound-slider";
 
-interface TrimVideoSliderTrackProps {
+interface SliderTrackProps {
   // Add any props you need for the component
   source: SliderItem,
   target: SliderItem,
@@ -8,7 +8,7 @@ interface TrimVideoSliderTrackProps {
   disabled?: boolean,
 }
 
-const TrimVideoSliderTrack: React.FC<TrimVideoSliderTrackProps> = ({ source, target, getTrackProps }) => {  
+const SliderTrack: React.FC<SliderTrackProps> = ({ source, target }) => {  
   return (
     <div
       className="absolute z-[1] h-full bg-color-primary"
@@ -16,10 +16,9 @@ const TrimVideoSliderTrack: React.FC<TrimVideoSliderTrackProps> = ({ source, tar
         left: `${source.percent}%`,
         width: `${target.percent - source.percent}%`,
       }}
-      {...getTrackProps()}
       >
     </div>
   );
 };
 
-export default TrimVideoSliderTrack;
+export default SliderTrack;

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Slider, Handles, Tracks, Ticks} from 'react-compound-slider';
 import SliderStartEndHandle from './SliderStartEndHandle';
-import TrimVideoSliderTrack from './SliderTrack';
-import TrimVideoSliderTick from './SliderTick';
+import SliderTrack from './SliderTrack';
+import SliderTick from './SliderTick';
 import SliderCurrentTimeHandle from './SliderCurrentTimeHandle';
 
 const sliderStyle: React.CSSProperties = {
@@ -60,7 +60,7 @@ const TrimVideoSlider: React.FC<TrimVideoSliderProps> = ({ values, duration, han
           {({ tracks, getTrackProps }) => (
             <div className='absolute w-full h-full rounded-md overflow-hidden'>
               {tracks.map(({ id, source, target }) => (
-                <TrimVideoSliderTrack 
+                <SliderTrack 
                   key={id}
                   source={source}
                   target={target}
@@ -75,7 +75,7 @@ const TrimVideoSlider: React.FC<TrimVideoSliderProps> = ({ values, duration, han
           {({ ticks }) => (
             <div>
               {ticks.map((tick) => (
-                <TrimVideoSliderTick key={tick.id} tick={tick} />
+                <SliderTick key={tick.id} tick={tick} />
               ))}
             </div>
           )}
