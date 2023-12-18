@@ -17,8 +17,15 @@ interface EditVideoModalProps {
   close: any,
 }
 
+export interface VideoMetadata {
+  isInitiallyLoading: boolean,
+  duration: number,
+  paused: boolean
+}
+
+
 const EditVideoModal: React.FC<EditVideoModalProps> = ({ videoPath, isOpen, close }) => {
-  console.log(`EditVideoModal: videoPath = ${videoPath}`)
+  // EDIT VIDEO MODAL STATES -----------------------------------------------
   const [selectedTabIndex, setSelectedTabIndex] = useState<number>(0);
   const [tabDimensions, setTabDimensions] = useState({width: 0, left: 0});
   const tabsRef = useRef<(HTMLButtonElement | null)[]>([]);
@@ -38,6 +45,15 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({ videoPath, isOpen, clos
     return () => window.removeEventListener('resize', setTabPosition);
   }, [selectedTabIndex, isFirstTabRendered]);
   
+  // TRIM VIDEO PANEL STATES -----------------------------------------------
+  const [videoMetadata, setVideoMetadata] = useState<VideoMetadata>({
+    isInitiallyLoading: true,
+    duration: 0,
+    paused: true
+  });
+  const [sliderHandleValues, setSliderHandleValues] = useState<number[]>([0, 0, 0]);
+  const sliderHandleValuesRef = useRef(sliderHandleValues);
+
   return (
     <Transition
       show={isOpen}
@@ -114,8 +130,26 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({ videoPath, isOpen, clos
                 </div>
                 
                 <Tab.Panels className='bg-white w-full h-full px-4 overflow-hidden'>
-                  <TrimVideoPanel videoPath={videoPath} />
-                  <Tab.Panel>Panel 2</Tab.Panel>
+                  {tabs.map((_, i) => {
+                    if (i === 0) {
+                      return (
+                        <TrimVideoPanel
+                          key={'edit-modal-tab-panel-0'}
+                          videoPath={videoPath} 
+                          videoMetadata={videoMetadata}
+                          setVideoMetadata={setVideoMetadata}
+                          sliderHandleValues={sliderHandleValues}
+                          setSliderHandleValues={setSliderHandleValues}
+                          sliderHandleValuesRef={sliderHandleValuesRef}
+                          selectedTabIndex={selectedTabIndex}
+                        />
+                      )
+                    } else if (i === 1) {
+                      return (
+                        <Tab.Panel key={'edit-modal-tab-panel-1'}>Panel 2</Tab.Panel>
+                      )
+                    }
+                  })}
                 </Tab.Panels>
 
                 <div className="flex flex-row justify-center gap-2 ">
