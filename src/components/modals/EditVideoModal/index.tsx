@@ -1,6 +1,7 @@
 import { Dialog, Tab, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useRef, useState } from "react";
 import TrimVideoPanel from "./TrimVideoPanel";
+import IdentifyVehiclesPanel from "./IdentifyVehiclesPanel";
 
 const tabs = [
   {
@@ -44,7 +45,7 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({ videoPath, isOpen, clos
     window.addEventListener('resize', setTabPosition);
     return () => window.removeEventListener('resize', setTabPosition);
   }, [selectedTabIndex, isFirstTabRendered]);
-  
+
   // TRIM VIDEO PANEL STATES -----------------------------------------------
   const [videoMetadata, setVideoMetadata] = useState<VideoMetadata>({
     isInitiallyLoading: true,
@@ -146,7 +147,7 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({ videoPath, isOpen, clos
                       )
                     } else if (i === 1) {
                       return (
-                        <Tab.Panel key={'edit-modal-tab-panel-1'}>Panel 2</Tab.Panel>
+                        <IdentifyVehiclesPanel key={'edit-modal-tab-panel-1'} />
                       )
                     }
                   })}

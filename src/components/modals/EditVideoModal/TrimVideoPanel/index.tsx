@@ -111,7 +111,6 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
         <video
           className="max-w-full max-h-full flex object-scale-down aspect-video"
           muted
-          controls
           ref={videoRef}
           onLoadedData={handleInitialLoading}
           onTimeUpdate={handleTimeUpdate}
