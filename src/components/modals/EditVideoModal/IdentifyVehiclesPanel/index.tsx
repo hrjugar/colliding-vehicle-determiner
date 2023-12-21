@@ -1,12 +1,23 @@
 import { Dialog, Tab } from '@headlessui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface IdentifyVehiclesPanelProps {
-
+  setAreTabsDisabled: React.Dispatch<React.SetStateAction<boolean>>,
+  selectedTabIndex: number
 }
 
-const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ }) => {
+const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ 
+  selectedTabIndex,
+  setAreTabsDisabled 
+}) => {
   const [testState, setTestState] = useState<number>(0);
+
+  useEffect(() => {
+    console.log(`IdentifyVehiclesPanel: selectedTabIndex: ${selectedTabIndex}`)
+    if (selectedTabIndex === 1) {
+      setAreTabsDisabled(true);
+    }
+  }, [selectedTabIndex])
 
   return (
     <Tab.Panel className="w-full h-full bg-white flex flex-col justify-center items-center">

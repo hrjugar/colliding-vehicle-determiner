@@ -29,8 +29,9 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({ videoPath, isOpen, clos
   // EDIT VIDEO MODAL STATES -----------------------------------------------
   const [selectedTabIndex, setSelectedTabIndex] = useState<number>(0);
   const [tabDimensions, setTabDimensions] = useState({width: 0, left: 0});
-  const tabsRef = useRef<(HTMLButtonElement | null)[]>([]);
+  const tabsRef = useRef<(HTMLElement | null)[]>([]);
   const [isFirstTabRendered, setIsFirstTabRendered] = useState<boolean>(false);
+  const [areTabsDisabled, setAreTabsDisabled] = useState<boolean>(false);
 
   useEffect(() => {
     function setTabPosition() {
@@ -88,20 +89,25 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({ videoPath, isOpen, clos
                   <Tab.List className='relative flex flex-row items-center gap-4'>
                     {tabs.map((tab, i) => {
                       return (
-                        <Tab as={Fragment} key={`edit-modal-tab-${i}`}>
+                        <Tab 
+                          key={`edit-modal-tab-${i}`}
+                          disabled={areTabsDisabled}
+                          className={`z-[2] p-0`}
+                          ref={(el) => {
+                            tabsRef.current[i] = el
+                            if (i === 0) {
+                              setIsFirstTabRendered(true);
+                            }
+                          }}
+                        >
                           {({ selected }) => (
-                            <button 
-                              className={`flex-grow flex flex-col items-start gap-0 px-4 py-2 z-[2] rounded-lg ${selected ? 'text-white' : 'hover:bg-color-primary-active text-color-primary'}`}
-                              ref={(el) => {
-                                tabsRef.current[i] = el
-                                if (i === 0) {
-                                  setIsFirstTabRendered(true);
-                                }
-                              }}
+                            <div 
+                              className={`flex-grow flex flex-col items-start gap-0 px-4 py-2 rounded-lg ${selected ? 'text-white' : areTabsDisabled ? 'text-gray-300' : 'hover:bg-color-primary-active text-color-primary'}`}
+
                             >
                               <span className={`text-xs`}>Step {i + 1}</span>
                               <p>{tab.title}</p>
-                            </button>
+                            </div>
                           )}
                         </Tab>
                       )
@@ -147,7 +153,11 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({ videoPath, isOpen, clos
                       )
                     } else if (i === 1) {
                       return (
-                        <IdentifyVehiclesPanel key={'edit-modal-tab-panel-1'} />
+                        <IdentifyVehiclesPanel 
+                          key={'edit-modal-tab-panel-1'} 
+                          selectedTabIndex={selectedTabIndex} 
+                          setAreTabsDisabled={setAreTabsDisabled}
+                        />
                       )
                     }
                   })}
@@ -155,23 +165,24 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({ videoPath, isOpen, clos
 
                 <div className="flex flex-row justify-center gap-2 ">
                   <button 
-                    className={`bg-transparent px-4 py-2 ${selectedTabIndex === 0 ? 'text-gray-300' : 'text-color-primary'}`}
-                    disabled={selectedTabIndex === 0}
+                    className={`bg-transparent px-4 py-2 text-color-primary disabled:text-gray-300`}
+                    disabled={selectedTabIndex === 0 || areTabsDisabled}
                     onClick={() => setSelectedTabIndex(selectedTabIndex - 1)}
                   >
                     Previous
                   </button>
                   {selectedTabIndex === tabs.length - 1 ? (
                     <button
-                      className="bg-transparent px-4 py-2 text-color-primary"
+                      className="bg-transparent px-4 py-2 text-color-primary disabled:text-gray-300"
                       onClick={() => close()}
+                      disabled={areTabsDisabled}
                     >
                       Finish
                     </button>
                   ) : (
                     <button 
-                      className="bg-transparent px-4 py-2 text-color-primary"
-                      disabled={selectedTabIndex === tabs.length - 1}
+                      className="bg-transparent px-4 py-2 text-color-primary disabled:text-gray-300"
+                      disabled={selectedTabIndex === tabs.length - 1 || areTabsDisabled}
                       onClick={() => setSelectedTabIndex(selectedTabIndex + 1)}
                     >
                       Next
