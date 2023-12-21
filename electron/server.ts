@@ -6,10 +6,7 @@ const app = express();
 const port = 3000;
 
 app.get('/video', (req, res) => {
-  console.log(`/video: req = ${req}`)
-  console.log(`/video: res = ${res}`)
   const reqPath = req.query.path;
-  console.log(`/video: videoPath = ${reqPath}`)
   const range = req.headers.range;
   if (!range) {
     res.status(400).send("Requires Range header");

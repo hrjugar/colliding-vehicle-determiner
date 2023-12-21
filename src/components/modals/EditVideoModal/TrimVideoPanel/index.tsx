@@ -94,6 +94,10 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
   }
 
   useEffect(() => {
+    setVideoMetadata((prevState) => ({...prevState, isInitiallyLoading: true, paused: true, duration: 0}));
+  }, [videoPath]);
+
+  useEffect(() => {
     sliderHandleValuesRef.current = sliderHandleValues;
   }, [sliderHandleValues]);
 
