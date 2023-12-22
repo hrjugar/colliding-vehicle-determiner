@@ -34,6 +34,10 @@ interface ElectronAPI {
   renameVideo(id: number | bigint, oldFilePath: string, newFileName: string): Promise,
   isFileExisting(filePath: string): Promise<boolean>,
   updateVideo(id: number | bigint): Promise<string>,
+
+  trimVideo(videoPath: string, startTime: number, endTime: number): Promise<string>,
+  onTrimProgress(callback: Function): void,
+  removeTrimProgressListener(): void,
 }
 
 // Used in Renderer process, expose in `preload.ts`

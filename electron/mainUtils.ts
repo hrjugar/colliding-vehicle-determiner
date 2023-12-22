@@ -159,3 +159,30 @@ export async function updateVideo(db: Database.Database, id: number | bigint) {
   console.log("updateVideo: Updated video.")
   return ''
 }
+
+export function trimVideo(event: Electron.IpcMainInvokeEvent, videoPath: string, startTime: number, endTime: number) {
+  const tempFolderPath = path.join(app.getPath('userData'), path.sep, 'temp')
+  if (!fs.existsSync(tempFolderPath)) {
+    fs.mkdirSync(tempFolderPath)
+  }
+  
+  const outputVideoPath = path.join(tempFolderPath, path.sep, `trim.mp4`)
+
+  return new Promise((resolve, reject) => {
+    ffmpeg(videoPath)
+      .setStartTime(startTime)
+      .setDuration(endTime - startTime)
+      .outputOptions('-c', 'copy')
+      .save(outputVideoPath)
+      .on('progress', (progress) => {
+        event.sender.send('trim:progress', progress.percent)
+      })
+      .on('end', () => {
+        resolve(outputVideoPath)
+      })
+      .on('error', (err) => {
+        reject(err)
+      })
+      .run()
+  });
+}

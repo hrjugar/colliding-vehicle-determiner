@@ -2,9 +2,10 @@ import { app, BrowserWindow, ipcMain, Menu, MenuItem, net, protocol, shell } fro
 import path from 'node:path'
 import fs from 'node:fs'
 import { getSqlite3 } from './better-sqlite3'
-import { closeWindow, createThumbnailFromId, deleteVideo, findNewVideo, insertVideo, isFileExisting, maximizeWindow, minimizeWindow, openVideoFolder, renameVideo, selectAllVideos, THUMBNAIL_FILENAME, updateVideo } from './mainUtils'
+import { closeWindow, createThumbnailFromId, deleteVideo, findNewVideo, insertVideo, isFileExisting, maximizeWindow, minimizeWindow, openVideoFolder, renameVideo, selectAllVideos, THUMBNAIL_FILENAME, trimVideo, updateVideo } from './mainUtils'
 import Database from 'better-sqlite3'
 import { stopServer } from './server'
+import ffmpeg from "fluent-ffmpeg"
 
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 // The built directory structure
@@ -142,5 +143,7 @@ app.whenReady().then(() => {
   ipcMain.handle('renameVideo', (_, id, oldFilePath, newFileName) => renameVideo(db, id, oldFilePath, newFileName))
   ipcMain.handle('isFileExisting', (_, filePath) => isFileExisting(filePath))
   ipcMain.handle('updateVideo', (_, id) => updateVideo(db, id))
+
+  ipcMain.handle('trim:trimVideo', (event, videoPath, startTime, endTime) => trimVideo(event, videoPath, startTime, endTime))
   createWindow()
 })

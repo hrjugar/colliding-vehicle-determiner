@@ -1,45 +1,80 @@
 import { Dialog, Tab } from '@headlessui/react';
 import React, { useEffect, useState } from 'react';
+import { useMutation } from 'react-query';
 
 interface IdentifyVehiclesPanelProps {
   setAreTabsDisabled: React.Dispatch<React.SetStateAction<boolean>>,
-  selectedTabIndex: number
+  selectedTabIndex: number,
+  videoPath: string,
+  startTime: number,
+  endTime: number
 }
 
 const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ 
   selectedTabIndex,
-  setAreTabsDisabled 
+  setAreTabsDisabled,
+  videoPath,
+  startTime,
+  endTime
 }) => {
-  const [testState, setTestState] = useState<number>(0);
+  const trimMutation = useMutation(
+    async () => await window.electronAPI.trimVideo(videoPath, startTime, endTime),
+    {
+      onSuccess: (data) => {
+        setTrimProgress(100);
+        setTrimOutputPath(data);
+        setAreTabsDisabled(false);
+
+        setTimeout(() => {
+          setIsVideoReady(true);
+        }, 500);
+      }
+    }
+  );
+  
+  const [trimOutputPath, setTrimOutputPath] = useState<string>("");
+  const [trimProgress, setTrimProgress] = useState<number>(0);
+  const [isVideoReady, setIsVideoReady] = useState<boolean>(false);
 
   useEffect(() => {
     console.log(`IdentifyVehiclesPanel: selectedTabIndex: ${selectedTabIndex}`)
     if (selectedTabIndex === 1) {
+      setTrimProgress(0);
       setAreTabsDisabled(true);
+      trimMutation.mutate();
+      
+      window.electronAPI.onTrimProgress((progressPercent: number) => {
+        if (progressPercent) {
+          setTrimProgress(progressPercent)
+        }
+      })
+    }
+
+    return () => {
+      console.log("Trim progress listener removed");
+      window.electronAPI.removeTrimProgressListener();
     }
   }, [selectedTabIndex])
 
   return (
     <Tab.Panel className="w-full h-full bg-white flex flex-col justify-center items-center">
-      <div className='flex flex-row justify-center items-center gap-6'>
-        <svg 
-          width="64" 
-          height="64" 
-          viewBox="0 0 64 64" 
-          xmlns="http://www.w3.org/2000/svg"
-          className='w-8 h-8 text-color-primary animate-spin'
-        >
-          <path 
-            d="M32 10.6667V5.33337C28.4981 5.33337 25.0305 6.02313 21.7951 7.36325C18.5598 8.70338 15.62 10.6676 13.1438 13.1439C8.14284 18.1448 5.33333 24.9276 5.33333 32H10.6667C10.6667 26.3421 12.9143 20.9159 16.9151 16.9151C20.9158 12.9143 26.342 10.6667 32 10.6667Z"
-            className='fill-current'
-          />
-        </svg>
-
-        <p>Trimming Video...</p>
-        <button onClick={() => setTestState((prevState) => prevState + 1)}>Click Me</button>
-        <p>{testState}</p>
-      </div>
-    
+      {isVideoReady ? (
+        <div>
+          <p>Finished</p>
+          <p>{trimOutputPath}</p>
+        </div>
+      ) : (
+        <div className='w-full flex flex-col justify-center items-center gap-2'>
+          <div className='w-full flex flex-row justify-between gap-1'>
+            <p className='font-medium'>Trimming Video...</p>
+            <p className='font-medium'>{trimProgress}%</p>
+          </div>
+          
+          <div className="w-full bg-gray-300 rounded-full">
+            <div className="bg-color-primary rounded-full h-2 transition-width duration-300" style={{ width: `${trimProgress}%` }}></div>
+          </div>
+        </div>    
+      )}
     </Tab.Panel>
   );
 };

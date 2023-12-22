@@ -157,6 +157,9 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({ videoPath, isOpen, clos
                           key={'edit-modal-tab-panel-1'} 
                           selectedTabIndex={selectedTabIndex} 
                           setAreTabsDisabled={setAreTabsDisabled}
+                          videoPath={videoPath}
+                          startTime={sliderHandleValues[0]}
+                          endTime={sliderHandleValues[2]}
                         />
                       )
                     }
