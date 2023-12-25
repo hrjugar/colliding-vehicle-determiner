@@ -1,11 +1,15 @@
 import { Dialog, Tab, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useRef, useState } from "react";
 import TrimVideoPanel from "./TrimVideoPanel";
+import DetectCollisionPanel from "./DetectCollisionPanel";
 import IdentifyVehiclesPanel from "./IdentifyVehiclesPanel";
 
 const tabs = [
   {
     title: 'Trim Video'
+  },
+  {
+    title: 'Detect Collision'
   },
   {
     title: 'Identify Vehicles'
@@ -88,10 +92,11 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({ videoPath, isOpen, clos
                 <div className="w-full flex flex-row items-start justify-between px-4 py-2">
                   <Tab.List className='relative flex flex-row items-center gap-4'>
                     {tabs.map((tab, i) => {
+                      const isTabInRange = i - selectedTabIndex < 2
                       return (
                         <Tab 
                           key={`edit-modal-tab-${i}`}
-                          disabled={areTabsDisabled}
+                          disabled={areTabsDisabled || !isTabInRange}
                           className={`z-[2] p-0`}
                           ref={(el) => {
                             tabsRef.current[i] = el
@@ -102,8 +107,7 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({ videoPath, isOpen, clos
                         >
                           {({ selected }) => (
                             <div 
-                              className={`flex-grow flex flex-col items-start gap-0 px-4 py-2 rounded-lg ${selected ? 'text-white' : areTabsDisabled ? 'text-gray-300' : 'hover:bg-color-primary-active text-color-primary'}`}
-
+                              className={`flex-grow flex flex-col items-start gap-0 px-4 py-2 rounded-lg ${selected ? 'text-white' : areTabsDisabled || !isTabInRange ? 'text-gray-300' : 'hover:bg-color-primary-active text-color-primary'}`}
                             >
                               <span className={`text-xs`}>Step {i + 1}</span>
                               <p>{tab.title}</p>
@@ -153,13 +157,19 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({ videoPath, isOpen, clos
                       )
                     } else if (i === 1) {
                       return (
-                        <IdentifyVehiclesPanel 
+                        <DetectCollisionPanel 
                           key={'edit-modal-tab-panel-1'} 
                           selectedTabIndex={selectedTabIndex} 
                           setAreTabsDisabled={setAreTabsDisabled}
                           videoPath={videoPath}
                           startTime={sliderHandleValues[0]}
                           endTime={sliderHandleValues[2]}
+                        />
+                      )
+                    } else if (i === 2) {
+                      return (
+                        <IdentifyVehiclesPanel 
+                          key={'edit-modal-tab-panel-2'}
                         />
                       )
                     }
