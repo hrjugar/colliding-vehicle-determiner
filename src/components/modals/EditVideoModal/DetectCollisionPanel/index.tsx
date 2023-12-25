@@ -56,6 +56,7 @@ const DetectCollisionPanel: React.FC<DetectCollisionPanelProps> = ({
   useEffect(() => {
     console.log(`DetectCollisionPanel: selectedTabIndex: ${selectedTabIndex}`)
     if (selectedTabIndex === 1) {
+      setIsLoadingDone(false);
       setLoadingProgress(0);
       setLoadingText("Trimming Video...")
       setAreTabsDisabled(true);
@@ -91,8 +92,8 @@ const DetectCollisionPanel: React.FC<DetectCollisionPanelProps> = ({
               muted
               controls
             >
-              <source 
-                src={`http://localhost:3000/video?path=${trimOutputPath}`} 
+              <source
+                src={`http://localhost:3000/video?path=${trimOutputPath}&tabIndex=${selectedTabIndex}&t=${Date.now()}`}
                 type="video/mp4" 
               />
             </video>

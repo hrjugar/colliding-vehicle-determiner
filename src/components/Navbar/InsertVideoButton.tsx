@@ -1,12 +1,12 @@
 
-import React, { useState, useReducer } from 'react';
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { toast } from 'react-toastify';
+import React, { useReducer } from 'react';
+import { useMutation } from "react-query";
 import EditVideoModal from '../modals/EditVideoModal';
 
 interface EditVideoModalState {
   isOpen: boolean;
   videoPath: string;
+  selectedTabIndex: number;
 }
 
 type EditVideoModalAction = 
@@ -16,6 +16,10 @@ type EditVideoModalAction =
   } |
   { 
     type: 'CLOSE',
+  } |
+  {
+    type: 'SELECT_TAB',
+    payload: number
   };
 
 const reducer = (state: EditVideoModalState, action: EditVideoModalAction): EditVideoModalState => {
@@ -23,7 +27,9 @@ const reducer = (state: EditVideoModalState, action: EditVideoModalAction): Edit
     case 'OPEN':
       return { ...state, isOpen: true, videoPath: action.payload };
     case 'CLOSE':
-      return { ...state, isOpen: false, videoPath: '' };
+      return { ...state, isOpen: false, videoPath: '', selectedTabIndex: 0 };
+    case 'SELECT_TAB':
+      return { ...state, selectedTabIndex: action.payload }
     default:
       return state;
   }
@@ -32,7 +38,8 @@ const reducer = (state: EditVideoModalState, action: EditVideoModalAction): Edit
 const InsertVideoButton: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, { 
     isOpen: false, 
-    videoPath: '' 
+    videoPath: '',
+    selectedTabIndex: 0
   });
 
   // const queryClient = useQueryClient();
@@ -87,6 +94,8 @@ const InsertVideoButton: React.FC = () => {
         videoPath={state.videoPath}
         isOpen={state.isOpen}
         close={() => dispatch({ type: 'CLOSE' })}
+        selectedTabIndex={state.selectedTabIndex}
+        setSelectedTabIndex={(index: number) => dispatch({ type: 'SELECT_TAB', payload: index })}
       />
     </>
   );

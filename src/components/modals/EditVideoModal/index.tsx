@@ -20,6 +20,8 @@ interface EditVideoModalProps {
   videoPath: string,
   isOpen: boolean,
   close: any,
+  selectedTabIndex: number,
+  setSelectedTabIndex: (index: number) => void
 }
 
 export interface VideoMetadata {
@@ -29,9 +31,8 @@ export interface VideoMetadata {
 }
 
 
-const EditVideoModal: React.FC<EditVideoModalProps> = ({ videoPath, isOpen, close }) => {
+const EditVideoModal: React.FC<EditVideoModalProps> = ({ videoPath, isOpen, close, selectedTabIndex, setSelectedTabIndex }) => {
   // EDIT VIDEO MODAL STATES -----------------------------------------------
-  const [selectedTabIndex, setSelectedTabIndex] = useState<number>(0);
   const [tabDimensions, setTabDimensions] = useState({width: 0, left: 0});
   const tabsRef = useRef<(HTMLElement | null)[]>([]);
   const [isFirstTabRendered, setIsFirstTabRendered] = useState<boolean>(false);

@@ -193,7 +193,7 @@ export function extractFrames(event: Electron.IpcMainInvokeEvent) {
 
   const framesFolderPath = path.join(tempFolderPath, path.sep, 'frames')
   if (fs.existsSync(framesFolderPath)) {
-    fs.rmdirSync(framesFolderPath, { recursive: true });
+    fs.rmSync(framesFolderPath, { recursive: true, force: true });
   }
   fs.mkdirSync(framesFolderPath);
 
