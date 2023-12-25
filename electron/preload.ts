@@ -21,6 +21,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   trimVideo: (videoPath: string, startTime: number, endTime: number) => ipcRenderer.invoke('trim:trimVideo', videoPath, startTime, endTime),
   onTrimProgress: (callback: Function) => ipcRenderer.on('trim:progress', (_, progressPercent) => callback(progressPercent)),
   removeTrimProgressListener: () => ipcRenderer.removeAllListeners('trim:progress'),
+
+  extractFrames: () => ipcRenderer.invoke('extractFrames'),
+  onExtractFramesProgress: (callback: Function) => ipcRenderer.on('extractFrames:progress', (_, progressPercent) => callback(progressPercent)),
+  removeExtractFramesProgressListener: () => ipcRenderer.removeAllListeners('extractFrames:progress'),
 })
 
 // `exposeInMainWorld` can't detect attributes and methods of `prototype`, manually patching it.

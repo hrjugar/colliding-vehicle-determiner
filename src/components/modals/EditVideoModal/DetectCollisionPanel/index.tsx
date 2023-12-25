@@ -17,35 +17,59 @@ const DetectCollisionPanel: React.FC<DetectCollisionPanelProps> = ({
   startTime,
   endTime
 }) => {
+  const [loadingText, setLoadingText] = useState<string>("");
+  const [trimOutputPath, setTrimOutputPath] = useState<string>("");
+  const [loadingProgress, setLoadingProgress] = useState<number>(0);
+  const [isLoadingDone, setIsLoadingDone] = useState<boolean>(false);
+
+  const extractFramesMutation = useMutation(
+    async () => await window.electronAPI.extractFrames(),
+    {
+      onSuccess: (_) => {
+        setLoadingProgress(100);
+        setAreTabsDisabled(false);
+
+        setTimeout(() => {
+          setIsLoadingDone(true);
+        }, 500)
+      }
+    }
+  )
+
   const trimMutation = useMutation(
     async () => await window.electronAPI.trimVideo(videoPath, startTime, endTime),
     {
       onSuccess: (data) => {
-        setTrimProgress(100);
+        setLoadingProgress(100);
         setTrimOutputPath(data);
-        setAreTabsDisabled(false);
 
         setTimeout(() => {
-          setIsVideoReady(true);
-        }, 500);
+          setLoadingProgress(0);
+          setLoadingText("Extracting Frames...")
+          window.electronAPI.removeTrimProgressListener();
+          extractFramesMutation.mutate();
+        }, 300);
       }
     }
   );
 
-  const [trimOutputPath, setTrimOutputPath] = useState<string>("");
-  const [trimProgress, setTrimProgress] = useState<number>(0);
-  const [isVideoReady, setIsVideoReady] = useState<boolean>(false);
-
   useEffect(() => {
     console.log(`DetectCollisionPanel: selectedTabIndex: ${selectedTabIndex}`)
     if (selectedTabIndex === 1) {
-      setTrimProgress(0);
+      setLoadingProgress(0);
+      setLoadingText("Trimming Video...")
       setAreTabsDisabled(true);
       trimMutation.mutate();
       
       window.electronAPI.onTrimProgress((progressPercent: number) => {
         if (progressPercent) {
-          setTrimProgress(progressPercent)
+          setLoadingProgress(progressPercent)
+        }
+      })
+
+      window.electronAPI.onExtractFramesProgress((progressPercent: number) => {
+        if (progressPercent) {
+          setLoadingProgress(progressPercent)
         }
       })
     }
@@ -53,12 +77,13 @@ const DetectCollisionPanel: React.FC<DetectCollisionPanelProps> = ({
     return () => {
       console.log("Trim progress listener removed");
       window.electronAPI.removeTrimProgressListener();
+      window.electronAPI.removeExtractFramesProgressListener();
     }
   }, [selectedTabIndex])
 
   return (
     <Tab.Panel className="w-full h-full bg-white flex flex-col justify-center items-center">
-      {isVideoReady ? (
+      {isLoadingDone ? (
         <div className='w-full h-full flex flex-col items-center gap-4 pb-2'>
           <div className='relative w-full h-full flex justify-center overflow-hidden bg-black'>
             <video
@@ -83,12 +108,12 @@ const DetectCollisionPanel: React.FC<DetectCollisionPanelProps> = ({
       ) : (
         <div className='w-full flex flex-col justify-center items-center gap-2'>
           <div className='w-full flex flex-row justify-between gap-1'>
-            <p className='font-medium'>Trimming Video...</p>
-            <p className='font-medium'>{trimProgress}%</p>
+            <p className='font-medium'>{loadingText}</p>
+            <p className='font-medium'>{loadingProgress}%</p>
           </div>
           
           <div className="w-full bg-gray-300 rounded-full">
-            <div className="bg-color-primary rounded-full h-2 transition-width duration-300" style={{ width: `${trimProgress}%` }}></div>
+            <div className="bg-color-primary rounded-full h-2 transition-width duration-300" style={{ width: `${loadingProgress}%` }}></div>
           </div>
         </div>    
       )}

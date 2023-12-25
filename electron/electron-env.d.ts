@@ -38,6 +38,10 @@ interface ElectronAPI {
   trimVideo(videoPath: string, startTime: number, endTime: number): Promise<string>,
   onTrimProgress(callback: Function): void,
   removeTrimProgressListener(): void,
+
+  extractFrames(): Promise,
+  onExtractFramesProgress(callback: Function): void,
+  removeExtractFramesProgressListener(): void,
 }
 
 // Used in Renderer process, expose in `preload.ts`

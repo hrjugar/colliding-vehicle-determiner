@@ -166,7 +166,7 @@ export function trimVideo(event: Electron.IpcMainInvokeEvent, videoPath: string,
     fs.mkdirSync(tempFolderPath)
   }
   
-  const outputVideoPath = path.join(tempFolderPath, path.sep, `trim.mp4`)
+  const outputVideoPath = path.join(tempFolderPath, path.sep, `trimmed.mp4`)
 
   return new Promise((resolve, reject) => {
     ffmpeg(videoPath)
@@ -184,5 +184,37 @@ export function trimVideo(event: Electron.IpcMainInvokeEvent, videoPath: string,
         reject(err)
       })
       .run()
+  });
+}
+
+export function extractFrames(event: Electron.IpcMainInvokeEvent) {
+  const tempFolderPath = path.join(app.getPath('userData'), path.sep, 'temp')
+  const trimmedVideoPath = path.join(tempFolderPath, path.sep, 'trimmed.mp4')
+
+  const framesFolderPath = path.join(tempFolderPath, path.sep, 'frames')
+  if (fs.existsSync(framesFolderPath)) {
+    fs.rmdirSync(framesFolderPath, { recursive: true });
+  }
+  fs.mkdirSync(framesFolderPath);
+
+  return new Promise((resolve, reject) => {
+    ffmpeg.ffprobe(trimmedVideoPath, (err, metadata) => {
+      if (err) {
+        reject(err)
+        return;
+      }
+
+      const frameRate = metadata.streams[0].avg_frame_rate
+
+      ffmpeg(trimmedVideoPath)
+        .outputOptions('-vf', `fps=${frameRate}`)
+        .output(path.join(framesFolderPath, path.sep, '%d.png'))
+        .on('progress', (progress) => {
+          event.sender.send('extractFrames:progress', progress.percent)
+        })
+        .on('end', resolve)
+        .on('error', reject)
+        .run();
+    })
   });
 }
