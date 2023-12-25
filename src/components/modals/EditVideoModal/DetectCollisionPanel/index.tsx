@@ -8,7 +8,7 @@ interface Progress {
 }
 
 interface DetectCollisionPanelProps {
-  setAreTabsDisabled: React.Dispatch<React.SetStateAction<boolean>>,
+  setAreTabsDisabled: (disabled: boolean) => void,
   selectedTabIndex: number,
   videoPath: string,
   startTime: number,
@@ -26,12 +26,14 @@ const DetectCollisionPanel: React.FC<DetectCollisionPanelProps> = ({
   const [trimOutputPath, setTrimOutputPath] = useState<string>("");
   const [loadingProgress, setLoadingProgress] = useState<Progress>({ percent: 0, displayText: "0%"});
   const [isLoadingDone, setIsLoadingDone] = useState<boolean>(false);
+  const [modelPredictions, setModelPredictions] = useState<any[]>([]);
 
+  // TODO: Cancel collision detection when tab is changed or modal is closed
   const detectCollisionsMutation = useMutation(
     async () => await window.electronAPI.detectCollisions(),
     {
       onSuccess: (data) => {
-        console.log(JSON.stringify(data));
+        setModelPredictions(data)
         setAreTabsDisabled(false);
 
         setTimeout(() => {

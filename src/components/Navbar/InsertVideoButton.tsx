@@ -7,6 +7,7 @@ interface EditVideoModalState {
   isOpen: boolean;
   videoPath: string;
   selectedTabIndex: number;
+  areTabsDisabled: boolean;
 }
 
 type EditVideoModalAction = 
@@ -20,6 +21,10 @@ type EditVideoModalAction =
   {
     type: 'SELECT_TAB',
     payload: number
+  } |
+  {
+    type: 'DISABLE_TABS',
+    payload: boolean
   };
 
 const reducer = (state: EditVideoModalState, action: EditVideoModalAction): EditVideoModalState => {
@@ -27,9 +32,11 @@ const reducer = (state: EditVideoModalState, action: EditVideoModalAction): Edit
     case 'OPEN':
       return { ...state, isOpen: true, videoPath: action.payload };
     case 'CLOSE':
-      return { ...state, isOpen: false, videoPath: '', selectedTabIndex: 0 };
+      return { ...state, isOpen: false, videoPath: '', selectedTabIndex: 0, areTabsDisabled: false };
     case 'SELECT_TAB':
       return { ...state, selectedTabIndex: action.payload }
+    case 'DISABLE_TABS':
+      return { ...state, areTabsDisabled: action.payload }
     default:
       return state;
   }
@@ -39,7 +46,8 @@ const InsertVideoButton: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, { 
     isOpen: false, 
     videoPath: '',
-    selectedTabIndex: 0
+    selectedTabIndex: 0,
+    areTabsDisabled: false,
   });
 
   // const queryClient = useQueryClient();
@@ -96,6 +104,8 @@ const InsertVideoButton: React.FC = () => {
         close={() => dispatch({ type: 'CLOSE' })}
         selectedTabIndex={state.selectedTabIndex}
         setSelectedTabIndex={(index: number) => dispatch({ type: 'SELECT_TAB', payload: index })}
+        areTabsDisabled={state.areTabsDisabled}
+        setAreTabsDisabled={(areTabsDisabled: boolean) => dispatch({ type: 'DISABLE_TABS', payload: areTabsDisabled })}
       />
     </>
   );
