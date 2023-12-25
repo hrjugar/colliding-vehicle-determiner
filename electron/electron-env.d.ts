@@ -42,6 +42,10 @@ interface ElectronAPI {
   extractFrames(): Promise,
   onExtractFramesProgress(callback: Function): void,
   removeExtractFramesProgressListener(): void,
+
+  detectCollisions(): Promise<any[]>,
+  onDetectCollisionsProgress(callback: Function): void,
+  removeDetectCollisionsProgressListener(): void,
 }
 
 // Used in Renderer process, expose in `preload.ts`

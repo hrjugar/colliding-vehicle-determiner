@@ -3,6 +3,7 @@ import Database from "better-sqlite3"
 import path from "node:path"
 import ffmpeg from "fluent-ffmpeg"
 import fs from "node:fs"
+import axios from "axios"
 
 export const THUMBNAIL_FILENAME = "thumbnail.png"
 
@@ -175,7 +176,10 @@ export function trimVideo(event: Electron.IpcMainInvokeEvent, videoPath: string,
       .outputOptions('-c', 'copy')
       .save(outputVideoPath)
       .on('progress', (progress) => {
-        event.sender.send('trim:progress', progress.percent)
+        event.sender.send('trim:progress', {
+          "percent": progress.percent,
+          "displayText": `${progress.percent}%`
+        })
       })
       .on('end', () => {
         resolve(outputVideoPath)
@@ -210,11 +214,46 @@ export function extractFrames(event: Electron.IpcMainInvokeEvent) {
         .outputOptions('-vf', `fps=${frameRate}`)
         .output(path.join(framesFolderPath, path.sep, '%d.png'))
         .on('progress', (progress) => {
-          event.sender.send('extractFrames:progress', progress.percent)
+          event.sender.send('extractFrames:progress', {
+            "percent": progress.percent,
+            "displayText": `${progress.percent}%`
+          })
         })
         .on('end', resolve)
         .on('error', reject)
         .run();
     })
   });
+}
+
+export async function detectCollisions(event: Electron.IpcMainInvokeEvent) {
+  const framesFolderPath = path.join(app.getPath('userData'), path.sep, 'temp', path.sep, 'frames')
+  const frameFiles = await fs.promises.readdir(framesFolderPath);
+  const detections = []
+
+  for (let i = 0; i < frameFiles.length; i++) {
+    const frameFile = frameFiles[i];
+    const frame = await fs.promises.readFile(path.join(framesFolderPath, path.sep, frameFile), {
+      encoding: "base64"
+    });
+    const response = await axios({
+      method: "POST",
+      url: "https://detect.roboflow.com/crash-car-detection/3",
+      params: {
+        api_key: "b8hRk357tccTq46DlXob"
+      },
+      data: frame,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    });
+    detections.push(response.data.predictions)
+
+    event.sender.send('detectCollisions:progress', {
+      "percent": (i + 1) / frameFiles.length * 100,
+      "displayText": `${i + 1}/${frameFiles.length}`
+    })
+  }
+
+  return detections
 }

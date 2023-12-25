@@ -19,12 +19,16 @@ contextBridge.exposeInMainWorld('electronAPI', {
   updateVideo: (id: number | bigint) => ipcRenderer.invoke('updateVideo', id),
 
   trimVideo: (videoPath: string, startTime: number, endTime: number) => ipcRenderer.invoke('trim:trimVideo', videoPath, startTime, endTime),
-  onTrimProgress: (callback: Function) => ipcRenderer.on('trim:progress', (_, progressPercent) => callback(progressPercent)),
+  onTrimProgress: (callback: Function) => ipcRenderer.on('trim:progress', (_, progress) => callback(progress)),
   removeTrimProgressListener: () => ipcRenderer.removeAllListeners('trim:progress'),
 
   extractFrames: () => ipcRenderer.invoke('extractFrames'),
-  onExtractFramesProgress: (callback: Function) => ipcRenderer.on('extractFrames:progress', (_, progressPercent) => callback(progressPercent)),
+  onExtractFramesProgress: (callback: Function) => ipcRenderer.on('extractFrames:progress', (_, progress) => callback(progress)),
   removeExtractFramesProgressListener: () => ipcRenderer.removeAllListeners('extractFrames:progress'),
+
+  detectCollisions: () => ipcRenderer.invoke('detectCollisions'),
+  onDetectCollisionsProgress: (callback: Function) => ipcRenderer.on('detectCollisions:progress', (_, progress) => callback(progress)),
+  removeDetectCollisionsProgressListener: () => ipcRenderer.removeAllListeners('detectCollisions:progress'),
 })
 
 // `exposeInMainWorld` can't detect attributes and methods of `prototype`, manually patching it.
