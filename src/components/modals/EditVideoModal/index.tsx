@@ -108,7 +108,6 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
     time: 0,
     end: 0
   });
-  const sliderMarkersRef = useRef(sliderMarkers);
 
   return (
     <Transition
@@ -201,7 +200,6 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
                           setVideoMetadata={setVideoMetadata}
                           sliderMarkers={sliderMarkers}
                           sliderMarkersDispatch={sliderMarkersDispatch}
-                          sliderMarkersRef={sliderMarkersRef}
                           selectedTabIndex={selectedTabIndex}
                         />
                       )

@@ -1,8 +1,6 @@
 import { Tab } from "@headlessui/react"
-import { useEffect, useRef, useState } from "react";
-import TrimVideoSlider from "./TrimVideoSlider";
+import { useEffect, useRef } from "react";
 import { SliderMarkersAction, SliderMarkersState, VideoMetadata } from "..";
-import { convertSecondsAndMillisecondsToString, convertTimeToObject } from "../../../../globals/utils";
 import TrimTimeInput from "./TrimTimeInput";
 import VideoTrimmingSlider from "./VideoTrimmingSlider";
 
@@ -11,8 +9,7 @@ interface TrimVideoPanelProps {
   videoMetadata: VideoMetadata,
   setVideoMetadata: React.Dispatch<React.SetStateAction<VideoMetadata>>,
   sliderMarkers: SliderMarkersState,
-  sliderMarkersDispatch: React.Dispatch<SliderMarkersAction>,
-  sliderMarkersRef: React.MutableRefObject<SliderMarkersState>,
+  sliderMarkersDispatch: React.Dispatch<SliderMarkersAction>
   selectedTabIndex: number
 }
 
@@ -23,7 +20,6 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
   setVideoMetadata,
   sliderMarkers,
   sliderMarkersDispatch,
-  sliderMarkersRef,
   selectedTabIndex
 }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -74,8 +70,8 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
     if (videoRef.current) {
       const currentTime = videoRef.current.currentTime
 
-      if (currentTime > sliderMarkersRef.current.end) {
-        videoRef.current.currentTime = sliderMarkersRef.current.start;
+      if (currentTime > sliderMarkers.end) {
+        videoRef.current.currentTime = sliderMarkers.start;
         videoRef.current.pause();
         setVideoMetadata((prevState) => ({...prevState, paused: true}))
       }
@@ -86,7 +82,7 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
 
   const handleVideoEnded = () => {
     if (videoRef.current) {
-      videoRef.current.currentTime = sliderMarkersRef.current.start;
+      videoRef.current.currentTime = sliderMarkers.start;
       videoRef.current.pause();
       setVideoMetadata((prevState) => ({...prevState, paused: true}))
     }
@@ -95,10 +91,6 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
   useEffect(() => {
     setVideoMetadata((prevState) => ({...prevState, isInitiallyLoading: true, paused: true, duration: 0}));
   }, [videoPath]);
-
-  useEffect(() => {
-    sliderMarkersRef.current = sliderMarkers;
-  }, [sliderMarkers]);
 
   useEffect(() => {
     if (selectedTabIndex === 0 && videoRef.current) {
