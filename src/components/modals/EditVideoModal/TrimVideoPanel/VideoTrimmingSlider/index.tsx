@@ -1,5 +1,6 @@
 import React, { useReducer } from 'react';
 import TrimmingSliderHandle from './TrimmingSliderHandle';
+import TrimmingSliderTicks from './TrimmingSliderTicks';
 
 interface VideoTrimmingSliderProps {
   duration: number
@@ -49,25 +50,44 @@ const VideoTrimmingSlider: React.FC<VideoTrimmingSliderProps> = ({ duration }) =
   };
 
   return (
-    <div 
-      className="relative bg-gray-200 w-full h-4 rounded-full"
-    >
+    <div className='w-full pt-8 pb-6 px-6'>
       <div 
-        className='absolute w-full h-full rounded-full'
-        onClick={handleSliderClick}
-      />
-      <TrimmingSliderHandle 
-        duration={duration}
-        sliderMarkers={markers}
-        setValue={(newStart) => markersDispatch({ type: 'SET_START', payload: newStart })}
-        handleType='start'
-      />
-      <TrimmingSliderHandle 
-        duration={duration}
-        sliderMarkers={markers}
-        setValue={(newStart) => markersDispatch({ type: 'SET_END', payload: newStart })}
-        handleType='end'
-      />
+        className="relative bg-gray-200 w-full h-4 rounded-full"
+      >
+        <div 
+          className='absolute w-full h-full rounded-full'
+          onClick={handleSliderClick}
+        />
+
+        <div 
+          className='absolute h-full w-4 bg-color-primary-active'
+          style={{ 
+            left: `${(markers.start / duration) * 100}%`,
+            width: `${((markers.end - markers.start) / duration) * 100}%`
+          }}
+        />
+        <TrimmingSliderHandle 
+          duration={duration}
+          sliderMarkers={markers}
+          setValue={(newStart) => markersDispatch({ type: 'SET_START', payload: newStart })}
+          handleType='start'
+        />
+        <TrimmingSliderHandle 
+          duration={duration}
+          sliderMarkers={markers}
+          setValue={(newEnd) => markersDispatch({ type: 'SET_END', payload: newEnd })}
+          handleType='end'
+        />
+        <TrimmingSliderHandle 
+          duration={duration}
+          sliderMarkers={markers}
+          setValue={(newTime) => markersDispatch({ type: 'SET_TIME', payload: newTime })}
+          handleType='time'
+        />
+        <TrimmingSliderTicks 
+          duration={duration}
+        />
+      </div>
     </div>
   );
 };

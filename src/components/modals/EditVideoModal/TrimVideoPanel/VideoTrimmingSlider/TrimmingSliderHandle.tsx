@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { SliderMarkersState } from '.';
+import { convertSecondsAndMillisecondsToString } from '../../../../../globals/utils';
 
 interface TrimmingSliderHandle {
   duration: number,
@@ -57,14 +58,28 @@ const TrimmingSliderHandle: React.FC<TrimmingSliderHandle> = ({
     }
   }, []);
 
-  return (
-    <div
-      ref={handleRef}
-      className="absolute w-4 h-4 rounded-full bg-white border-2 border-color-primary cursor-pointer transform -translate-x-1/2"
-      style={{ left: `${sliderPercentage}%`}}
-      onPointerDown={onPointerDown}
-    />
-  );
+  if (handleType === "time") {
+    return (
+      <div
+        ref={handleRef}
+        className='absolute bottom-0 flex flex-col justify-start items-center transform -translate-x-1/2 cursor-pointer'
+        style={{ left: `${sliderPercentage}%`}}
+        onPointerDown={onPointerDown}
+      >
+        <span className='bg-color-primary text-white text-xs px-4 py-2 rounded-full cursor-pointer'>{convertSecondsAndMillisecondsToString(value)}</span>
+        <div className='w-[1px] h-5 bg-color-primary cursor-pointer' />
+      </div>
+    )
+  } else {
+    return (
+      <div
+        ref={handleRef}
+        className={"absolute w-4 h-4 rounded-full bg-white border-2 border-color-primary cursor-pointer transform -translate-x-1/2"}
+        style={{ left: `${sliderPercentage}%`}}
+        onPointerDown={onPointerDown}
+      />
+    );
+  }
 };
 
 export default TrimmingSliderHandle;
