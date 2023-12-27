@@ -33,7 +33,7 @@ const DetectCollisionPanel: React.FC<DetectCollisionPanelProps> = ({
     async () => await window.electronAPI.detectCollisions(),
     {
       onSuccess: (data) => {
-        setModelPredictions(data)
+        // setModelPredictions(data)
         setAreTabsDisabled(false);
 
         setTimeout(() => {

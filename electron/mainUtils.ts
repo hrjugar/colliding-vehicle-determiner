@@ -227,33 +227,5 @@ export function extractFrames(event: Electron.IpcMainInvokeEvent) {
 }
 
 export async function detectCollisions(event: Electron.IpcMainInvokeEvent) {
-  const framesFolderPath = path.join(app.getPath('userData'), path.sep, 'temp', path.sep, 'frames')
-  const frameFiles = await fs.promises.readdir(framesFolderPath);
-  const detections = []
-
-  for (let i = 0; i < frameFiles.length; i++) {
-    const frameFile = frameFiles[i];
-    const frame = await fs.promises.readFile(path.join(framesFolderPath, path.sep, frameFile), {
-      encoding: "base64"
-    });
-    const response = await axios({
-      method: "POST",
-      url: "https://detect.roboflow.com/crash-car-detection/3",
-      params: {
-        api_key: "b8hRk357tccTq46DlXob"
-      },
-      data: frame,
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      }
-    });
-    detections.push(response.data.predictions)
-
-    event.sender.send('detectCollisions:progress', {
-      "percent": (i + 1) / frameFiles.length * 100,
-      "displayText": `${i + 1}/${frameFiles.length}`
-    })
-  }
-
-  return detections
+  console.log("yes")
 }
