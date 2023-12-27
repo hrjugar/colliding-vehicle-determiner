@@ -46,6 +46,8 @@ function createWindow() {
   win = new BrowserWindow({
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     frame: false,
+    minWidth: 600,
+    minHeight: 600,
     webPreferences: {
       preload: path.join(__dirname, './preload.js'),
       // webSecurity: false // TODO: Change this to true later! Currently needed in false to read file data

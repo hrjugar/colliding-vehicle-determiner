@@ -8,7 +8,7 @@ import SliderCurrentTimeHandle from './SliderCurrentTimeHandle';
 const sliderStyle: React.CSSProperties = {
   position: 'relative',
   width: '100%',
-  height: '2rem',
+  height: '1rem',
   backgroundColor: 'lightgray',
   borderRadius: '0.375rem',
 };
@@ -21,7 +21,7 @@ interface TrimVideoSliderProps {
 
 const TrimVideoSlider: React.FC<TrimVideoSliderProps> = ({ values, duration, handleSliderOnSlideEnd }) => {
   return (
-    <div className='flex flex-col w-full h-full pt-12'>
+    <div className='flex flex-col w-full h-full pt-6 px-6'>
       <Slider
         rootStyle={sliderStyle}
         domain={[0, duration]}
