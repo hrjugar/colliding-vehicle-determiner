@@ -205,16 +205,14 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
                       )
                     } else if (i === 1) {
                       return (
-                        // TODO: UPDATE THIS TO USE THE NEW SLIDER
-                        <div key={'edit-modal-tab-panel-1'}>Detect Collision Panel</div>
-                        // <DetectCollisionPanel 
-                        //   key={'edit-modal-tab-panel-1'} 
-                        //   selectedTabIndex={selectedTabIndex} 
-                        //   setAreTabsDisabled={setAreTabsDisabled}
-                        //   videoPath={videoPath}
-                        //   startTime={sliderHandleValues[0]}
-                        //   endTime={sliderHandleValues[2]}
-                        // />
+                        <DetectCollisionPanel 
+                          key={'edit-modal-tab-panel-1'} 
+                          selectedTabIndex={selectedTabIndex} 
+                          setAreTabsDisabled={setAreTabsDisabled}
+                          videoPath={videoPath}
+                          startTime={sliderMarkers.start}
+                          endTime={sliderMarkers.end}
+                        />
                       )
                     } else if (i === 2) {
                       return (
