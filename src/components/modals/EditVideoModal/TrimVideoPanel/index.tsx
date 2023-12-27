@@ -4,6 +4,7 @@ import TrimVideoSlider from "./TrimVideoSlider";
 import { VideoMetadata } from "..";
 import { convertSecondsAndMillisecondsToString, convertTimeToObject } from "../../../../globals/utils";
 import TrimTimeInput from "./TrimTimeInput";
+import VideoTrimmingSlider from "./VideoTrimmingSlider";
 
 interface TrimVideoPanelProps {
   videoPath: string,
@@ -205,12 +206,15 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
             </div>
           </div>
 
-          <TrimVideoSlider
+          {/* <TrimVideoSlider
             values={sliderHandleValues}
             duration={videoMetadata.duration}
             handleSliderOnSlideEnd={handleSliderOnSlideEnd}
-          />
+          /> */}
           
+          <VideoTrimmingSlider 
+            duration={videoMetadata.duration}
+          />
         </div>
       )}
 
