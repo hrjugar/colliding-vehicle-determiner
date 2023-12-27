@@ -72,12 +72,12 @@ button {
   background-color: #171C46;
 }
 
-#custom-title-bar {
-  -webkit-app-region: drag;
+#window-button-group {
+  z-index: 9999 !important;
 }
 
-#window-button-group {
-  -webkit-app-region: no-drag;
+#window-dragger {
+  -webkit-app-region: drag;
 }
 
 .page {

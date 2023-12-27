@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 export default function WindowButtonGroup() {
   const [isMaximized, setIsMaximized] = useState<boolean>(false);
@@ -13,8 +14,10 @@ export default function WindowButtonGroup() {
     }
   }, []);
 
-  return (
-    <div id="window-button-group" className="flex flex-row h-min">
+  return createPortal(
+    (
+    <div id="window-button-group" className="fixed top-0 right-0 flex flex-row justify-end h-min w-[calc(100%_-_4rem)] ">
+      <div id="window-dragger" className="w-full"></div>
       <button 
         className="p-4 bg-transparent hover:bg-gray-200 cursor-pointer"
         onClick={() => window.electronAPI.minimizeWindow()}
@@ -76,5 +79,7 @@ export default function WindowButtonGroup() {
         </svg>
       </button>
     </div>    
+    ),
+    document.body
   )
 }

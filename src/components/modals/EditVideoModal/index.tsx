@@ -96,7 +96,7 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
             leaveFrom="translate-y-0"
             leaveTo="translate-y-full"          
           >
-            <Dialog.Panel className='w-full h-[calc(100vh_-_2rem)] flex flex-col bg-white rounded-t-2xl p-2 gap-2'>
+            <Dialog.Panel className='w-full h-[calc(100vh_-_4rem)] flex flex-col bg-white rounded-t-2xl p-2 gap-2'>
               <Tab.Group as={Fragment} selectedIndex={selectedTabIndex} onChange={setSelectedTabIndex}>
                 <div className="w-full flex flex-row items-start justify-between px-4 py-2">
                   <Tab.List className='relative flex flex-row items-center gap-4'>
