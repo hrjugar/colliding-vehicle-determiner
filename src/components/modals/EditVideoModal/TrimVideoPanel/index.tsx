@@ -191,12 +191,6 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
               />
             </div>
           </div>
-
-          {/* <TrimVideoSlider
-            values={sliderHandleValues}
-            duration={videoMetadata.duration}
-            handleSliderOnSlideEnd={handleSliderOnSlideEnd}
-          /> */}
           
           <VideoTrimmingSlider 
             duration={videoMetadata.duration}
