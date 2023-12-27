@@ -1,7 +1,7 @@
 import { Tab } from "@headlessui/react"
 import { useEffect, useRef, useState } from "react";
 import TrimVideoSlider from "./TrimVideoSlider";
-import { VideoMetadata } from "..";
+import { SliderMarkersAction, SliderMarkersState, VideoMetadata } from "..";
 import { convertSecondsAndMillisecondsToString, convertTimeToObject } from "../../../../globals/utils";
 import TrimTimeInput from "./TrimTimeInput";
 import VideoTrimmingSlider from "./VideoTrimmingSlider";
@@ -10,9 +10,9 @@ interface TrimVideoPanelProps {
   videoPath: string,
   videoMetadata: VideoMetadata,
   setVideoMetadata: React.Dispatch<React.SetStateAction<VideoMetadata>>,
-  sliderHandleValues: number[],
-  setSliderHandleValues: React.Dispatch<React.SetStateAction<number[]>>,
-  sliderHandleValuesRef: React.MutableRefObject<number[]>,
+  sliderMarkers: SliderMarkersState,
+  sliderMarkersDispatch: React.Dispatch<SliderMarkersAction>,
+  sliderMarkersRef: React.MutableRefObject<SliderMarkersState>,
   selectedTabIndex: number
 }
 
@@ -21,19 +21,16 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
   videoPath,
   videoMetadata,
   setVideoMetadata,
-  sliderHandleValues,
-  setSliderHandleValues,
-  sliderHandleValuesRef,
+  sliderMarkers,
+  sliderMarkersDispatch,
+  sliderMarkersRef,
   selectedTabIndex
 }) => {
-  console.log("Trim video panel renders");
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const startHandleTime = convertTimeToObject(sliderHandleValues[0]);
-  const endHandleTime = convertTimeToObject(sliderHandleValues[2]);
 
   const handleVideoSkip = (isBackwards : boolean) => {
     if (videoRef.current) {
-      videoRef.current.currentTime = isBackwards ? sliderHandleValues[0] : sliderHandleValues[2];
+      videoRef.current.currentTime = isBackwards ? sliderMarkers.start : sliderMarkers.end;
     }
   }
 
@@ -49,13 +46,8 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
     }
   }
 
-  const handleSliderOnSlideEnd = (newValues: readonly number[]) => {
-    const oldTime = sliderHandleValues[1];
-    const newTime = newValues[1];
-
-    if (Math.abs(newTime - oldTime) < 0.01) {
-      setSliderHandleValues(Array.from(newValues))
-    } else if (videoRef.current) {
+  const updateVideoFromTimeHandle = (newTime: number) => {
+    if (videoRef.current) {
       videoRef.current.currentTime = newTime;
     }
   }
@@ -70,7 +62,11 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
         isInitiallyLoading: false,
         duration
       }))
-      setSliderHandleValues([0, 0, duration])
+      sliderMarkersDispatch({ type: 'SET', payload: {
+        start: 0,
+        time: 0,
+        end: duration
+      }});
     }
   };
 
@@ -78,21 +74,19 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
     if (videoRef.current) {
       const currentTime = videoRef.current.currentTime
 
-      if (currentTime > sliderHandleValuesRef.current[2]) {
-        videoRef.current.currentTime = sliderHandleValuesRef.current[0];
+      if (currentTime > sliderMarkersRef.current.end) {
+        videoRef.current.currentTime = sliderMarkersRef.current.start;
         videoRef.current.pause();
         setVideoMetadata((prevState) => ({...prevState, paused: true}))
       }
-      
-      setSliderHandleValues((prevState) => {
-        return [prevState[0], currentTime, prevState[2]]
-      })
+
+      sliderMarkersDispatch({ type: 'SET_TIME', payload: currentTime });
     }
   };
 
   const handleVideoEnded = () => {
     if (videoRef.current) {
-      videoRef.current.currentTime = sliderHandleValuesRef.current[0];
+      videoRef.current.currentTime = sliderMarkersRef.current.start;
       videoRef.current.pause();
       setVideoMetadata((prevState) => ({...prevState, paused: true}))
     }
@@ -103,14 +97,14 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
   }, [videoPath]);
 
   useEffect(() => {
-    sliderHandleValuesRef.current = sliderHandleValues;
-  }, [sliderHandleValues]);
+    sliderMarkersRef.current = sliderMarkers;
+  }, [sliderMarkers]);
 
   useEffect(() => {
     if (selectedTabIndex === 0 && videoRef.current) {
       videoRef.current.pause();
       setVideoMetadata((prevState) => ({...prevState, paused: true}))
-      videoRef.current.currentTime = sliderHandleValues[1];
+      videoRef.current.currentTime = sliderMarkers.time;
     }
   }, [selectedTabIndex, videoRef.current])
 
@@ -139,9 +133,9 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
             <div className="flex-1 flex flex-row justify-start items-center">
               <TrimTimeInput 
                 label={"Start"}
-                sliderHandleValues={sliderHandleValues}
-                setSliderHandleValues={setSliderHandleValues}
-                sliderHandleValuesIndex={0}
+                sliderMarkers={sliderMarkers}
+                sliderMarkersDispatch={sliderMarkersDispatch}
+                sliderMarkerType="start"
                 duration={videoMetadata.duration}
               />
             </div>
@@ -198,9 +192,9 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
             <div className="flex-1 flex flex-row justify-end items-center">
               <TrimTimeInput 
                 label={"End"}
-                sliderHandleValues={sliderHandleValues}
-                setSliderHandleValues={setSliderHandleValues}
-                sliderHandleValuesIndex={2}
+                sliderMarkers={sliderMarkers}
+                sliderMarkersDispatch={sliderMarkersDispatch}
+                sliderMarkerType="end"
                 duration={videoMetadata.duration}
               />
             </div>
@@ -214,6 +208,9 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
           
           <VideoTrimmingSlider 
             duration={videoMetadata.duration}
+            sliderMarkers={sliderMarkers}
+            sliderMarkersDispatch={sliderMarkersDispatch}
+            updateVideoFromTimeHandle={updateVideoFromTimeHandle}
           />
         </div>
       )}

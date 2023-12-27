@@ -1,5 +1,5 @@
 import { Dialog, Tab, Transition } from "@headlessui/react";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useReducer, useRef, useState } from "react";
 import TrimVideoPanel from "./TrimVideoPanel";
 import DetectCollisionPanel from "./DetectCollisionPanel";
 import IdentifyVehiclesPanel from "./IdentifyVehiclesPanel";
@@ -31,6 +31,42 @@ export interface VideoMetadata {
   duration: number,
   paused: boolean
 }
+
+export type SliderMarkerType = "start" | "time" | "end";
+
+export interface SliderMarkersState {
+  start: number;
+  time: number;
+  end: number;
+}
+
+export type SliderMarkersAction = (
+  { type: 'SET'; payload: SliderMarkersState} |
+  { type: 'SET_START'; payload: number } | 
+  { type: 'SET_TIME'; payload: number } | 
+  { type: 'SET_END'; payload: number } |
+  { type: 'SET_DYNAMIC'; payload: { type: SliderMarkerType, value: number } }
+);
+
+const sliderMarkersReducer = (
+  state: SliderMarkersState,
+  action: SliderMarkersAction
+): SliderMarkersState => {
+  switch (action.type) {
+    case 'SET':
+      return { ...action.payload };
+    case 'SET_START':
+      return { ...state, start: action.payload };
+    case 'SET_TIME':
+      return { ...state, time: action.payload };
+    case 'SET_END':
+      return { ...state, end: action.payload };
+    case 'SET_DYNAMIC':
+      return { ...state, [action.payload.type]: action.payload.value };
+    default:
+      return state;
+  }
+};
 
 const EditVideoModal: React.FC<EditVideoModalProps> = ({ 
   videoPath, 
@@ -66,8 +102,13 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
     duration: 0,
     paused: true
   });
-  const [sliderHandleValues, setSliderHandleValues] = useState<number[]>([0, 0, 0]);
-  const sliderHandleValuesRef = useRef(sliderHandleValues);
+  
+  const [sliderMarkers, sliderMarkersDispatch] = useReducer(sliderMarkersReducer, {
+    start: 0,
+    time: 0,
+    end: 0
+  });
+  const sliderMarkersRef = useRef(sliderMarkers);
 
   return (
     <Transition
@@ -158,22 +199,24 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
                           videoPath={videoPath} 
                           videoMetadata={videoMetadata}
                           setVideoMetadata={setVideoMetadata}
-                          sliderHandleValues={sliderHandleValues}
-                          setSliderHandleValues={setSliderHandleValues}
-                          sliderHandleValuesRef={sliderHandleValuesRef}
+                          sliderMarkers={sliderMarkers}
+                          sliderMarkersDispatch={sliderMarkersDispatch}
+                          sliderMarkersRef={sliderMarkersRef}
                           selectedTabIndex={selectedTabIndex}
                         />
                       )
                     } else if (i === 1) {
                       return (
-                        <DetectCollisionPanel 
-                          key={'edit-modal-tab-panel-1'} 
-                          selectedTabIndex={selectedTabIndex} 
-                          setAreTabsDisabled={setAreTabsDisabled}
-                          videoPath={videoPath}
-                          startTime={sliderHandleValues[0]}
-                          endTime={sliderHandleValues[2]}
-                        />
+                        // TODO: UPDATE THIS TO USE THE NEW SLIDER
+                        <div key={'edit-modal-tab-panel-1'}>Detect Collision Panel</div>
+                        // <DetectCollisionPanel 
+                        //   key={'edit-modal-tab-panel-1'} 
+                        //   selectedTabIndex={selectedTabIndex} 
+                        //   setAreTabsDisabled={setAreTabsDisabled}
+                        //   videoPath={videoPath}
+                        //   startTime={sliderHandleValues[0]}
+                        //   endTime={sliderHandleValues[2]}
+                        // />
                       )
                     } else if (i === 2) {
                       return (

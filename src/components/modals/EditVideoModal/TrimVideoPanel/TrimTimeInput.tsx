@@ -1,24 +1,25 @@
 import React from 'react';
 import { addLeadingZero, convertTimeToObject } from '../../../../globals/utils';
 import { toast } from 'react-toastify';
+import { SliderMarkerType, SliderMarkersAction, SliderMarkersState } from '..';
 
 interface TrimStartHandleInputProps {
   label: string,
-  sliderHandleValues: number[],
-  setSliderHandleValues: React.Dispatch<React.SetStateAction<number[]>>,
-  sliderHandleValuesIndex: number,
+  sliderMarkers: SliderMarkersState,
+  sliderMarkersDispatch: React.Dispatch<SliderMarkersAction>,
+  sliderMarkerType: SliderMarkerType,
   duration: number
   // Add any props you need for the component here
 }
 
 const TrimTimeInput: React.FC<TrimStartHandleInputProps> = ({ 
   label,
-  sliderHandleValues,
-  setSliderHandleValues,
-  sliderHandleValuesIndex,
+  sliderMarkers,
+  sliderMarkersDispatch,
+  sliderMarkerType,
   duration
 }) => {
-  const timeObject = convertTimeToObject(sliderHandleValues[sliderHandleValuesIndex]);
+  const timeObject = convertTimeToObject(sliderMarkers[sliderMarkerType]);
   
   const checkInputValidity = (value: number, timeType: "minutes" | "seconds" | "milliseconds") => {
     let max;
@@ -57,11 +58,13 @@ const TrimTimeInput: React.FC<TrimStartHandleInputProps> = ({
         timeObject.seconds + 
         timeObject.milliseconds / 100
       );
-  
-      setSliderHandleValues((prevState) => {
-        const newState = [...prevState];
-        newState[sliderHandleValuesIndex] = newTime;
-        return newState;
+
+      sliderMarkersDispatch({ 
+        type: `SET_DYNAMIC`, 
+        payload: {
+          type: sliderMarkerType,
+          value: newTime
+        }
       });
     }
   }
@@ -76,11 +79,13 @@ const TrimTimeInput: React.FC<TrimStartHandleInputProps> = ({
         newSeconds + 
         timeObject.milliseconds / 100
       );
-  
-      setSliderHandleValues((prevState) => {
-        const newState = [...prevState];
-        newState[sliderHandleValuesIndex] = newTime;
-        return newState;
+
+      sliderMarkersDispatch({ 
+        type: `SET_DYNAMIC`, 
+        payload: {
+          type: sliderMarkerType,
+          value: newTime
+        }
       });
     }
   }
@@ -99,10 +104,12 @@ const TrimTimeInput: React.FC<TrimStartHandleInputProps> = ({
 
       console.log(`handleMillisecondsOnChange: newTime = ${newTime}`)
   
-      setSliderHandleValues((prevState) => {
-        const newState = [...prevState];
-        newState[sliderHandleValuesIndex] = newTime;
-        return newState;
+      sliderMarkersDispatch({ 
+        type: `SET_DYNAMIC`, 
+        payload: {
+          type: sliderMarkerType,
+          value: newTime
+        }
       });
     }
   }

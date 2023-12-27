@@ -1,19 +1,21 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { SliderMarkersState } from '.';
 import { convertSecondsAndMillisecondsToString } from '../../../../../globals/utils';
+import { SliderMarkersState } from '../..';
 
 interface TrimmingSliderHandle {
   duration: number,
   sliderMarkers: SliderMarkersState,
   setValue: (newValue: number) => void,
-  handleType: "start" | "time" | "end"
+  handleType: "start" | "time" | "end",
+  updateVideoFromTimeHandle?: (newTime: number) => void
 }
 
 const TrimmingSliderHandle: React.FC<TrimmingSliderHandle> = ({
   duration,
   sliderMarkers,
   setValue,
-  handleType
+  handleType,
+  updateVideoFromTimeHandle
 }) => {
   const value = sliderMarkers[handleType];
   const sliderPercentage = value / duration * 100;
@@ -39,13 +41,16 @@ const TrimmingSliderHandle: React.FC<TrimmingSliderHandle> = ({
 
     if (newPositionPercentage >= 0 && newPositionPercentage <= 1) {
       const newValue = duration * newPositionPercentage;
-      console.log(sliderMarkers);
       if (
-        (handleType === "start" && newValue + 0.5 < sliderMarkers.end) ||
-        (handleType === "end" && newValue - 0.5 > sliderMarkers.start) ||
-        (handleType === "time" && newValue >= sliderMarkers.start && newValue <= sliderMarkers.end) 
+        (handleType === "start" && newValue + 0.5 < sliderMarkers.end && newValue <= sliderMarkers.time) ||
+        (handleType === "end" && newValue - 0.5 > sliderMarkers.start && newValue >= sliderMarkers.time) ||
+        (handleType === "time" && newValue >= sliderMarkers.start && newValue <= sliderMarkers.end)
       ) {
         setValue(newValue);
+
+        if (handleType === "time" && updateVideoFromTimeHandle) {
+          updateVideoFromTimeHandle(newValue);
+        }
       }
     }
   }

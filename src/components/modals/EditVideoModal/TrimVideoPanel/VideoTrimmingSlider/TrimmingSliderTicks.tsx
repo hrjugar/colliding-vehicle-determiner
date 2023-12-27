@@ -14,6 +14,7 @@ const TrimmingSliderTicks: React.FC<TrimmingSliderTicksProps> = ({ duration }) =
           <div 
             className='absolute transform -translate-x-1/2 flex flex-col justify-start items-center'
             style={{ left: `${i * 20}%` }}
+            key={`trimming-slider-tick-${i}`}
           >
             <div className='bg-color-primary-inactive w-[1px] h-2.5 mt-0.5'/>
             <span className='text-xs text-color-primary-inactivey'>{convertSecondsAndMillisecondsToString(duration * (i * 0.2))}</span>
