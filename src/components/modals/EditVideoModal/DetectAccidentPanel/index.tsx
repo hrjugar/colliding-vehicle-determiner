@@ -37,8 +37,8 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
         setLoadingProgress({ percent: 0, displayText: "" });
         setLoadingText("Detecting accidents...")
       },
-      onSuccess: (_) => {
-        // setModelPredictions(data)
+      onSuccess: (data) => {
+        console.log(`data is at ${data}`)
         setAreTabsDisabled(false);
 
         setTimeout(() => {
@@ -103,11 +103,18 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
           setLoadingProgress(progress)
         }
       })
+
+      window.electronAPI.onRunAccidentDetectionModelProgress((progress: Progress) => {
+        if (progress) {
+          setLoadingProgress(progress)
+        }
+      })
     }
 
     return () => {
       window.electronAPI.removeTrimProgressListener();
       window.electronAPI.removeExtractFramesProgressListener();
+      window.electronAPI.removeRunAccidentDetectionModelProgressListener();
       console.log("DetectAccidentPanel progress listeners removed");
     }
   }, [selectedTabIndex])

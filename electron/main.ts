@@ -147,6 +147,7 @@ app.whenReady().then(() => {
 
   ipcMain.handle('trim:trimVideo', (event, videoPath, startTime, endTime) => trimVideo(event, videoPath, startTime, endTime))
   ipcMain.handle('extractFrames', (event) => extractFrames(event))
-  ipcMain.handle('model:accidentDetection', () => runAccidentDetectionModel())
+
+  ipcMain.handle('model:accidentDetection', (event) => runAccidentDetectionModel(event))
   createWindow()
 })

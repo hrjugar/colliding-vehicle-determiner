@@ -3,7 +3,6 @@ import Database from "better-sqlite3"
 import path from "node:path"
 import ffmpeg from "fluent-ffmpeg"
 import fs from "node:fs"
-import axios from "axios"
 import { spawn } from "node:child_process"
 
 export const THUMBNAIL_FILENAME = "thumbnail.png"
@@ -227,7 +226,7 @@ export function extractFrames(event: Electron.IpcMainInvokeEvent) {
   });
 }
 
-export function runAccidentDetectionModel() {
+export function runAccidentDetectionModel(event: Electron.IpcMainInvokeEvent) {
   let scriptPath = path.join(
     app.getAppPath(),
     'python-scripts',
@@ -243,21 +242,31 @@ export function runAccidentDetectionModel() {
     app.getPath('userData'),
     'temp'
   )
-
-  let args = [scriptPath, framesFolderPath, outputFolderPath];
+  let rootFolderPath = app.getAppPath()
 
   return new Promise((resolve, reject) => {
-    let process = spawn('python', [...args])
+    let process = spawn('python', [scriptPath, framesFolderPath, outputFolderPath, rootFolderPath])
 
+    process.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    })
+    
     process.on('error', (err) => {
       console.log("Python script error")
       console.log(err)
       reject(err)
     })
 
-    process.on('close', () => {
-      resolve(true)
-    });
+    process.stderr.on('data', (data) => {
+      console.log("Python script error")
+      console.log(data.toString());
+      reject(data.toString())
+    })
+
+    process.on('exit', (code) => {
+      console.log(`Python exited with code ${code}`);
+      resolve(code === 0)
+    })
   });
 }
 

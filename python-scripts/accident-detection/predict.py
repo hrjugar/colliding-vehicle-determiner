@@ -2,15 +2,19 @@ from ultralytics import YOLO
 import os
 import sys
 import json
+from dotenv import dotenv_values
 
 if (__name__ == '__main__'):
     frame_folder_path = sys.argv[1]
     output_folder_path = sys.argv[2]
+    env_path = os.path.join(sys.argv[3], ".env")
 
     model = YOLO("best.pt")
 
     frame_count = len(os.listdir(frame_folder_path))
     frames_output = []
+    
+    ws_port = dotenv_values(env_path)["VITE_WEBSOCKET_PORT"]
 
     for i in range(1, frame_count + 1):
         frame_path = os.path.join(frame_folder_path, f"{i}.png")

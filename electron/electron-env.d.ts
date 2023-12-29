@@ -44,6 +44,8 @@ interface ElectronAPI {
   removeExtractFramesProgressListener(): void,
 
   runAccidentDetectionModel(): Promise,
+  onRunAccidentDetectionModelProgress(callback: Function): void,
+  removeRunAccidentDetectionModelProgressListener(): void,
 }
 
 // Used in Renderer process, expose in `preload.ts`

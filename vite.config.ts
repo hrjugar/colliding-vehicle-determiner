@@ -4,11 +4,17 @@ import {
   type Plugin,
   defineConfig,
   normalizePath, 
+  loadEnv
 } from 'vite'
 import electron from 'vite-plugin-electron/simple'
 import react from '@vitejs/plugin-react'
 import alias from '@rollup/plugin-alias'
 import svgr from 'vite-plugin-svgr'
+
+const env = loadEnv(
+  'all',
+  process.cwd()
+);
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -83,7 +89,11 @@ function bindingSqlite3(options: {
       fs.copyFileSync(better_sqlite3_node, better_sqlite3_copy)
       /** `dist-native/better_sqlite3.node` */
       const BETTER_SQLITE3_BINDING = better_sqlite3_copy.replace(resolvedRoot + path.sep, '')
-      fs.writeFileSync(path.join(resolvedRoot, '.env'), `VITE_BETTER_SQLITE3_BINDING=${BETTER_SQLITE3_BINDING}`)
+
+      if (!("VITE_BETTER_SQLITE3_BINDING" in env)) {
+        fs.appendFileSync(path.join(resolvedRoot, '.env'), `VITE_BETTER_SQLITE3_BINDING=${BETTER_SQLITE3_BINDING}`)
+      }
+      
 
       console.log(TAG, `binding to ${BETTER_SQLITE3_BINDING}`)
     },

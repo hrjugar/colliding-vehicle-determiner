@@ -27,6 +27,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   removeExtractFramesProgressListener: () => ipcRenderer.removeAllListeners('extractFrames:progress'),
 
   runAccidentDetectionModel: () => ipcRenderer.invoke('model:accidentDetection'),
+  onRunAccidentDetectionModelProgress: (callback: Function) => ipcRenderer.on('model:accidentDetection:progress', (_, progress) => callback(progress)),
+  removeRunAccidentDetectionModelProgressListener: () => ipcRenderer.removeAllListeners('model:accidentDetection:progress'),
 })
 
 // `exposeInMainWorld` can't detect attributes and methods of `prototype`, manually patching it.
