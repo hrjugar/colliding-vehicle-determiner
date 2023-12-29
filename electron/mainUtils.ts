@@ -25,7 +25,7 @@ export function closeWindow(window: BrowserWindow) {
 }
 
 export function getVideoDataFolder(id: number | bigint) {
-  return path.join(app.getPath('userData'), path.sep, id.toString());
+  return path.join(app.getPath('userData'), id.toString());
 }
 
 export function isFileExisting(filePath: string) {
@@ -65,7 +65,7 @@ export function createThumbnail(filePath: string, id: number | bigint) {
       .on('end', () => {
         resolve(filePath)
         console.log("createThumbnail: Created thumbnail.");
-        console.log(`createThumbnail: file exists = ${fs.existsSync(path.join(videoDataFolder, path.sep, THUMBNAIL_FILENAME))}`)
+        console.log(`createThumbnail: file exists = ${fs.existsSync(path.join(videoDataFolder, THUMBNAIL_FILENAME))}`)
       });
   })
 }
@@ -121,7 +121,7 @@ export function openVideoFolder(filePath: string) {
 
 export function renameVideo(db: Database.Database, id: number | bigint, oldFilePath: string, newFileName: string) {
   const folder = path.dirname(oldFilePath);
-  const newFilePath = path.join(folder, path.sep, `${newFileName}.mp4`)
+  const newFilePath = path.join(folder, `${newFileName}.mp4`)
   console.log(`renameVideo: oldFilePath = ${oldFilePath}`)
   console.log(`renameVideo: newFilePath = ${newFilePath}`)
   fs.renameSync(oldFilePath, newFilePath)
@@ -162,12 +162,12 @@ export async function updateVideo(db: Database.Database, id: number | bigint) {
 }
 
 export function trimVideo(event: Electron.IpcMainInvokeEvent, videoPath: string, startTime: number, endTime: number) {
-  const tempFolderPath = path.join(app.getPath('userData'), path.sep, 'temp')
+  const tempFolderPath = path.join(app.getPath('userData'), 'temp')
   if (!fs.existsSync(tempFolderPath)) {
     fs.mkdirSync(tempFolderPath)
   }
   
-  const outputVideoPath = path.join(tempFolderPath, path.sep, `trimmed.mp4`)
+  const outputVideoPath = path.join(tempFolderPath, `trimmed.mp4`)
 
   return new Promise((resolve, reject) => {
     ffmpeg(videoPath)
@@ -178,7 +178,7 @@ export function trimVideo(event: Electron.IpcMainInvokeEvent, videoPath: string,
       .on('progress', (progress) => {
         event.sender.send('trim:progress', {
           "percent": progress.percent,
-          "displayText": `${progress.percent}%`
+          "displayText": `${Math.round(progress.percent)}%`
         })
       })
       .on('end', () => {
@@ -192,10 +192,10 @@ export function trimVideo(event: Electron.IpcMainInvokeEvent, videoPath: string,
 }
 
 export function extractFrames(event: Electron.IpcMainInvokeEvent) {
-  const tempFolderPath = path.join(app.getPath('userData'), path.sep, 'temp')
-  const trimmedVideoPath = path.join(tempFolderPath, path.sep, 'trimmed.mp4')
+  const tempFolderPath = path.join(app.getPath('userData'), 'temp')
+  const trimmedVideoPath = path.join(tempFolderPath, 'trimmed.mp4')
 
-  const framesFolderPath = path.join(tempFolderPath, path.sep, 'frames')
+  const framesFolderPath = path.join(tempFolderPath, 'frames')
   if (fs.existsSync(framesFolderPath)) {
     fs.rmSync(framesFolderPath, { recursive: true, force: true });
   }
@@ -212,11 +212,11 @@ export function extractFrames(event: Electron.IpcMainInvokeEvent) {
 
       ffmpeg(trimmedVideoPath)
         .outputOptions('-vf', `fps=${frameRate}`)
-        .output(path.join(framesFolderPath, path.sep, '%d.png'))
+        .output(path.join(framesFolderPath, '%d.png'))
         .on('progress', (progress) => {
           event.sender.send('extractFrames:progress', {
             "percent": progress.percent,
-            "displayText": `${progress.percent}%`
+            "displayText": `${Math.round(progress.percent)}%`
           })
         })
         .on('end', resolve)
@@ -269,5 +269,3 @@ export function runAccidentDetectionModel(event: Electron.IpcMainInvokeEvent) {
     })
   });
 }
-
-// TODO: REMOVE REDUNDANT path.sep IN EVERY path.join() (path.join() uses path.sep by default)
