@@ -7,7 +7,7 @@ interface Progress {
   displayText: string
 }
 
-interface DetectCollisionPanelProps {
+interface DetectAccidentPanelProps {
   setAreTabsDisabled: (disabled: boolean) => void,
   selectedTabIndex: number,
   videoPath: string,
@@ -15,7 +15,7 @@ interface DetectCollisionPanelProps {
   endTime: number
 }
 
-const DetectCollisionPanel: React.FC<DetectCollisionPanelProps> = ({ 
+const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({ 
   selectedTabIndex,
   setAreTabsDisabled,
   videoPath,
@@ -28,7 +28,7 @@ const DetectCollisionPanel: React.FC<DetectCollisionPanelProps> = ({
   const [isLoadingDone, setIsLoadingDone] = useState<boolean>(false);
   const [modelPredictions, setModelPredictions] = useState<any[]>([]);
 
-  // TODO: Cancel collision detection when tab is changed or modal is closed
+  // TODO: Cancel accident detection when tab is changed or modal is closed
 
   const detectAccidentsMutation = useMutation(
     async () => await window.electronAPI.runAccidentDetectionModel(),
@@ -86,7 +86,7 @@ const DetectCollisionPanel: React.FC<DetectCollisionPanelProps> = ({
   );
 
   useEffect(() => {
-    console.log(`DetectCollisionPanel: selectedTabIndex: ${selectedTabIndex}`)
+    console.log(`DetectAccidentPanel: selectedTabIndex: ${selectedTabIndex}`)
     if (selectedTabIndex === 1) {
       setIsLoadingDone(false);
       setAreTabsDisabled(true);
@@ -108,7 +108,7 @@ const DetectCollisionPanel: React.FC<DetectCollisionPanelProps> = ({
     return () => {
       window.electronAPI.removeTrimProgressListener();
       window.electronAPI.removeExtractFramesProgressListener();
-      console.log("DetectCollisionPanel progress listeners removed");
+      console.log("DetectAccidentPanel progress listeners removed");
     }
   }, [selectedTabIndex])
 
@@ -152,4 +152,4 @@ const DetectCollisionPanel: React.FC<DetectCollisionPanelProps> = ({
   );
 };
 
-export default DetectCollisionPanel;
+export default DetectAccidentPanel;

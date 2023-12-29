@@ -1,7 +1,7 @@
 import { Dialog, Tab, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useReducer, useRef, useState } from "react";
 import TrimVideoPanel from "./TrimVideoPanel";
-import DetectCollisionPanel from "./DetectCollisionPanel";
+import DetectAccidentPanel from "./DetectAccidentPanel";
 import IdentifyVehiclesPanel from "./IdentifyVehiclesPanel";
 
 const tabs = [
@@ -9,7 +9,7 @@ const tabs = [
     title: 'Trim Video'
   },
   {
-    title: 'Detect Collision'
+    title: 'Detect Accident'
   },
   {
     title: 'Identify Vehicles'
@@ -205,7 +205,7 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
                       )
                     } else if (i === 1) {
                       return (
-                        <DetectCollisionPanel 
+                        <DetectAccidentPanel 
                           key={'edit-modal-tab-panel-1'} 
                           selectedTabIndex={selectedTabIndex} 
                           setAreTabsDisabled={setAreTabsDisabled}
