@@ -4,7 +4,7 @@ import fs from 'node:fs'
 import { getSqlite3 } from './better-sqlite3'
 import { closeWindow, createThumbnailFromId, deleteVideo, extractFrames, findNewVideo, insertVideo, isFileExisting, maximizeWindow, minimizeWindow, openVideoFolder, renameVideo, runAccidentDetectionModel, selectAllVideos, THUMBNAIL_FILENAME, trimVideo, updateVideo } from './mainUtils'
 import Database from 'better-sqlite3'
-import { stopServer } from './expressServer'
+import { stopServer } from './server'
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 // The built directory structure
 //
