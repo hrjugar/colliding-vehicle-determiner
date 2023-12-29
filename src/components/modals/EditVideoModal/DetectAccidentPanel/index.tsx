@@ -130,7 +130,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
               controls
             >
               <source
-                src={`http://localhost:3000/video?path=${trimOutputPath}&tabIndex=${selectedTabIndex}&t=${Date.now()}`}
+                src={`http://localhost:${import.meta.env.VITE_EXPRESS_PORT}/video?path=${trimOutputPath}&tabIndex=${selectedTabIndex}&t=${Date.now()}`}
                 type="video/mp4" 
               />
             </video>

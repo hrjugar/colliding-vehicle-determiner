@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 const app = express();
-const port = 3000;
+const port = import.meta.env.VITE_EXPRESS_PORT as number;
 
 app.get('/video', (req, res) => {
   const reqPath = req.query.path;
