@@ -218,6 +218,7 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
                       return (
                         <IdentifyVehiclesPanel 
                           key={'edit-modal-tab-panel-2'}
+                          selectedTabIndex={selectedTabIndex}
                         />
                       )
                     }
