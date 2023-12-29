@@ -4,6 +4,7 @@ import path from "node:path"
 import ffmpeg from "fluent-ffmpeg"
 import fs from "node:fs"
 import axios from "axios"
+import { spawn } from "node:child_process"
 
 export const THUMBNAIL_FILENAME = "thumbnail.png"
 
@@ -226,6 +227,38 @@ export function extractFrames(event: Electron.IpcMainInvokeEvent) {
   });
 }
 
-export async function detectCollisions(event: Electron.IpcMainInvokeEvent) {
-  console.log("yes")
+export function runAccidentDetectionModel() {
+  let scriptPath = path.join(
+    app.getAppPath(),
+    'python-scripts',
+    'accident-detection',
+    'predict.py'
+  )
+  let framesFolderPath = path.join(
+    app.getPath('userData'),
+    'temp',
+    'frames'
+  )
+  let outputFolderPath = path.join(
+    app.getPath('userData'),
+    'temp'
+  )
+
+  let args = [scriptPath, framesFolderPath, outputFolderPath];
+
+  return new Promise((resolve, reject) => {
+    let process = spawn('python', [...args])
+
+    process.on('error', (err) => {
+      console.log("Python script error")
+      console.log(err)
+      reject(err)
+    })
+
+    process.on('close', () => {
+      resolve(true)
+    });
+  });
 }
+
+// TODO: REMOVE REDUNDANT path.sep IN EVERY path.join() (path.join() uses path.sep by default)

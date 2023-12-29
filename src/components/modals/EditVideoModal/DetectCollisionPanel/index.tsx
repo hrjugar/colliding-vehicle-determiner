@@ -1,4 +1,4 @@
-import { Dialog, Tab } from '@headlessui/react';
+import { Tab } from '@headlessui/react';
 import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 
@@ -29,32 +29,38 @@ const DetectCollisionPanel: React.FC<DetectCollisionPanelProps> = ({
   const [modelPredictions, setModelPredictions] = useState<any[]>([]);
 
   // TODO: Cancel collision detection when tab is changed or modal is closed
-  const detectCollisionsMutation = useMutation(
-    async () => await window.electronAPI.detectCollisions(),
+
+  const detectAccidentsMutation = useMutation(
+    async () => await window.electronAPI.runAccidentDetectionModel(),
     {
-      onSuccess: (data) => {
+      onMutate: () => {
+        setLoadingProgress({ percent: 0, displayText: "" });
+        setLoadingText("Detecting accidents...")
+      },
+      onSuccess: (_) => {
         // setModelPredictions(data)
         setAreTabsDisabled(false);
 
         setTimeout(() => {
           setIsLoadingDone(true);
-          window.electronAPI.removeDetectCollisionsProgressListener();
         }, 500)
-      }
+      },
     }
   )
 
   const extractFramesMutation = useMutation(
     async () => await window.electronAPI.extractFrames(),
     {
+      onMutate: () => {
+        setLoadingProgress({ percent: 0, displayText: "0%" });
+        setLoadingText("Extracting frames...")
+      },
       onSuccess: (_) => {
         setLoadingProgress({ percent: 100, displayText: "100%" });
 
         setTimeout(() => {
-          setLoadingProgress({ percent: 0, displayText: "" });
-          setLoadingText("Detecting collisions...")
           window.electronAPI.removeExtractFramesProgressListener();
-          detectCollisionsMutation.mutate();
+          detectAccidentsMutation.mutate();
         }, 500)
       }
     }
@@ -63,13 +69,15 @@ const DetectCollisionPanel: React.FC<DetectCollisionPanelProps> = ({
   const trimMutation = useMutation(
     async () => await window.electronAPI.trimVideo(videoPath, startTime, endTime),
     {
+      onMutate: () => {
+        setLoadingProgress({ percent: 0, displayText: "0%" });
+        setLoadingText("Trimming video...")
+      },
       onSuccess: (data) => {
         setLoadingProgress({ percent: 100, displayText: "100%" });
         setTrimOutputPath(data);
 
         setTimeout(() => {
-          setLoadingProgress({ percent: 0, displayText: "0%" });
-          setLoadingText("Extracting frames...")
           window.electronAPI.removeTrimProgressListener();
           extractFramesMutation.mutate();
         }, 300);
@@ -81,8 +89,6 @@ const DetectCollisionPanel: React.FC<DetectCollisionPanelProps> = ({
     console.log(`DetectCollisionPanel: selectedTabIndex: ${selectedTabIndex}`)
     if (selectedTabIndex === 1) {
       setIsLoadingDone(false);
-      setLoadingProgress({ percent: 0, displayText: "0%" });
-      setLoadingText("Trimming video...")
       setAreTabsDisabled(true);
       trimMutation.mutate();
       
@@ -97,18 +103,11 @@ const DetectCollisionPanel: React.FC<DetectCollisionPanelProps> = ({
           setLoadingProgress(progress)
         }
       })
-
-      window.electronAPI.onDetectCollisionsProgress((progress: Progress) => {
-        if (progress) {
-          setLoadingProgress(progress)
-        }
-      })
     }
 
     return () => {
       window.electronAPI.removeTrimProgressListener();
       window.electronAPI.removeExtractFramesProgressListener();
-      window.electronAPI.removeDetectCollisionsProgressListener();
       console.log("DetectCollisionPanel progress listeners removed");
     }
   }, [selectedTabIndex])

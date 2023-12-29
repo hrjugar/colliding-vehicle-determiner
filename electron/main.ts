@@ -1,12 +1,10 @@
-import { app, BrowserWindow, ipcMain, Menu, MenuItem, net, protocol, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, net, protocol, shell } from 'electron'
 import path from 'node:path'
 import fs from 'node:fs'
 import { getSqlite3 } from './better-sqlite3'
-import { closeWindow, createThumbnailFromId, deleteVideo, detectCollisions, extractFrames, findNewVideo, insertVideo, isFileExisting, maximizeWindow, minimizeWindow, openVideoFolder, renameVideo, selectAllVideos, THUMBNAIL_FILENAME, trimVideo, updateVideo } from './mainUtils'
+import { closeWindow, createThumbnailFromId, deleteVideo, extractFrames, findNewVideo, insertVideo, isFileExisting, maximizeWindow, minimizeWindow, openVideoFolder, renameVideo, runAccidentDetectionModel, selectAllVideos, THUMBNAIL_FILENAME, trimVideo, updateVideo } from './mainUtils'
 import Database from 'better-sqlite3'
-import { stopServer } from './server'
-import ffmpeg from "fluent-ffmpeg"
-
+import { stopServer } from './expressServer'
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 // The built directory structure
 //
@@ -53,8 +51,7 @@ function createWindow() {
       // webSecurity: false // TODO: Change this to true later! Currently needed in false to read file data
     }
   })
-
-  win.maximize()
+  win.maximize();
 
   // Opens external links in browser instead of new Electron window
   win.webContents.setWindowOpenHandler(({ url }) => {
@@ -150,6 +147,6 @@ app.whenReady().then(() => {
 
   ipcMain.handle('trim:trimVideo', (event, videoPath, startTime, endTime) => trimVideo(event, videoPath, startTime, endTime))
   ipcMain.handle('extractFrames', (event) => extractFrames(event))
-  ipcMain.handle('detectCollisions', (event) => detectCollisions(event))
+  ipcMain.handle('model:accidentDetection', () => runAccidentDetectionModel())
   createWindow()
 })
