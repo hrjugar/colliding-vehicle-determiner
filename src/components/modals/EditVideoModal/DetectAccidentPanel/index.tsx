@@ -34,7 +34,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
     async () => await window.electronAPI.runAccidentDetectionModel(),
     {
       onMutate: () => {
-        setLoadingProgress({ percent: 0, displayText: "" });
+        setLoadingProgress({ percent: 0, displayText: "Frame 0/0" });
         setLoadingText("Detecting accidents...")
       },
       onSuccess: (data) => {
@@ -42,6 +42,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
         setAreTabsDisabled(false);
 
         setTimeout(() => {
+          window.electronAPI.removeRunAccidentDetectionModelProgressListener();
           setIsLoadingDone(true);
         }, 500)
       },
@@ -105,6 +106,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
       })
 
       window.electronAPI.onRunAccidentDetectionModelProgress((progress: Progress) => {
+        console.log(`RECEIVING DATA IN REACT: ${JSON.stringify(progress)}`)
         if (progress) {
           setLoadingProgress(progress)
         }
@@ -122,27 +124,28 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
   return (
     <Tab.Panel className="w-full h-full bg-white flex flex-col justify-center items-center">
       {isLoadingDone ? (
-        <div className='w-full h-full flex flex-col items-center gap-4 pb-2'>
-          <div className='relative w-full h-full flex justify-center overflow-hidden bg-black'>
-            <video
-              className="max-w-full max-h-full flex object-scale-down aspect-video"
-              muted
-              controls
-            >
-              <source
-                src={`http://localhost:${import.meta.env.VITE_EXPRESS_PORT}/video?path=${trimOutputPath}&tabIndex=${selectedTabIndex}&t=${Date.now()}`}
-                type="video/mp4" 
-              />
-            </video>
-          </div>
+        <p>Loading is done</p>
+        // <div className='w-full h-full flex flex-col items-center gap-4 pb-2'>
+        //   <div className='relative w-full h-full flex justify-center overflow-hidden bg-black'>
+        //     <video
+        //       className="max-w-full max-h-full flex object-scale-down aspect-video"
+        //       muted
+        //       controls
+        //     >
+        //       <source
+        //         src={`http://localhost:${import.meta.env.VITE_EXPRESS_PORT}/video?path=${trimOutputPath}&tabIndex=${selectedTabIndex}&t=${Date.now()}`}
+        //         type="video/mp4" 
+        //       />
+        //     </video>
+        //   </div>
 
-          <button 
-            type='button'
-            className='bg-color-primary text-white rounded-lg'
-          >
-            Identify vehicles
-          </button>
-        </div>
+        //   <button 
+        //     type='button'
+        //     className='bg-color-primary text-white rounded-lg'
+        //   >
+        //     Identify vehicles
+        //   </button>
+        // </div>
       ) : (
         <div className='w-full flex flex-col justify-center items-center gap-2'>
           <div className='w-full flex flex-row justify-between gap-1'>

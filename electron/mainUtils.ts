@@ -4,6 +4,7 @@ import path from "node:path"
 import ffmpeg from "fluent-ffmpeg"
 import fs from "node:fs"
 import { spawn } from "node:child_process"
+const zmq: typeof import("zeromq") = require("zeromq");
 
 export const THUMBNAIL_FILENAME = "thumbnail.png"
 
@@ -226,6 +227,28 @@ export function extractFrames(event: Electron.IpcMainInvokeEvent) {
   });
 }
 
+async function getModelProgress(event: Electron.IpcMainInvokeEvent) {
+  const socket = new zmq.Reply;
+  const socketPort = import.meta.env.VITE_WEBSOCKET_PORT as number;
+  console.log(`getModelProgress: socketPort = ${socketPort}`)
+
+  await socket.bind(`tcp://127.0.0.1:${socketPort}`)
+  console.log(`getModelProgress: Connected to socket at port ${socketPort}`)
+  
+  for await (const [msg] of socket) {
+    console.log(`getModelProgress: message = ${msg.toString()}`);
+    const msgJson = JSON.parse(msg.toString());
+    event.sender.send('model:accidentDetection:progress', msgJson);
+    await socket.send("Success");
+  }
+
+  console.log("getModelProgress: After awaiting loop")
+
+  socket.close();
+
+  console.log("getModelProgress: After closing socket")
+}
+
 export function runAccidentDetectionModel(event: Electron.IpcMainInvokeEvent) {
   let scriptPath = path.join(
     app.getAppPath(),
@@ -244,9 +267,11 @@ export function runAccidentDetectionModel(event: Electron.IpcMainInvokeEvent) {
   )
   let rootFolderPath = app.getAppPath()
 
-  return new Promise((resolve, reject) => {
-    let process = spawn('python', [scriptPath, framesFolderPath, outputFolderPath, rootFolderPath])
+  getModelProgress(event);
 
+  let process = spawn('python', [scriptPath, framesFolderPath, outputFolderPath, rootFolderPath])
+  
+  return new Promise((resolve, reject) => {
     process.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     })
@@ -254,18 +279,17 @@ export function runAccidentDetectionModel(event: Electron.IpcMainInvokeEvent) {
     process.on('error', (err) => {
       console.log("Python script error")
       console.log(err)
-      reject(err)
+      reject(err);
     })
-
+  
     process.stderr.on('data', (data) => {
       console.log("Python script error")
       console.log(data.toString());
-      reject(data.toString())
     })
-
+  
     process.on('exit', (code) => {
       console.log(`Python exited with code ${code}`);
-      resolve(code === 0)
+      resolve(`code: ${code}`);
     })
-  });
+  })
 }

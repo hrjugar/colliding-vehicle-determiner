@@ -52,6 +52,8 @@ function createWindow() {
     }
   })
   win.maximize();
+  
+  win.webContents.openDevTools();
 
   // Opens external links in browser instead of new Electron window
   win.webContents.setWindowOpenHandler(({ url }) => {
