@@ -22,6 +22,12 @@ const VideoTrimmingSlider: React.FC<VideoTrimmingSliderProps> = ({
     const x = e.clientX - rect.left;
     const leftPercentage = x / rect.width;
     const newTime = duration * leftPercentage;
+
+    if (newTime < sliderMarkers.start || newTime > sliderMarkers.end) {
+      toast(`Time must be within the start and end constraints`, { type: "error", autoClose: 3000 })
+      return;
+    }
+
     sliderMarkersDispatch({ type: 'SET_TIME', payload: newTime });
     
     if (updateVideoFromTimeHandle) {
