@@ -264,10 +264,6 @@ export function runAccidentDetectionModel() {
   pythonProcess = spawn('python', [scriptPath, framesFolderPath, outputFolderPath, rootFolderPath]);
   
   return new Promise((resolve, reject) => {
-    pythonProcess.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    })
-    
     pythonProcess.on('error', (err) => {
       console.log("Python script error")
       console.log(err)
