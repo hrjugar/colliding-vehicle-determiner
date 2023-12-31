@@ -2,6 +2,7 @@ import React, { useReducer } from 'react';
 import TrimmingSliderHandle from './TrimmingSliderHandle';
 import TrimmingSliderTicks from './TrimmingSliderTicks';
 import { SliderMarkersAction, SliderMarkersState } from '../..';
+import { toast } from 'react-toastify';
 
 interface VideoTrimmingSliderProps {
   duration: number,
@@ -29,7 +30,7 @@ const VideoTrimmingSlider: React.FC<VideoTrimmingSliderProps> = ({
   };
 
   return (
-    <div className='w-full pt-8 pb-6 px-6'>
+    <div className='w-full pt-8 pb-6 px-10'>
       <div 
         className="relative bg-gray-200 w-full h-4 rounded-full"
       >

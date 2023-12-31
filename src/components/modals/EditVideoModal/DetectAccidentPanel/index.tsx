@@ -39,9 +39,9 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
       },
       onSuccess: (data) => {
         console.log(`data is at ${data}`)
-        setAreTabsDisabled(false);
-
+        
         setTimeout(() => {
+          setAreTabsDisabled(false);
           window.electronAPI.removeRunAccidentDetectionModelProgressListener();
           setIsLoadingDone(true);
         }, 500)
@@ -153,7 +153,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
         <div className='w-full flex flex-col justify-center items-center gap-2'>
           <div className='w-full flex flex-row justify-between gap-1'>
             <p className='font-medium'>{loadingText}</p>
-            <p className='font-medium'>{loadingProgress.displayText}</p>
+            <p className='font-medium text-gray-400'>{loadingProgress.displayText}</p>
           </div>
           
           <div className="w-full bg-gray-300 rounded-full">

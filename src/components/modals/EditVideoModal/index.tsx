@@ -226,13 +226,23 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
                 </Tab.Panels>
 
                 <div className="flex flex-row justify-center gap-2 ">
-                  <button 
-                    className={`bg-transparent px-4 py-2 text-color-primary disabled:text-gray-300`}
-                    disabled={selectedTabIndex === 0 || areTabsDisabled}
-                    onClick={() => setSelectedTabIndex(selectedTabIndex - 1)}
-                  >
-                    Previous
-                  </button>
+                  {selectedTabIndex === 0 ? (
+                    <button
+                      className={`bg-transparent px-4 py-2 text-color-primary disabled:text-gray-300`}
+                      disabled={areTabsDisabled}
+                      onClick={() => close()}
+                    >
+                      Cancel
+                    </button>
+                  ) : (
+                    <button 
+                      className={`bg-transparent px-4 py-2 text-color-primary disabled:text-gray-300`}
+                      disabled={areTabsDisabled}
+                      onClick={() => setSelectedTabIndex(selectedTabIndex - 1)}
+                    >
+                      Previous
+                    </button>
+                  )}
                   {selectedTabIndex === tabs.length - 1 ? (
                     <button
                       className="bg-transparent px-4 py-2 text-color-primary disabled:text-gray-300"
