@@ -114,6 +114,9 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
     }
 
     return () => {
+      if (selectedTabIndex === 1) {
+        window.electronAPI.killPythonProcess();
+      }
       window.electronAPI.removeTrimProgressListener();
       window.electronAPI.removeExtractFramesProgressListener();
       window.electronAPI.removeRunAccidentDetectionModelProgressListener();

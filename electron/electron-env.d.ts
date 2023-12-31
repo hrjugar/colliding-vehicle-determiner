@@ -43,6 +43,8 @@ interface ElectronAPI {
   onExtractFramesProgress(callback: Function): void,
   removeExtractFramesProgressListener(): void,
 
+  killPythonProcess(): void,
+
   runAccidentDetectionModel(): Promise,
   onRunAccidentDetectionModelProgress(callback: Function): void,
   removeRunAccidentDetectionModelProgressListener(): void,

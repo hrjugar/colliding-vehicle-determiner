@@ -3,10 +3,11 @@ import Database from "better-sqlite3"
 import path from "node:path"
 import ffmpeg from "fluent-ffmpeg"
 import fs from "node:fs"
-import { spawn } from "node:child_process"
+import { spawn, ChildProcessWithoutNullStreams } from "node:child_process"
 const zmq: typeof import("zeromq") = require("zeromq");
 
 export const THUMBNAIL_FILENAME = "thumbnail.png"
+let pythonProcess: ChildProcessWithoutNullStreams;
 
 export function minimizeWindow(window: BrowserWindow) {
   window.minimize()
@@ -227,29 +228,17 @@ export function extractFrames(event: Electron.IpcMainInvokeEvent) {
   });
 }
 
-async function getModelProgress(event: Electron.IpcMainInvokeEvent) {
-  const socket = new zmq.Reply;
-  const socketPort = import.meta.env.VITE_WEBSOCKET_PORT as number;
-  console.log(`getModelProgress: socketPort = ${socketPort}`)
-
-  await socket.bind(`tcp://127.0.0.1:${socketPort}`)
-  console.log(`getModelProgress: Connected to socket at port ${socketPort}`)
-  
-  for await (const [msg] of socket) {
-    console.log(`getModelProgress: message = ${msg.toString()}`);
-    const msgJson = JSON.parse(msg.toString());
-    event.sender.send('model:accidentDetection:progress', msgJson);
-    await socket.send("Success");
+export function killPythonProcess() {
+  console.log("Trying to kill python process...")
+  if (pythonProcess) {
+    pythonProcess.kill();
+    console.log("Killed python process");
+  } else {
+    console.log("No python processes detected.")
   }
-
-  console.log("getModelProgress: After awaiting loop")
-
-  socket.close();
-
-  console.log("getModelProgress: After closing socket")
 }
 
-export function runAccidentDetectionModel(event: Electron.IpcMainInvokeEvent) {
+export function runAccidentDetectionModel() {
   let scriptPath = path.join(
     app.getAppPath(),
     'python-scripts',
@@ -267,29 +256,32 @@ export function runAccidentDetectionModel(event: Electron.IpcMainInvokeEvent) {
   )
   let rootFolderPath = app.getAppPath()
 
-  getModelProgress(event);
+  console.log("RUNNING ACCIDENT DETECTION MODEL")
 
-  let process = spawn('python', [scriptPath, framesFolderPath, outputFolderPath, rootFolderPath])
+  if (pythonProcess) {
+    pythonProcess.kill();
+  }
+  pythonProcess = spawn('python', [scriptPath, framesFolderPath, outputFolderPath, rootFolderPath]);
   
   return new Promise((resolve, reject) => {
-    process.stdout.on('data', (data) => {
+    pythonProcess.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     })
     
-    process.on('error', (err) => {
+    pythonProcess.on('error', (err) => {
       console.log("Python script error")
       console.log(err)
       reject(err);
     })
   
-    process.stderr.on('data', (data) => {
+    pythonProcess.stderr.on('data', (data) => {
       console.log("Python script error")
       console.log(data.toString());
     })
   
-    process.on('exit', (code) => {
+    pythonProcess.on('exit', (code) => {
       console.log(`Python exited with code ${code}`);
-      resolve(`code: ${code}`);
+      resolve(code);
     })
   })
 }

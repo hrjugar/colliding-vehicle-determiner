@@ -26,6 +26,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onExtractFramesProgress: (callback: Function) => ipcRenderer.on('extractFrames:progress', (_, progress) => callback(progress)),
   removeExtractFramesProgressListener: () => ipcRenderer.removeAllListeners('extractFrames:progress'),
 
+  killPythonProcess: () => ipcRenderer.send('killPythonProcess'),
+  
   runAccidentDetectionModel: () => ipcRenderer.invoke('model:accidentDetection'),
   onRunAccidentDetectionModelProgress: (callback: Function) => ipcRenderer.on('model:accidentDetection:progress', (_, progress) => callback(progress)),
   removeRunAccidentDetectionModelProgressListener: () => ipcRenderer.removeAllListeners('model:accidentDetection:progress'),

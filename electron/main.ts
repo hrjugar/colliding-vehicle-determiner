@@ -2,9 +2,12 @@ import { app, BrowserWindow, ipcMain, net, protocol, shell } from 'electron'
 import path from 'node:path'
 import fs from 'node:fs'
 import { getSqlite3 } from './better-sqlite3'
-import { closeWindow, createThumbnailFromId, deleteVideo, extractFrames, findNewVideo, insertVideo, isFileExisting, maximizeWindow, minimizeWindow, openVideoFolder, renameVideo, runAccidentDetectionModel, selectAllVideos, THUMBNAIL_FILENAME, trimVideo, updateVideo } from './mainUtils'
+import { closeWindow, createThumbnailFromId, deleteVideo, extractFrames, findNewVideo, insertVideo, isFileExisting, killPythonProcess, maximizeWindow, minimizeWindow, openVideoFolder, renameVideo, runAccidentDetectionModel, selectAllVideos, THUMBNAIL_FILENAME, trimVideo, updateVideo } from './mainUtils'
 import Database from 'better-sqlite3'
 import { stopServer } from './server'
+import { initSocket } from './zeromq'
+import { ChildProcessWithoutNullStreams } from 'child_process';
+
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 // The built directory structure
 //
@@ -27,6 +30,7 @@ if (!app.requestSingleInstanceLock()) {
 
 let win: BrowserWindow | null
 let db: Database.Database
+let pythonProcess: ChildProcessWithoutNullStreams;
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
 const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
 
@@ -66,6 +70,7 @@ function createWindow() {
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
     // win?.webContents.send('main-process-message', (new Date).toLocaleString())
+    initSocket(win!);
     db = getSqlite3()
     win?.webContents.send('sqlite3', db);
   })
@@ -150,6 +155,9 @@ app.whenReady().then(() => {
   ipcMain.handle('trim:trimVideo', (event, videoPath, startTime, endTime) => trimVideo(event, videoPath, startTime, endTime))
   ipcMain.handle('extractFrames', (event) => extractFrames(event))
 
-  ipcMain.handle('model:accidentDetection', (event) => runAccidentDetectionModel(event))
+  ipcMain.on('killPythonProcess', () => killPythonProcess())
+
+  ipcMain.handle('model:accidentDetection', () => runAccidentDetectionModel())
+  
   createWindow()
 })

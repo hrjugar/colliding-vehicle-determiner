@@ -32,6 +32,7 @@ const reducer = (state: EditVideoModalState, action: EditVideoModalAction): Edit
     case 'OPEN':
       return { ...state, isOpen: true, videoPath: action.payload };
     case 'CLOSE':
+      window.electronAPI.killPythonProcess();
       return { ...state, isOpen: false, videoPath: '', selectedTabIndex: 0, areTabsDisabled: false };
     case 'SELECT_TAB':
       return { ...state, selectedTabIndex: action.payload }
