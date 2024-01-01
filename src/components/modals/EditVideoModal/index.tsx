@@ -136,16 +136,18 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
             leaveFrom="translate-y-0"
             leaveTo="translate-y-full"          
           >
-            <Dialog.Panel className='w-full h-[calc(100vh_-_4rem)] flex flex-col bg-white rounded-t-2xl p-2 gap-2'>
+            <Dialog.Panel className='w-full h-[calc(100vh_-_2.75rem)] flex flex-col bg-white rounded-t-2xl'>
               <Tab.Group as={Fragment} selectedIndex={selectedTabIndex} onChange={setSelectedTabIndex}>
-                <div className="w-full flex flex-row items-start justify-between px-4 py-2">
-                  <Tab.List className='relative flex flex-row items-center gap-4'>
+                <div className="w-full flex flex-row items-start justify-between px-6 py-4 border-b-[1px] border-gray-300 gap-2">
+                  {/* <div className="flex-1"/> */}
+                  <Tab.List className='relative flex flex-row items-center gap-8'>
                     {tabs.map((tab, i) => {
                       const isTabInRange = i - selectedTabIndex < 2
+                      const isTabDisabled = areTabsDisabled || !isTabInRange
                       return (
                         <Tab 
                           key={`edit-modal-tab-${i}`}
-                          disabled={areTabsDisabled || !isTabInRange}
+                          disabled={isTabDisabled}
                           className={`z-[2] p-0`}
                           ref={(el) => {
                             tabsRef.current[i] = el
@@ -156,40 +158,40 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
                         >
                           {({ selected }) => (
                             <div 
-                              className={`flex-grow flex flex-col items-start gap-0 px-4 py-2 rounded-lg ${selected ? 'text-white' : areTabsDisabled || !isTabInRange ? 'text-gray-300' : 'hover:bg-color-primary-active text-color-primary'}`}
+                              className={`group flex-grow flex flex-row items-center gap-2 text-sm ${isTabDisabled ? 'opacity-25 pointer-events-none' : ''}`}
                             >
-                              <span className={`text-xs`}>Step {i + 1}</span>
-                              <p>{tab.title}</p>
+                              <span 
+                                className={`px-3 py-1.5 rounded-full border-2 font-bold ${
+                                  selected ? 'border-color-primary bg-color-primary text-white' : 'border-gray-500 text-gray-500 group-hover:border-color-primary group-hover:text-color-primary'
+                                }`}
+                              >{i + 1}</span>
+                              <p className={`font-semibold ${selected ? 'text-color-primary' : 'text-gray-500 group-hover:text-color-primary'}`}>{tab.title}</p>
                             </div>
                           )}
                         </Tab>
                       )
                     })}
-                    <div 
-                      className="absolute z-[1] h-14 bg-color-primary rounded-lg transition-all duration-300"
-                      style={{ left: tabDimensions.left, width: tabDimensions.width }}
-                    ></div>
                   </Tab.List>
                   <button 
-                    className="group/edit-modal-close-btn p-2 rounded-full bg-transparent hover:bg-color-primary-active"
-                    onClick={() => close()}
-                  >
-                    <svg 
-                      width="64" 
-                      height="64" 
-                      viewBox="0 0 64 64"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-3 h-3 text-transparent"
+                      className="group/edit-modal-close-btn p-2 rounded-full bg-transparent hover:bg-color-primary-active"
+                      onClick={() => close()}
                     >
-                      <path 
-                        d="M0 0 L64 64 M64 0 L0 64 Z"
-                        className="fill-current stroke-[6] stroke-color-primary group-hover/edit-modal-close-btn:stroke-black"
-                      />
-                    </svg>
-                  </button>
+                      <svg 
+                        width="64" 
+                        height="64" 
+                        viewBox="0 0 64 64"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-3 h-3 text-transparent"
+                      >
+                        <path 
+                          d="M0 0 L64 64 M64 0 L0 64 Z"
+                          className="fill-current stroke-[6] stroke-color-primary group-hover/edit-modal-close-btn:stroke-black"
+                        />
+                      </svg>
+                    </button>
                 </div>
                 
-                <Tab.Panels className='bg-white w-full h-full px-4 overflow-hidden'>
+                <Tab.Panels className='bg-white w-full h-full px-4 py-4 overflow-hidden'>
                   {tabs.map((_, i) => {
                     if (i === 0) {
                       return (
