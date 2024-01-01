@@ -17,17 +17,17 @@ interface DetectAccidentPanelProps {
 }
 
 const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({ 
-  // selectedTabIndex,
-  // setAreTabsDisabled,
-  // videoPath,
-  // startTime,
-  // endTime
+  selectedTabIndex,
+  setAreTabsDisabled,
+  videoPath,
+  startTime,
+  endTime
 }) => {
-  // const [loadingText, setLoadingText] = useState<string>("");
-  // const [trimOutputPath, setTrimOutputPath] = useState<string>("");
-  // const [loadingProgress, setLoadingProgress] = useState<Progress>({ percent: 0, displayText: "0%"});
-  // const [isLoadingDone, setIsLoadingDone] = useState<boolean>(false);
-  // const [modelPredictions, setModelPredictions] = useState<any[]>([]);
+  const [loadingText, setLoadingText] = useState<string>("");
+  const [trimOutputPath, setTrimOutputPath] = useState<string>("");
+  const [loadingProgress, setLoadingProgress] = useState<Progress>({ percent: 0, displayText: "0%"});
+  const [isLoadingDone, setIsLoadingDone] = useState<boolean>(false);
+  const [frameCount, setFrameCount] = useState(0);
 
   // const detectAccidentsMutation = useMutation(
   //   async () => await window.electronAPI.runAccidentDetectionModel(),
@@ -48,86 +48,90 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
   //   }
   // )
 
-  // const extractFramesMutation = useMutation(
-  //   async () => await window.electronAPI.extractFrames(),
-  //   {
-  //     onMutate: () => {
-  //       setLoadingProgress({ percent: 0, displayText: "0%" });
-  //       setLoadingText("Extracting frames...")
-  //     },
-  //     onSuccess: (_) => {
-  //       setLoadingProgress({ percent: 100, displayText: "100%" });
+  const extractFramesMutation = useMutation(
+    async () => await window.electronAPI.extractFrames(),
+    {
+      onMutate: () => {
+        setLoadingProgress({ percent: 0, displayText: "0%" });
+        setLoadingText("Extracting frames...")
+      },
+      onSuccess: (data) => {
+        setFrameCount(data);
+        setLoadingProgress({ percent: 100, displayText: "100%" });
 
-  //       setTimeout(() => {
-  //         window.electronAPI.removeExtractFramesProgressListener();
-  //         detectAccidentsMutation.mutate();
-  //       }, 500)
-  //     }
-  //   }
-  // )
+        setTimeout(() => {
+          window.electronAPI.removeExtractFramesProgressListener();
+          // detectAccidentsMutation.mutate();
 
-  // const trimMutation = useMutation(
-  //   async () => await window.electronAPI.trimVideo(videoPath, startTime, endTime),
-  //   {
-  //     onMutate: () => {
-  //       setLoadingProgress({ percent: 0, displayText: "0%" });
-  //       setLoadingText("Trimming video...")
-  //     },
-  //     onSuccess: (data) => {
-  //       setLoadingProgress({ percent: 100, displayText: "100%" });
-  //       setTrimOutputPath(data);
+          // TODO: Remove this later once detectAccidentsMutation is uncommented
+          setAreTabsDisabled(false);
+          setIsLoadingDone(true);
+        }, 500)
+      }
+    }
+  )
 
-  //       setTimeout(() => {
-  //         window.electronAPI.removeTrimProgressListener();
-  //         extractFramesMutation.mutate();
-  //       }, 300);
-  //     }
-  //   }
-  // );
+  const trimMutation = useMutation(
+    async () => await window.electronAPI.trimVideo(videoPath, startTime, endTime),
+    {
+      onMutate: () => {
+        setLoadingProgress({ percent: 0, displayText: "0%" });
+        setLoadingText("Trimming video...")
+      },
+      onSuccess: (data) => {
+        setLoadingProgress({ percent: 100, displayText: "100%" });
+        setTrimOutputPath(data);
 
-  // useEffect(() => {
-  //   console.log(`DetectAccidentPanel: selectedTabIndex: ${selectedTabIndex}`)
-  //   if (selectedTabIndex === 1) {
-  //     setIsLoadingDone(false);
-  //     setAreTabsDisabled(true);
-  //     trimMutation.mutate();
+        setTimeout(() => {
+          window.electronAPI.removeTrimProgressListener();
+          extractFramesMutation.mutate();
+        }, 300);
+      }
+    }
+  );
+
+  useEffect(() => {
+    console.log(`DetectAccidentPanel: selectedTabIndex: ${selectedTabIndex}`)
+    if (selectedTabIndex === 1) {
+      setIsLoadingDone(false);
+      setAreTabsDisabled(true);
+      trimMutation.mutate();
       
-  //     window.electronAPI.onTrimProgress((progress: Progress) => {
-  //       if (progress) {
-  //         setLoadingProgress(progress)
-  //       }
-  //     })
+      window.electronAPI.onTrimProgress((progress: Progress) => {
+        if (progress) {
+          setLoadingProgress(progress)
+        }
+      })
 
-  //     window.electronAPI.onExtractFramesProgress((progress: Progress) => {
-  //       if (progress) {
-  //         setLoadingProgress(progress)
-  //       }
-  //     })
+      window.electronAPI.onExtractFramesProgress((progress: Progress) => {
+        if (progress) {
+          setLoadingProgress(progress)
+        }
+      })
 
-  //     window.electronAPI.onRunAccidentDetectionModelProgress((progress: Progress) => {
-  //       console.log(`RECEIVING DATA IN REACT: ${JSON.stringify(progress)}`)
-  //       if (progress) {
-  //         setLoadingProgress(progress)
-  //       }
-  //     })
-  //   }
+      window.electronAPI.onRunAccidentDetectionModelProgress((progress: Progress) => {
+        console.log(`RECEIVING DATA IN REACT: ${JSON.stringify(progress)}`)
+        if (progress) {
+          setLoadingProgress(progress)
+        }
+      })
+    }
 
-  //   return () => {
-  //     if (selectedTabIndex === 1) {
-  //       window.electronAPI.killPythonProcess();
-  //     }
-  //     window.electronAPI.removeTrimProgressListener();
-  //     window.electronAPI.removeExtractFramesProgressListener();
-  //     window.electronAPI.removeRunAccidentDetectionModelProgressListener();
-  //     console.log("DetectAccidentPanel progress listeners removed");
-  //   }
-  // }, [selectedTabIndex])
+    return () => {
+      if (selectedTabIndex === 1) {
+        window.electronAPI.killPythonProcess();
+      }
+      window.electronAPI.removeTrimProgressListener();
+      window.electronAPI.removeExtractFramesProgressListener();
+      window.electronAPI.removeRunAccidentDetectionModelProgressListener();
+      console.log("DetectAccidentPanel progress listeners removed");
+    }
+  }, [selectedTabIndex])
 
   return (
     <Tab.Panel className="w-full h-full bg-white flex flex-col justify-start items-center overflow-y-auto p-4">
-      <FramePagination />
-      {/* {isLoadingDone ? (
-        <p>Loading is done</p>
+      {isLoadingDone ? (
+        <FramePagination frameCount={frameCount} />
       ) : (
         <div className='w-full flex flex-col justify-center items-center gap-2'>
           <div className='w-full flex flex-row justify-between gap-1'>
@@ -139,7 +143,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
             <div className="bg-color-primary rounded-full h-2 transition-width duration-300" style={{ width: `${loadingProgress.percent}%` }}></div>
           </div>
         </div>    
-      )} */}
+      )}
     </Tab.Panel>
   );
 };

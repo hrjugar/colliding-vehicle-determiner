@@ -221,7 +221,11 @@ export function extractFrames(event: Electron.IpcMainInvokeEvent) {
             "displayText": `${Math.round(progress.percent)}%`
           })
         })
-        .on('end', resolve)
+        .on('end', () => {
+          const frames = fs.readdirSync(framesFolderPath);
+          const numFrames = frames.length;
+          resolve(numFrames);
+        })
         .on('error', reject)
         .run();
     })

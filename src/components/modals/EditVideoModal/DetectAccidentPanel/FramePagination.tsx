@@ -1,37 +1,64 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-const randomColors = Array(20).fill(null).map((_, index) => {
-  const redValue = Math.floor((255 / 19) * index);
-  return `rgb(${redValue}, 0, 0)`;
-});
-
 interface FramePaginationProps {
-  // Add any props you need for the component
+  frameCount: number,
 }
 
-const FramePagination: React.FC<FramePaginationProps> = ({ }) => {
-  const images = randomColors;
+interface ImageSizeState {
+  width: number,
+  height: number
+}
 
-  const [rowFirstElementIndex, setRowFirstElementIndex] = useState<number>(0);
-  const [imagePerRow, setImagePerRow] = useState<number>(10);
+const FramePagination: React.FC<FramePaginationProps> = ({ frameCount }) => {
+  const [imageSize, setImageSize] = useState<ImageSizeState>({ width: 0, height: 0 });
+
+  const [rowFirstImageIndex, setRowFirstImageIndex] = useState<number>(0);
+  const [maxImagesPerRow, setMaxImagesPerRow] = useState<number>(10);
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
+  const rowLastImageIndex = Math.min(frameCount, rowFirstImageIndex + maxImagesPerRow);
+  const currImagesPerRow = rowLastImageIndex - rowFirstImageIndex;
+
   const handlePrevious = () => {
-    const newRowFirstElementIndex = Math.max(0, rowFirstElementIndex - imagePerRow);
-    setRowFirstElementIndex(newRowFirstElementIndex);
+    const newRowFirstElementIndex = Math.max(0, rowFirstImageIndex - maxImagesPerRow);
+    setRowFirstImageIndex(newRowFirstElementIndex);
   };
 
   const handleNext = () => {
-    const newRowFirstElementIndex = Math.min(images.length - imagePerRow, rowFirstElementIndex + imagePerRow);
-    setRowFirstElementIndex(newRowFirstElementIndex);
+    if (rowFirstImageIndex + currImagesPerRow >= frameCount) {
+      return;
+    }
+
+    const newRowFirstElementIndex = rowFirstImageIndex + maxImagesPerRow;
+    setRowFirstImageIndex(newRowFirstElementIndex);
   }
 
   useEffect(() => {
+    console.log("Inside first use effect");
+    const img = new Image();
+    img.onload = () => {
+      console.log("Set image size!")
+      setImageSize({
+        width: img.naturalWidth,
+        height: img.naturalHeight
+      })
+    }
+    img.src = `fileHandler://tempFrame//1`;
+  }, []);
+
+  useEffect(() => {
+    if (imageSize.width == 0 || imageSize.height == 0) return;
+    
+    console.log("Running second use effect");
+    console.log("Image size is: ", imageSize);
+
     const calculateImagesPerPage = () => {
-      const imageWidth = 128; // 8 rem = 128px
       const gapSize = 8;
       const containerWidth = imageContainerRef.current?.offsetWidth || 0;
-      setImagePerRow(Math.floor(containerWidth / (imageWidth + gapSize)));
+      const containerHeight = imageContainerRef.current?.offsetHeight || 0;
+
+      const adjustedWidth = (containerHeight / imageSize.height) * imageSize.width;
+      setMaxImagesPerRow(Math.floor(containerWidth / (adjustedWidth + gapSize)));
     };
 
     calculateImagesPerPage();
@@ -40,12 +67,12 @@ const FramePagination: React.FC<FramePaginationProps> = ({ }) => {
     return () => {
       window.removeEventListener('resize', calculateImagesPerPage);
     }
-  }, []);
+  }, [imageSize]);
   
   return (
     <div className='w-full flex flex-col gap-2'>
       <div className='w-full flex flex-row justify-between'>
-        <p>Frames <span>{rowFirstElementIndex + 1}-{rowFirstElementIndex + imagePerRow}</span> of <span>{images.length}</span></p>
+        <p>Frames <span>{rowFirstImageIndex + 1}-{rowLastImageIndex}</span> of <span>{frameCount}</span></p>
         <p>Hide frames without detections</p>
       </div>
       <div className='w-full flex flex-row items-center gap-2'>
@@ -71,12 +98,17 @@ const FramePagination: React.FC<FramePaginationProps> = ({ }) => {
           className='w-full flex flex-row flex-nowrap justify-center h-20 gap-[8px] overflow-hidden'
           ref={imageContainerRef}
         >
-          {Array(imagePerRow).fill(null).map((_, index) => (
-            <div 
-              key={`frame-pagination-${index}`} 
-              className='basis-[128px] grow-0 shrink-0'
-              style={{ backgroundColor: images[rowFirstElementIndex + index] }}
+          {Array(currImagesPerRow).fill(null).map((_, index) => (
+            <img 
+              key={`frame-pagination-${index}`}
+              className='w-auto h-full grow-0 shrink-0'
+              src={`fileHandler://tempFrame//${rowFirstImageIndex + index + 1}`}
             />
+            // <div 
+            //   key={`frame-pagination-${index}`} 
+            //   className='w-auto h-full grow-0 shrink-0'
+            //   style={{ backgroundColor: images[rowFirstImageIndex + index] }}
+            // />
           ))}
         </div>
 

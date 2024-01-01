@@ -39,7 +39,7 @@ interface ElectronAPI {
   onTrimProgress(callback: Function): void,
   removeTrimProgressListener(): void,
 
-  extractFrames(): Promise,
+  extractFrames(): Promise<number>,
   onExtractFramesProgress(callback: Function): void,
   removeExtractFramesProgressListener(): void,
 

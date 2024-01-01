@@ -142,6 +142,21 @@ app.whenReady().then(() => {
     return net.fetch(src);
   })
 
+  protocol.handle('filehandler', async (request) => {
+    console.log('file handler: request url = ' + request.url);
+    const [_, handlerType, handlerValue] = request.url.split('//');
+
+    let src;
+    switch (handlerType) {
+      case "tempFrame":
+      default:
+        src = path.join(app.getPath('userData'), 'temp', 'frames', `${handlerValue}.png`)
+        break;
+    }
+
+    return net.fetch(src);
+  })
+
   ipcMain.handle('findNewVideo', () => findNewVideo())
   ipcMain.handle('dialog:insertVideo', () => insertVideo(db))
   ipcMain.handle('selectAllVideos', () => selectAllVideos(db))
