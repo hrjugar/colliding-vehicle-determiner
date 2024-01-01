@@ -14,6 +14,7 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount }) => {
 
   const [rowFirstImageIndex, setRowFirstImageIndex] = useState<number>(0);
   const [maxImagesPerRow, setMaxImagesPerRow] = useState<number>(10);
+  const [shouldHideFramesWithoutDetection, setShouldHideFramesWithoutDetection] = useState<boolean>(false);
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
   const rowLastImageIndex = Math.min(frameCount, rowFirstImageIndex + maxImagesPerRow);
@@ -77,7 +78,11 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount }) => {
       <div className='w-full flex flex-row justify-between px-4'>
         <h2>Frames <span>{rowFirstImageIndex + 1}-{rowLastImageIndex}</span> of <span>{frameCount}</span></h2>
         <label className="relative inline-flex items-center cursor-pointer">
-          <input type="checkbox" value="" className="sr-only peer" />
+          <input 
+            type="checkbox" 
+            className="sr-only peer" 
+            checked={shouldHideFramesWithoutDetection}  onChange={(e) => setShouldHideFramesWithoutDetection(e.target.checked)}
+          />
           <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-color-primary" />
           <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Hide frames without detection</span>
         </label>
@@ -139,6 +144,7 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount }) => {
           </svg>
         </button>        
       </div>
+      <div>Pagination here</div>
     </div>
   );
 };

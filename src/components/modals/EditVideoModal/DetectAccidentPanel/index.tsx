@@ -133,7 +133,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
       {isLoadingDone ? (
         <FramePagination frameCount={frameCount} />
       ) : (
-        <div className='w-full flex flex-col justify-center items-center gap-2'>
+        <div className='w-full h-full flex flex-col justify-center items-center gap-2'>
           <div className='w-full flex flex-row justify-between gap-1'>
             <p className='font-medium'>{loadingText}</p>
             <p className='font-medium text-gray-400'>{loadingProgress.displayText}</p>
