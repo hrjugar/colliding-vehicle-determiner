@@ -101,7 +101,7 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
   }, [selectedTabIndex, videoRef.current])
 
   return (
-    <Tab.Panel className='w-full h-full flex flex-col justify-start items-center gap-2'>
+    <Tab.Panel className='w-full h-full flex flex-col justify-start items-center gap-2 p-4'>
       <div className="relative w-full h-full flex flex-col items-center justify-center bg-black overflow-hidden">
         <video
           className="max-w-full max-h-full flex object-scale-down aspect-video"

@@ -173,25 +173,25 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
                     })}
                   </Tab.List>
                   <button 
-                      className="group/edit-modal-close-btn p-2 rounded-full bg-transparent hover:bg-color-primary-active"
-                      onClick={() => close()}
+                    className="group/edit-modal-close-btn p-2 rounded-full bg-transparent hover:bg-color-primary-active"
+                    onClick={() => close()}
+                  >
+                    <svg 
+                      width="64" 
+                      height="64" 
+                      viewBox="0 0 64 64"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-3 h-3 text-transparent"
                     >
-                      <svg 
-                        width="64" 
-                        height="64" 
-                        viewBox="0 0 64 64"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="w-3 h-3 text-transparent"
-                      >
-                        <path 
-                          d="M0 0 L64 64 M64 0 L0 64 Z"
-                          className="fill-current stroke-[6] stroke-color-primary group-hover/edit-modal-close-btn:stroke-black"
-                        />
-                      </svg>
-                    </button>
+                      <path 
+                        d="M0 0 L64 64 M64 0 L0 64 Z"
+                        className="fill-current stroke-[6] stroke-color-primary group-hover/edit-modal-close-btn:stroke-black"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 
-                <Tab.Panels className='bg-white w-full h-full px-4 py-4 overflow-hidden'>
+                <Tab.Panels className='bg-white w-full h-full overflow-hidden'>
                   {tabs.map((_, i) => {
                     if (i === 0) {
                       return (
@@ -227,7 +227,7 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
                   })}
                 </Tab.Panels>
 
-                <div className="flex flex-row justify-center gap-2 ">
+                <div className="flex flex-row justify-center gap-2">
                   {selectedTabIndex === 0 ? (
                     <button
                       className={`bg-transparent px-4 py-2 text-color-primary disabled:text-gray-300`}
