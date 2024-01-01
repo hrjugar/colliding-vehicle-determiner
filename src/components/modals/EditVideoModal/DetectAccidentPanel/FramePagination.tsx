@@ -73,12 +73,16 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount }) => {
   }, [imageSize]);
   
   return (
-    <div className='w-full flex flex-col gap-2'>
-      <div className='w-full flex flex-row justify-between'>
-        <p>Frames <span>{rowFirstImageIndex + 1}-{rowLastImageIndex}</span> of <span>{frameCount}</span></p>
-        <p>Hide frames without detections</p>
+    <div className='w-full flex flex-col items-center gap-2'>
+      <div className='w-full flex flex-row justify-between px-4'>
+        <h2>Frames <span>{rowFirstImageIndex + 1}-{rowLastImageIndex}</span> of <span>{frameCount}</span></h2>
+        <label className="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" value="" className="sr-only peer" />
+          <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-color-primary" />
+          <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Hide frames without detection</span>
+        </label>
       </div>
-      <div className='w-full flex flex-row items-center gap-2'>
+      <div className='w-full flex flex-row items-center gap-1'>
         <button 
           className={`group p-2 rounded-full bg-transparent ${isPrevButtonDisabled ? '' : 'hover:bg-color-primary-active'}`}
           onClick={() => handlePrevious()}
