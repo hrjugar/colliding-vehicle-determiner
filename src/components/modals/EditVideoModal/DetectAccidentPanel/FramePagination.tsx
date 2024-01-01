@@ -19,6 +19,9 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount }) => {
   const rowLastImageIndex = Math.min(frameCount, rowFirstImageIndex + maxImagesPerRow);
   const currImagesPerRow = rowLastImageIndex - rowFirstImageIndex;
 
+  const isPrevButtonDisabled = rowFirstImageIndex == 0;
+  const isNextButtonDisabled = rowFirstImageIndex + currImagesPerRow >= frameCount;
+
   const handlePrevious = () => {
     const newRowFirstElementIndex = Math.max(0, rowFirstImageIndex - maxImagesPerRow);
     setRowFirstImageIndex(newRowFirstElementIndex);
@@ -77,8 +80,9 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount }) => {
       </div>
       <div className='w-full flex flex-row items-center gap-2'>
         <button 
-          className="group p-2 rounded-full bg-transparent hover:bg-color-primary-active"
+          className={`group p-2 rounded-full bg-transparent ${isPrevButtonDisabled ? '' : 'hover:bg-color-primary-active'}`}
           onClick={() => handlePrevious()}
+          disabled={isPrevButtonDisabled}
         >
           <svg 
             width="64" 
@@ -89,7 +93,7 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount }) => {
           >
             <path 
               d="M48 0 L16 32 L48 64"
-              className="fill-current stroke-[6] stroke-color-primary group-hover:stroke-black"
+              className={`fill-current stroke-[6] stroke-color-primary ${isPrevButtonDisabled ? 'opacity-30' : 'group-hover:stroke-black'}`}
             />
           </svg>
         </button>
@@ -113,8 +117,9 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount }) => {
         </div>
 
         <button 
-          className="group p-2 rounded-full bg-transparent hover:bg-color-primary-active"
+          className={`group p-2 rounded-full bg-transparent ${isNextButtonDisabled ? '' : 'hover:bg-color-primary-active'}`}
           onClick={() => handleNext()}
+          disabled={isNextButtonDisabled}
         >
           <svg 
             width="64" 
@@ -125,7 +130,7 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount }) => {
           >
             <path 
               d="M16 0 L48 32 L16 64"
-              className="fill-current stroke-[6] stroke-color-primary group-hover:stroke-black"
+              className={`fill-current stroke-[6] stroke-color-primary ${isNextButtonDisabled ? 'opacity-30' : 'group-hover:stroke-black'}`}
             />
           </svg>
         </button>        
