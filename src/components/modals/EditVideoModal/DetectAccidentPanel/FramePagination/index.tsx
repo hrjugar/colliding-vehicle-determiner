@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import FramePaginationController from './FramePaginationController';
 
 interface FramePaginationProps {
   frameCount: number,
@@ -19,9 +20,6 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount }) => {
 
   const rowLastImageIndex = Math.min(frameCount, rowFirstImageIndex + maxImagesPerRow);
   const currImagesPerRow = rowLastImageIndex - rowFirstImageIndex;
-
-  const isPrevButtonDisabled = rowFirstImageIndex == 0;
-  const isNextButtonDisabled = rowFirstImageIndex + currImagesPerRow >= frameCount;
 
   const handlePrevious = () => {
     const newRowFirstElementIndex = Math.max(0, rowFirstImageIndex - maxImagesPerRow);
@@ -87,26 +85,7 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount }) => {
           <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Hide frames without detection</span>
         </label>
       </div>
-      <div className='w-full flex flex-row items-center gap-1'>
-        <button 
-          className={`group p-2 rounded-full bg-transparent ${isPrevButtonDisabled ? '' : 'hover:bg-color-primary-active'}`}
-          onClick={() => handlePrevious()}
-          disabled={isPrevButtonDisabled}
-        >
-          <svg 
-            width="64" 
-            height="64" 
-            viewBox="0 0 64 64"
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-3 h-3 text-transparent"
-          >
-            <path 
-              d="M48 0 L16 32 L48 64"
-              className={`fill-current stroke-[6] stroke-color-primary ${isPrevButtonDisabled ? 'opacity-30' : 'group-hover:stroke-black'}`}
-            />
-          </svg>
-        </button>
-
+      <div className='w-full flex flex-row items-center'>
         <div 
           className='w-full flex flex-row flex-nowrap justify-center h-20 gap-[8px] overflow-hidden'
           ref={imageContainerRef}
@@ -123,28 +102,15 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount }) => {
             //   style={{ backgroundColor: images[rowFirstImageIndex + index] }}
             // />
           ))}
-        </div>
-
-        <button 
-          className={`group p-2 rounded-full bg-transparent ${isNextButtonDisabled ? '' : 'hover:bg-color-primary-active'}`}
-          onClick={() => handleNext()}
-          disabled={isNextButtonDisabled}
-        >
-          <svg 
-            width="64" 
-            height="64" 
-            viewBox="0 0 64 64"
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-3 h-3 text-transparent"
-          >
-            <path 
-              d="M16 0 L48 32 L16 64"
-              className={`fill-current stroke-[6] stroke-color-primary ${isNextButtonDisabled ? 'opacity-30' : 'group-hover:stroke-black'}`}
-            />
-          </svg>
-        </button>        
+        </div>      
       </div>
-      <div>Pagination here</div>
+      <FramePaginationController 
+        rowFirstImageIndex={rowFirstImageIndex}
+        setRowFirstImageIndex={setRowFirstImageIndex}
+        maxImagesPerRow={maxImagesPerRow}
+        currImagesPerRow={currImagesPerRow}
+        frameCount={frameCount}
+      />
     </div>
   );
 };
