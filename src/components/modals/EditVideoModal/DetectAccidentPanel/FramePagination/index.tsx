@@ -18,21 +18,15 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount }) => {
   const [shouldHideFramesWithoutDetection, setShouldHideFramesWithoutDetection] = useState<boolean>(false);
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
+  const [selectedFrame, setSelectedFrame] = useState<number>(0);
+
   const rowLastImageIndex = Math.min(frameCount, rowFirstImageIndex + maxImagesPerRow);
   const currImagesPerRow = rowLastImageIndex - rowFirstImageIndex;
 
-  const handlePrevious = () => {
-    const newRowFirstElementIndex = Math.max(0, rowFirstImageIndex - maxImagesPerRow);
-    setRowFirstImageIndex(newRowFirstElementIndex);
-  };
-
-  const handleNext = () => {
-    if (rowFirstImageIndex + currImagesPerRow >= frameCount) {
-      return;
-    }
-
-    const newRowFirstElementIndex = rowFirstImageIndex + maxImagesPerRow;
-    setRowFirstImageIndex(newRowFirstElementIndex);
+  const goToSelectedFramePage = () => {
+    const selectedFramePage = Math.floor(selectedFrame / maxImagesPerRow);
+    const newFirstImageIndex = selectedFramePage * maxImagesPerRow;
+    setRowFirstImageIndex(newFirstImageIndex);
   }
 
   useEffect(() => {
@@ -75,15 +69,12 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount }) => {
     <div className='w-full flex flex-col items-center gap-2'>
       <div className='w-full flex flex-row justify-between px-4'>
         <h2>Frames <span>{rowFirstImageIndex + 1}-{rowLastImageIndex}</span> of <span>{frameCount}</span></h2>
-        <label className="relative inline-flex items-center cursor-pointer">
-          <input 
-            type="checkbox" 
-            className="sr-only peer" 
-            checked={shouldHideFramesWithoutDetection}  onChange={(e) => setShouldHideFramesWithoutDetection(e.target.checked)}
-          />
-          <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-color-primary" />
-          <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Hide frames without detection</span>
-        </label>
+        <button 
+          className='p-0 text-sm font-medium hover:text-color-primary-active'
+          onClick={goToSelectedFramePage}
+        >
+          Go to selected frame
+        </button>
       </div>
       <div className='w-full flex flex-row items-center'>
         <div 
@@ -93,8 +84,9 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount }) => {
           {Array(currImagesPerRow).fill(null).map((_, index) => (
             <img 
               key={`frame-pagination-${index}`}
-              className='w-auto h-full grow-0 shrink-0'
+              className={`w-auto h-full grow-0 shrink-0 cursor-pointer ${selectedFrame === rowFirstImageIndex + index ? 'border-4 border-color-primary' : ''}`}
               src={`fileHandler://tempFrame//${rowFirstImageIndex + index + 1}`}
+              onClick={() => setSelectedFrame(rowFirstImageIndex + index)}
             />
             // <div 
             //   key={`frame-pagination-${index}`} 
