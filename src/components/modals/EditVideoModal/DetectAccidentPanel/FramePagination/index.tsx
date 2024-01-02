@@ -67,7 +67,7 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount }) => {
   
   return (
     <div className='w-full flex flex-col items-center gap-2'>
-      <div className='w-full flex flex-row justify-between px-4'>
+      <div className='w-full flex flex-row justify-between'>
         <h2>Frames <span>{rowFirstImageIndex + 1}-{rowLastImageIndex}</span> of <span>{frameCount}</span></h2>
         <button 
           className='p-0 text-sm font-medium hover:text-color-primary-active'
