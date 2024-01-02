@@ -83,7 +83,7 @@ const ThresholdHandler: React.FC<ThresholdHandlerProps> = ({
   return (
     <div className='flex flex-col gap-2'>
       <div className='flex flex-row gap-4 justify-between items-center'>
-        <p className='text-sm font-medium text-black'>{name} Threshold</p>
+        <p className='text-sm font-medium text-black whitespace-nowrap'>{name} Threshold</p>
         <div className='flex flex-row items-start'>
           <input
             type='text' 

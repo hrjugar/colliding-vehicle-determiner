@@ -33,6 +33,8 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
   const [confidenceThreshold, setConfidenceThreshold] = useState(50);
   const [iouThreshold, setIouThreshold] = useState(50);
 
+  const [selectedFrame, setSelectedFrame] = useState(0);
+
   // const detectAccidentsMutation = useMutation(
   //   async () => await window.electronAPI.runAccidentDetectionModel(),
   //   {
@@ -135,18 +137,29 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
   return (
     <Tab.Panel className="w-full h-full bg-white flex flex-col justify-start items-center overflow-y-auto p-4">
       <div className='flex flex-col w-full h-full gap-4'>
-        <div className='flex flex-row'>
-          <DetectAccidentModelHandler 
-            confidenceThreshold={confidenceThreshold}
-            setConfidenceThreshold={setConfidenceThreshold}
-            iouThreshold={iouThreshold}
-            setIouThreshold={setIouThreshold}
-          />
+        <div className='flex flex-row gap-2'>
+          <div className='flex flex-col'>
+            <DetectAccidentModelHandler 
+              confidenceThreshold={confidenceThreshold}
+              setConfidenceThreshold={setConfidenceThreshold}
+              iouThreshold={iouThreshold}
+              setIouThreshold={setIouThreshold}
+            />
+          </div>
+
+          <div className='bg-black flex justify-center items-center w-full'>
+            <img
+              src={`fileHandler://tempFrame//${selectedFrame + 1}`}
+              className='object-contain'
+            />
+          </div>
         </div>
 
         <FramePagination 
           // frameCount={frameCount} 
           frameCount={24}
+          selectedFrame={selectedFrame}
+          setSelectedFrame={setSelectedFrame}
         />
       </div>
       {/* {isLoadingDone ? (

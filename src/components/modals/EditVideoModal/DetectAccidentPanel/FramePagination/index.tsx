@@ -3,6 +3,8 @@ import FramePaginationController from './FramePaginationController';
 
 interface FramePaginationProps {
   frameCount: number,
+  selectedFrame: number,
+  setSelectedFrame: (frame: number) => void
 }
 
 interface ImageSizeState {
