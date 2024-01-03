@@ -148,7 +148,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
             </div>
 
             <div className='flex flex-col gap-4'>
-              <FrameDescription detections={[]} />
+              <FrameDescription detections={[]} selectedFrame={selectedFrame} />
               <DetectAccidentModelHandler 
                 confidenceThreshold={confidenceThreshold}
                 setConfidenceThreshold={setConfidenceThreshold}
