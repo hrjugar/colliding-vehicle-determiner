@@ -28,7 +28,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   killPythonProcess: () => ipcRenderer.send('killPythonProcess'),
   
-  runAccidentDetectionModel: () => ipcRenderer.invoke('model:accidentDetection'),
+  runAccidentDetectionModel: (confidenceThreshold: number, iouThreshold: number) => ipcRenderer.invoke('model:accidentDetection', confidenceThreshold, iouThreshold),
   onRunAccidentDetectionModelProgress: (callback: Function) => ipcRenderer.on('model:accidentDetection:progress', (_, progress) => callback(progress)),
   removeRunAccidentDetectionModelProgressListener: () => ipcRenderer.removeAllListeners('model:accidentDetection:progress'),
 })

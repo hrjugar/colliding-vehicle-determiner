@@ -172,7 +172,7 @@ app.whenReady().then(() => {
 
   ipcMain.on('killPythonProcess', () => killPythonProcess())
 
-  ipcMain.handle('model:accidentDetection', () => runAccidentDetectionModel())
+  ipcMain.handle('model:accidentDetection', (_, confidenceThreshold, iouThreshold) => runAccidentDetectionModel(confidenceThreshold, iouThreshold))
   
   createWindow()
 })

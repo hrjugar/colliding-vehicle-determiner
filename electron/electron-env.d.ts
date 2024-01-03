@@ -45,7 +45,7 @@ interface ElectronAPI {
 
   killPythonProcess(): void,
 
-  runAccidentDetectionModel(): Promise,
+  runAccidentDetectionModel(confidenceThreshold: number, iouThreshold: number): Promise,
   onRunAccidentDetectionModelProgress(callback: Function): void,
   removeRunAccidentDetectionModelProgressListener(): void,
 }

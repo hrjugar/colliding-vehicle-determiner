@@ -6,13 +6,15 @@ interface DetectAccidentModelHandlerProps {
   setConfidenceThreshold: (confidenceThreshold: number) => void,
   iouThreshold: number,
   setIouThreshold: (iouThreshold: number) => void,
+  rerunModel: () => void,
 }
 
 const DetectAccidentModelHandler: React.FC<DetectAccidentModelHandlerProps> = ({ 
   confidenceThreshold,
   setConfidenceThreshold,
   iouThreshold,
-  setIouThreshold
+  setIouThreshold,
+  rerunModel
 }) => {
 
   return (
@@ -20,6 +22,8 @@ const DetectAccidentModelHandler: React.FC<DetectAccidentModelHandlerProps> = ({
       <div className='w-full flex flex-row justify-between items-center border-b-[1px] border-gray-300 px-4 py-2'>
         <h2 className='font-semibold text-lg'>Model</h2>
         <button 
+          type='button'
+          onClick={rerunModel}
           className='p-0 text-sm font-medium rounded-sm bg-transparent hover:font-semibold'
         >Rerun</button>
       </div>

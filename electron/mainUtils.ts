@@ -240,7 +240,7 @@ export function killPythonProcess() {
   }
 }
 
-export function runAccidentDetectionModel() {
+export function runAccidentDetectionModel(confidenceThreshold: number, iouThreshold: number) {
   let scriptPath = path.join(
     app.getAppPath(),
     'python-scripts',
@@ -263,7 +263,7 @@ export function runAccidentDetectionModel() {
   if (pythonProcess) {
     pythonProcess.kill();
   }
-  pythonProcess = spawn('python', [scriptPath, framesFolderPath, outputFolderPath, rootFolderPath]);
+  pythonProcess = spawn('python', [scriptPath, framesFolderPath, outputFolderPath, rootFolderPath, confidenceThreshold.toString(), iouThreshold.toString()]);
   
   return new Promise((resolve, reject) => {
     pythonProcess.on('error', (err) => {

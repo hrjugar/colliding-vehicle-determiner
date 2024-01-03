@@ -75,10 +75,10 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
   const transitionAnimationFrameId = useRef<number | null>(null);
 
   const detectAccidentsMutation = useMutation(
-    async () => await window.electronAPI.runAccidentDetectionModel(),
+    async () => await window.electronAPI.runAccidentDetectionModel(confidenceThreshold, iouThreshold),
     {
       onMutate: () => {
-        setLoadingProgress({ percent: 0, displayText: "Loading Python script..." });
+        setLoadingProgress({ percent: 0, displayText: "Loading Python script" });
         setLoadingText("Detecting accidents...")
       },
       onSuccess: (data) => {
@@ -127,6 +127,38 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
       }
     }
   );
+
+  const handleOnProgress = (progress: Progress) => {
+    if (progress) {
+      setLoadingProgress(progress)
+    }
+  };
+
+  const handleOnRunAccidentDetectionModelProgress = (progress: Progress) => {
+    if (progress) {
+      setLoadingProgress({
+        displayText: progress.displayText,
+        percent: progress.percent
+      })
+
+      if (progress.frame !== undefined) {
+        dispatchModelOutput({ type: 'ADD', item: progress.frame})
+      }
+    }
+  };
+
+  const rerunModel = () => {
+    dispatchModelOutput({ type: 'CLEAR' });
+    setSelectedFrame(0);
+    setSelectedPrediction(-1);
+
+    setIsPredictionDone(false);
+    setIsLoadingDone(false);
+    setAreTabsDisabled(true);
+
+    window.electronAPI.onRunAccidentDetectionModelProgress(handleOnRunAccidentDetectionModelProgress);
+    detectAccidentsMutation.mutate();
+  };
 
   useEffect(() => {
     if (isPredictionDone) {
@@ -199,30 +231,11 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
 
       trimMutation.mutate();
       
-      window.electronAPI.onTrimProgress((progress: Progress) => {
-        if (progress) {
-          setLoadingProgress(progress)
-        }
-      })
+      window.electronAPI.onTrimProgress(handleOnProgress)
 
-      window.electronAPI.onExtractFramesProgress((progress: Progress) => {
-        if (progress) {
-          setLoadingProgress(progress)
-        }
-      })
+      window.electronAPI.onExtractFramesProgress(handleOnProgress)
 
-      window.electronAPI.onRunAccidentDetectionModelProgress((progress: Progress) => {
-        if (progress) {
-          setLoadingProgress({
-            displayText: progress.displayText,
-            percent: progress.percent
-          })
-
-          if (progress.frame !== undefined) {
-            dispatchModelOutput({ type: 'ADD', item: progress.frame})
-          }
-        }
-      })
+      window.electronAPI.onRunAccidentDetectionModelProgress(handleOnRunAccidentDetectionModelProgress)
     }
 
     return () => {
@@ -255,6 +268,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
                   setConfidenceThreshold={setConfidenceThreshold}
                   iouThreshold={iouThreshold}
                   setIouThreshold={setIouThreshold}
+                  rerunModel={rerunModel}
                 />
               </div>          
             </div>
