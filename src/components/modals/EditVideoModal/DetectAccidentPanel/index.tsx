@@ -260,9 +260,9 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
             </div>
 
             <FramePagination 
-              frameCount={modelOutput.length} 
               selectedFrame={selectedFrame}
               setSelectedFrame={setSelectedFrame}
+              modelOutput={modelOutput} 
             />
           </div>
         </div>

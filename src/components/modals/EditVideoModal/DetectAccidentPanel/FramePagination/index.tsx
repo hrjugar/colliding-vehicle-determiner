@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import FramePaginationController from './FramePaginationController';
+import { FramePrediction } from '..';
 
 interface FramePaginationProps {
-  frameCount: number,
   selectedFrame: number,
-  setSelectedFrame: (frame: number) => void
+  setSelectedFrame: (frame: number) => void,
+  modelOutput: FramePrediction[]
 }
 
 interface ImageSizeState {
@@ -12,7 +13,9 @@ interface ImageSizeState {
   height: number
 }
 
-const FramePagination: React.FC<FramePaginationProps> = ({ frameCount, selectedFrame, setSelectedFrame }) => {
+const FramePagination: React.FC<FramePaginationProps> = ({ selectedFrame, setSelectedFrame, modelOutput }) => {
+  const frameCount = modelOutput.length;
+
   const [imageSize, setImageSize] = useState<ImageSizeState>({ width: 0, height: 0 });
 
   const [rowFirstImageIndex, setRowFirstImageIndex] = useState<number>(0);
@@ -86,19 +89,30 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount, selectedF
             className='w-full flex flex-row flex-nowrap justify-center h-20 gap-[8px]'
             ref={imageContainerRef}
           >
-            {Array(currImagesPerRow).fill(null).map((_, index) => (
-              <div
-                key={`frame-pagination-${index}`}
-                className={`relative transition-shadow ${selectedFrame === rowFirstImageIndex + index ? 'shadow-around-dark opacity-100' : ''}`}>
-                <img 
-                  className={`w-auto h-full grow-0 shrink-0 cursor-pointer`}
-                  src={`fileHandler://tempFrame//${rowFirstImageIndex + index + 1}`}
-                  onClick={() => setSelectedFrame(rowFirstImageIndex + index)}
-                />
+            {Array(currImagesPerRow).fill(null).map((_, index) => {
+              const currFrameIndex = rowFirstImageIndex + index;
+              const currFramePrediction = modelOutput[currFrameIndex];
 
-                <div className={`absolute inset-0 pointer-events-none bg-white transition-opacity ${selectedFrame === rowFirstImageIndex + index ? 'opacity-50' : 'opacity-0'}`}/>
-              </div>
-            ))}
+              return (
+                <div
+                  key={`frame-pagination-${index}`}
+                  className={`relative transition-shadow flex justify-center items-center ${selectedFrame === currFrameIndex ? 'shadow-around-dark opacity-100' : ''}`}>
+                  <img 
+                    className={`w-auto h-full grow-0 shrink-0 cursor-pointer`}
+                    src={`fileHandler://tempFrame//${currFrameIndex + 1}`}
+                    onClick={() => setSelectedFrame(currFrameIndex)}
+                  />
+
+                  <div className={`absolute inset-0 pointer-events-none bg-white transition-opacity ${selectedFrame === currFrameIndex ? 'opacity-50' : 'opacity-0'}`}/>
+                  
+                  {currFramePrediction ? (
+                    <span className={`absolute bottom-1 right-1 text-xs font-semibold p-1 w-6 h-6 rounded-full flex items-center justify-center border-[1px] border-primary select-none transition-colors ${selectedFrame === currFrameIndex ? 'bg-white ' : 'bg-gray-200 '}`}>
+                      {currFramePrediction.length}
+                    </span>
+                  ) : null}
+                </div>
+              );
+            })}
           </div>      
         </div>
 
