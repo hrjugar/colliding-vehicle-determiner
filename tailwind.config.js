@@ -12,9 +12,14 @@ export const theme = {
           '0%': { transform: 'translateY(100%)' },
           '100%': { opacity: 'translateY(0%)' },
         },
+        scaleUp: {
+          '0%': { transform: 'scale(0)' },
+          '100%': { transform: 'scale(1)' },
+        }
     },
     animation: {
-      'slide-appear': 'slideAppear 0.2s ease-out'
+      'slide-appear': 'slideAppear 0.2s ease-out',
+      'scale-up': 'scaleUp 0.2s ease-out both',
     },
     colors: {
       'color-primary': '#171C46',

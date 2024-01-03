@@ -4,6 +4,7 @@ import { useMutation } from 'react-query';
 import FramePagination from './FramePagination';
 import DetectAccidentModelHandler from './DetectAccidentModelHandler';
 import FrameDescription from './FrameDescription';
+import SelectFrameImage from './SelectedFrameImage';
 
 
 interface DetectAccidentPanelProps {
@@ -14,7 +15,7 @@ interface DetectAccidentPanelProps {
   endTime: number
 }
 
-interface PredictionBox {
+export interface PredictionBox {
   x: number,
   y: number,
   w: number,
@@ -26,7 +27,7 @@ interface PredictionBox {
   confidence: number,
 }
 
-type FramePrediction = PredictionBox[];
+export type FramePrediction = PredictionBox[];
 
 interface Progress {
   percent: number,
@@ -195,7 +196,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
       setIsPredictionDone(false);
       setIsLoadingDone(false);
       setAreTabsDisabled(true);
-      
+
       trimMutation.mutate();
       
       window.electronAPI.onTrimProgress((progress: Progress) => {
@@ -241,12 +242,11 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
         <div className='w-full flex flex-col justify-start items-center p-4'>
           <div className='flex flex-col w-full h-full gap-4'>
             <div className='flex flex-row gap-4'>
-              <div className='bg-black flex justify-center items-center w-full'>
-                <img
-                  src={`fileHandler://tempFrame//${selectedFrame + 1}`}
-                  className='object-contain'
-                />
-              </div>
+              <SelectFrameImage 
+                selectedFrame={selectedFrame} 
+                prediction={modelOutput[selectedFrame]}
+                isLoadingDone={isLoadingDone}
+              />
 
               <div className='flex flex-col gap-4'>
                 <FrameDescription detections={[]} selectedFrame={selectedFrame} />
