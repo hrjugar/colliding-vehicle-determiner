@@ -29,7 +29,7 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount, selectedF
     setRowFirstImageIndex(newFirstImageIndex);
   }
 
-  useEffect(() => {
+  useEffect(() => {    
     console.log("Inside first use effect");
     const img = new Image();
     img.onload = () => {
@@ -41,6 +41,10 @@ const FramePagination: React.FC<FramePaginationProps> = ({ frameCount, selectedF
     }
     img.src = `fileHandler://tempFrame//1`;
   }, []);
+
+  useEffect(() => {
+    goToSelectedFramePage();
+  }, [selectedFrame]);
 
   useEffect(() => {
     if (imageSize.width == 0 || imageSize.height == 0) return;

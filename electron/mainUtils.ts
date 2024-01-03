@@ -171,7 +171,7 @@ export function trimVideo(event: Electron.IpcMainInvokeEvent, videoPath: string,
   
   const outputVideoPath = path.join(tempFolderPath, `trimmed.mp4`)
 
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     ffmpeg(videoPath)
       .setStartTime(startTime)
       .setDuration(endTime - startTime)
@@ -184,7 +184,7 @@ export function trimVideo(event: Electron.IpcMainInvokeEvent, videoPath: string,
         })
       })
       .on('end', () => {
-        resolve(outputVideoPath)
+        resolve()
       })
       .on('error', (err) => {
         reject(err)
@@ -203,7 +203,7 @@ export function extractFrames(event: Electron.IpcMainInvokeEvent) {
   }
   fs.mkdirSync(framesFolderPath);
 
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     ffmpeg.ffprobe(trimmedVideoPath, (err, metadata) => {
       if (err) {
         reject(err)
@@ -222,9 +222,7 @@ export function extractFrames(event: Electron.IpcMainInvokeEvent) {
           })
         })
         .on('end', () => {
-          const frames = fs.readdirSync(framesFolderPath);
-          const numFrames = frames.length;
-          resolve(numFrames);
+          resolve();
         })
         .on('error', reject)
         .run();

@@ -11,6 +11,11 @@ export async function initSocket(win: BrowserWindow) {
 
   for await (const [msg] of serverSocket) {
     const { model, progress } = JSON.parse(msg.toString());
+
+    if (progress.frame !== undefined) {
+      progress.frame = JSON.parse(progress.frame);
+    }
+    
     console.log(`message = ${msg.toString()}`);
     win.webContents.send(`model:${model}:progress`, progress);
     await serverSocket.send("success");
