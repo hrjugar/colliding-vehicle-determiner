@@ -12,15 +12,13 @@ interface ImageSizeState {
   height: number
 }
 
-const FramePagination: React.FC<FramePaginationProps> = ({ frameCount }) => {
+const FramePagination: React.FC<FramePaginationProps> = ({ frameCount, selectedFrame, setSelectedFrame }) => {
   const [imageSize, setImageSize] = useState<ImageSizeState>({ width: 0, height: 0 });
 
   const [rowFirstImageIndex, setRowFirstImageIndex] = useState<number>(0);
   const [maxImagesPerRow, setMaxImagesPerRow] = useState<number>(10);
   const [shouldHideFramesWithoutDetection, setShouldHideFramesWithoutDetection] = useState<boolean>(false);
   const imageContainerRef = useRef<HTMLDivElement>(null);
-
-  const [selectedFrame, setSelectedFrame] = useState<number>(0);
 
   const rowLastImageIndex = Math.min(frameCount, rowFirstImageIndex + maxImagesPerRow);
   const currImagesPerRow = rowLastImageIndex - rowFirstImageIndex;
