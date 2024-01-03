@@ -21,11 +21,16 @@ export const theme = {
       'color-primary-inactive': '#626484',
       'color-primary-active': '#BABFE8',
     },
+    boxShadow: {
+      'around': '0 0 10px 0 rgba(23, 28, 70, 0.2)',
+      'around-dark': '0 0 10px 0 rgba(23, 28, 70, 0.5)',
+    }
   },
 };
 
 export const variants = {
   extend: {
+    boxShadow: ['hover'],
     fill: ['hover', 'focus', 'group-hover', 'group-focus'],
     textColor: ['group-hover'],
   }

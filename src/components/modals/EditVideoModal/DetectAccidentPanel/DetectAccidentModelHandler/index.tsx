@@ -16,24 +16,29 @@ const DetectAccidentModelHandler: React.FC<DetectAccidentModelHandlerProps> = ({
 }) => {
 
   return (
-    <div className='flex flex-col bg-gray-100 border-[1px] border-color-primary px-6 py-4 rounded-sm gap-8'>
-      <div className='flex flex-col gap-4'>
-        <ThresholdHandler 
-          name={'Confidence'} 
-          threshold={confidenceThreshold}
-          setThreshold={setConfidenceThreshold}
-        />
-
-        <ThresholdHandler 
-          name={'IoU'} 
-          threshold={iouThreshold}
-          setThreshold={setIouThreshold}
-        />
+    <div className='flex flex-col bg-white rounded-md shadow-around hover:shadow-around-dark transition-shadow'>
+      <div className='w-full flex flex-row justify-between items-center border-b-[1px] border-gray-300 px-4 py-2'>
+        <h2 className='font-semibold text-lg'>Model</h2>
+        <button 
+          className='p-0 text-sm font-medium rounded-sm bg-transparent hover:font-semibold'
+        >Rerun</button>
       </div>
 
-      <button 
-        className='text-white bg-color-primary px-3 py-2 text-xs self-end rounded-sm'
-      >Rerun Model</button>
+      <div className='flex flex-col gap-8 p-4 pb-8'>
+        <div className='flex flex-col gap-4'>
+          <ThresholdHandler 
+            name={'Confidence'} 
+            threshold={confidenceThreshold}
+            setThreshold={setConfidenceThreshold}
+          />
+
+          <ThresholdHandler 
+            name={'IoU'} 
+            threshold={iouThreshold}
+            setThreshold={setIouThreshold}
+          />
+        </div>
+      </div>
     </div>
   );
 };

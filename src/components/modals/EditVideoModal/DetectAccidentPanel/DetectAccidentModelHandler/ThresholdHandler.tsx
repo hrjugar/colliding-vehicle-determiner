@@ -81,8 +81,8 @@ const ThresholdHandler: React.FC<ThresholdHandlerProps> = ({
   }, []);
 
   return (
-    <div className='flex flex-col gap-2'>
-      <div className='flex flex-row gap-4 justify-between items-center'>
+    <div className='flex flex-col gap-2 group'>
+      <div className='flex flex-row gap-4 justify-between items-center transition-opacity opacity-75 group-hover:opacity-100'>
         <p className='text-sm font-medium text-black whitespace-nowrap'>{name} Threshold</p>
         <div className='flex flex-row items-start'>
           <input
@@ -97,7 +97,7 @@ const ThresholdHandler: React.FC<ThresholdHandlerProps> = ({
 
       <div 
         ref={thresholdSliderRef}
-        className='relative w-full h-2 flex flex-row items-center bg-color-primary rounded-full'
+        className='relative w-full h-2 flex flex-row items-center bg-color-primary rounded-full transition-opacity opacity-90 group-hover:opacity-100'
         onClick={onSliderClick}
       >
         <div 

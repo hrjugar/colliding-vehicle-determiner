@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import FramePagination from './FramePagination';
 import DetectAccidentModelHandler from './DetectAccidentModelHandler';
+import FrameDescription from './FrameDescription';
 
 interface Progress {
   percent: number,
@@ -135,32 +136,35 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
   // }, [selectedTabIndex])
 
   return (
-    <Tab.Panel className="w-full h-full bg-white flex flex-col justify-start items-center overflow-y-auto p-4">
-      <div className='flex flex-col w-full h-full gap-4'>
-        <div className='flex flex-row gap-2'>
-          <div className='flex flex-col'>
-            <DetectAccidentModelHandler 
-              confidenceThreshold={confidenceThreshold}
-              setConfidenceThreshold={setConfidenceThreshold}
-              iouThreshold={iouThreshold}
-              setIouThreshold={setIouThreshold}
-            />
+    <Tab.Panel className="w-full h-full bg-gray-50 flex flex-col overflow-y-auto">
+      <div className='w-full flex flex-col justify-start items-center p-4'>
+        <div className='flex flex-col w-full h-full gap-4'>
+          <div className='flex flex-row gap-4'>
+            <div className='bg-black flex justify-center items-center w-full'>
+              <img
+                src={`fileHandler://tempFrame//${selectedFrame + 1}`}
+                className='object-contain'
+              />
+            </div>
+
+            <div className='flex flex-col gap-4'>
+              <FrameDescription detections={[]} />
+              <DetectAccidentModelHandler 
+                confidenceThreshold={confidenceThreshold}
+                setConfidenceThreshold={setConfidenceThreshold}
+                iouThreshold={iouThreshold}
+                setIouThreshold={setIouThreshold}
+              />
+            </div>          
           </div>
 
-          <div className='bg-black flex justify-center items-center w-full'>
-            <img
-              src={`fileHandler://tempFrame//${selectedFrame + 1}`}
-              className='object-contain'
-            />
-          </div>
+          <FramePagination 
+            // frameCount={frameCount} 
+            frameCount={24}
+            selectedFrame={selectedFrame}
+            setSelectedFrame={setSelectedFrame}
+          />
         </div>
-
-        <FramePagination 
-          // frameCount={frameCount} 
-          frameCount={24}
-          selectedFrame={selectedFrame}
-          setSelectedFrame={setSelectedFrame}
-        />
       </div>
       {/* {isLoadingDone ? (
       ) : (

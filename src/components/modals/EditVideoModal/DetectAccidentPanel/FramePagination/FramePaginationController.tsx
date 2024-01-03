@@ -54,9 +54,9 @@ const FramePaginationController: React.FC<FramePaginationControllerProps> = ({
         <button 
           key={`frame-pagination-button-${pageNumber}`} 
           onClick={() => handlePageClick(pageNumber)}
-          className={`flex items-center justify-center p-3 w-4 h-4 rounded-full ${
-            currPage == pageNumber ? 'bg-white text-color-primary' : 
-            'bg-color-primary text-white hover:bg-color-primary-active hover:text-color-primary'
+          className={`flex items-center justify-center p-3 w-4 h-4 rounded-full transition-colors ${
+            currPage == pageNumber ? 'bg-color-primary text-white' : 
+            'bg-white text-color-primary hover:bg-color-primary-active hover:text-color-primary'
           }`}
         >{pageNumber}</button>
       )
@@ -92,9 +92,9 @@ const FramePaginationController: React.FC<FramePaginationControllerProps> = ({
 
   return (
     <div className='px-4'>
-      <div className='flex flex-row w-full rounded-full font-medium text-sm py-1.5 gap-6 bg-color-primary text-white justify-between items-center overflow-hidden'>
+      <div className='flex flex-row w-full font-medium text-sm py-1.5 gap-6 text-color-primary justify-between items-center'>
         <button 
-            className={`group px-4 bg-transparent border-r-[1px] border-color-primary-inactive`}
+            className={`group px-4 bg-transparent`}
             onClick={() => handlePrevious()}
             disabled={isPrevButtonDisabled}
           >
@@ -107,7 +107,7 @@ const FramePaginationController: React.FC<FramePaginationControllerProps> = ({
             >
               <path 
                 d="M48 0 L16 32 L48 64"
-                className={`fill-current stroke-[8] stroke-white ${isPrevButtonDisabled ? 'opacity-30' : 'group-hover:stroke-color-primary-active'}`}
+                className={`fill-current stroke-[8] stroke-color-primary ${isPrevButtonDisabled ? 'opacity-30' : 'group-hover:stroke-color-primary-active'}`}
               />
             </svg>
           </button>  
@@ -117,7 +117,7 @@ const FramePaginationController: React.FC<FramePaginationControllerProps> = ({
           </div>
           
           <button 
-            className={`group px-4 bg-transparent border-l-[1px] border-color-primary-inactive`}
+            className={`group px-4 bg-transparent`}
             onClick={() => handleNext()}
             disabled={isNextButtonDisabled}
           >
@@ -130,7 +130,7 @@ const FramePaginationController: React.FC<FramePaginationControllerProps> = ({
             >
               <path 
                 d="M16 0 L48 32 L16 64"
-                className={`fill-current stroke-[8] stroke-white ${isNextButtonDisabled ? 'opacity-30' : 'group-hover:stroke-color-primary-active'}`}
+                className={`fill-current stroke-[8] stroke-color-primary ${isNextButtonDisabled ? 'opacity-30' : 'group-hover:stroke-color-primary-active'}`}
               />
             </svg>
           </button>     

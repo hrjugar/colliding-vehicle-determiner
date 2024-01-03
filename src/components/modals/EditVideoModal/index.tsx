@@ -227,7 +227,7 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
                   })}
                 </Tab.Panels>
 
-                <div className="flex flex-row justify-center gap-2">
+                <div className="flex flex-row justify-center gap-2 py-1 border-[1px] border-gray-300">
                   {selectedTabIndex === 0 ? (
                     <button
                       className={`bg-transparent px-4 py-2 text-color-primary disabled:text-gray-300`}
