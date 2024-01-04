@@ -7,6 +7,7 @@ import { getBoundingBoxColor } from '../../../../../globals/utils';
 interface FrameDetectionsProps {
   prediction: FramePrediction,
   selectedFrame: number,
+  bestPrediction: { frame: number, box: number },
   hiddenPredictionIndexes: Set<number>,
   dispatchHiddenPredictionIndexes: React.Dispatch<hiddenPredictionIndexesAction>,
   isFrameTransitionDone: boolean,
@@ -34,6 +35,7 @@ const reducer = (state: boolean[], action: Action): boolean[] => {
 const FrameDetections: React.FC<FrameDetectionsProps> = ({ 
   prediction, 
   selectedFrame,
+  bestPrediction,
   hiddenPredictionIndexes,
   dispatchHiddenPredictionIndexes,
   isFrameTransitionDone
@@ -79,7 +81,37 @@ const FrameDetections: React.FC<FrameDetectionsProps> = ({
                         backgroundColor: getBoundingBoxColor(index)
                       }}
                     />               
-                    <p className='text-sm select-none text-color-primary font-semibold'>Box {index + 1}</p>
+                    <div className='flex flex-row items-center gap-1 text-sm select-none text-color-primary font-semibold text-center'>
+                      <p>Box {index + 1}</p>
+                      {bestPrediction.frame === selectedFrame && bestPrediction.box === index ? (
+                      <svg 
+                        width="64" 
+                        height="64" 
+                        viewBox="0 0 64 64" 
+                        xmlns="http://www.w3.org/2000/svg"
+                        className='w-4 h-4 text-yellow-500'
+                      >
+                        <path 
+                          d="M32 46.0534L48.48 56L44.1066 37.2534L58.6666 24.64L39.4933 22.9867L32 5.33337L24.5066 22.9867L5.33331 24.64L19.8666 37.2534L15.52 56L32 46.0534Z"
+                          className='fill-current'
+                        />
+                      </svg>
+                    ): null}
+                    </div>
+                    {/* {bestPrediction.frame === selectedFrame && bestPrediction.box === index ? (
+                      <svg 
+                        width="64" 
+                        height="64" 
+                        viewBox="0 0 64 64" 
+                        xmlns="http://www.w3.org/2000/svg"
+                        className='w-4 h-4 text-yellow-500'
+                      >
+                        <path 
+                          d="M32 46.0534L48.48 56L44.1066 37.2534L58.6666 24.64L39.4933 22.9867L32 5.33337L24.5066 22.9867L5.33331 24.64L19.8666 37.2534L15.52 56L32 46.0534Z"
+                          className='fill-current'
+                        />
+                      </svg>
+                    ): null} */}
                   </div>
 
                   <button
@@ -107,30 +139,30 @@ const FrameDetections: React.FC<FrameDetectionsProps> = ({
                 </div>
 
                 <div className={`grid transition-all duration-300 ${descriptionToggles[index] ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
-                  <div className='flex flex-col pl-6 overflow-y-hidden'>
-                    <div className='flex flex-row justify-between items-center text-xs'>
+                  <div className='flex flex-col pl-6 overflow-y-hidden text-xs'>
+                    <div className='flex flex-row justify-between items-center'>
                       <p className='font-medium'>x</p>
                       <p>{detection.x.toFixed(2)}</p>
                     </div>
                     
-                    <div className='flex flex-row justify-between items-center text-xs'>
+                    <div className='flex flex-row justify-between items-center'>
                       <p className='font-medium'>y</p>
                       <p>{detection.y.toFixed(2)}</p>
                     </div>
 
-                    <div className='flex flex-row justify-between items-center text-xs'>
+                    <div className='flex flex-row justify-between items-center'>
                       <p className='font-medium'>width</p>
                       <p>{detection.w.toFixed(2)}</p>
                     </div>
 
-                    <div className='flex flex-row justify-between items-center text-xs'>
+                    <div className='flex flex-row justify-between items-center'>
                       <p className='font-medium'>height</p>
                       <p>{detection.h.toFixed(2)}</p>
                     </div>
 
-                    <div className='flex flex-row justify-between items-center text-xs'>
+                    <div className='flex flex-row justify-between items-center'>
                       <p className='font-medium'>confidence</p>
-                      <p>{(detection.confidence * 100).toFixed(2)}%</p>
+                      <p className={bestPrediction.frame === selectedFrame && bestPrediction.box === index ? 'font-bold' : ''}>{(detection.confidence * 100).toFixed(2)}%</p>
                     </div>
                   </div>
                 </div>

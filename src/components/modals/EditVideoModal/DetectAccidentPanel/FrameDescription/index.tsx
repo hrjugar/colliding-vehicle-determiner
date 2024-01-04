@@ -5,6 +5,7 @@ import { FramePrediction, hiddenPredictionIndexesAction } from '..';
 interface FrameDescriptionProps {
   prediction: FramePrediction,
   selectedFrame: number,
+  bestPrediction: { frame: number, box: number }
   hiddenPredictionIndexes: Set<number>,
   dispatchHiddenPredictionIndexes: React.Dispatch<hiddenPredictionIndexesAction>,
   isFrameTransitionDone: boolean,
@@ -13,6 +14,7 @@ interface FrameDescriptionProps {
 const FrameDescription: React.FC<FrameDescriptionProps> = ({ 
   prediction, 
   selectedFrame,
+  bestPrediction,
   hiddenPredictionIndexes,
   dispatchHiddenPredictionIndexes,
   isFrameTransitionDone
@@ -32,6 +34,7 @@ const FrameDescription: React.FC<FrameDescriptionProps> = ({
         <FrameDetections 
           prediction={prediction} 
           selectedFrame={selectedFrame}
+          bestPrediction={bestPrediction}
           hiddenPredictionIndexes={hiddenPredictionIndexes}
           dispatchHiddenPredictionIndexes={dispatchHiddenPredictionIndexes}
           isFrameTransitionDone={isFrameTransitionDone}

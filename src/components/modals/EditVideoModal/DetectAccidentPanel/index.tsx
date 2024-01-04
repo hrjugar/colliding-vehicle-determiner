@@ -102,7 +102,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
   
   const [modelOutput, dispatchModelOutput] = useReducer(modelOutputReducer, []);
   const [selectedFrame, setSelectedFrame] = useState(0);
-  const [selectedPrediction, setSelectedPrediction] = useState(-1);
+  const [bestPrediction, setBestPrediction] = useState({ frame: -1, box: -1 });
 
   const [hiddenPredictionIndexes, dispatchHiddenPredictionIndexes] = useReducer(hiddenPredictionIndexesReducer, new Set<number>());
 
@@ -185,7 +185,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
     dispatchModelOutput({ type: 'CLEAR' });
     dispatchHiddenPredictionIndexes({ type: 'CLEAR' });
     setSelectedFrame(0);
-    setSelectedPrediction(-1);
+    setBestPrediction({ frame: -1, box: -1 });
     
     setIsPredictionDone(false);
     setIsFrameTransitionDone(false);
@@ -205,7 +205,6 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
 
   useEffect(() => {
     if (isPredictionDone) {
-      
       const selectBestPrediction = () => {
         setLoadingText("Selecting best prediction...");
 
@@ -226,7 +225,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
         console.log(`Best prediction: frame ${bestFrameIndex} at box #${bestPredictionIndex} with confidence: ${highestConfidence}`);
     
         if (bestPredictionIndex !== -1) {
-          setSelectedPrediction(bestPredictionIndex);
+          setBestPrediction({ frame: bestFrameIndex, box: bestPredictionIndex });
 
           const startFrame = selectedFrame;
           const endFrame = bestFrameIndex;
@@ -268,7 +267,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
       dispatchModelOutput({ type: 'CLEAR' });
       dispatchHiddenPredictionIndexes({ type: 'CLEAR' });
       setSelectedFrame(0);
-      setSelectedPrediction(-1);
+      setBestPrediction({ frame: -1, box: -1 });
       
       setIsPredictionDone(false);
       setIsFrameTransitionDone(false);
@@ -298,7 +297,14 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
   return (
     <Tab.Panel className="w-full h-full bg-gray-50 flex flex-col overflow-y-auto">
       {isLoadingDone ? (
-        <div className='w-full flex flex-col justify-start items-center p-4'>
+        <div className='w-full flex flex-col justify-start items-center p-4 gap-2'>
+          <button
+            disabled={!isFrameTransitionDone}
+            className={`bg-transparent text-color-primary p-0 self-end hover:font-semibold ${isFrameTransitionDone ? 'cursor-pointer' : 'opacity-30 pointer-events-none'}}`}
+            onClick={() => setSelectedFrame(bestPrediction.frame)}
+          >
+            Select best prediction
+          </button>
           <div className='flex flex-col w-full h-full gap-4'>
             <div className='flex flex-row gap-4'>
               <SelectFrameImage 
@@ -312,6 +318,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
                 <FrameDescription 
                   prediction={modelOutput[selectedFrame]} 
                   selectedFrame={selectedFrame}
+                  bestPrediction={bestPrediction}
                   hiddenPredictionIndexes={hiddenPredictionIndexes}
                   dispatchHiddenPredictionIndexes={dispatchHiddenPredictionIndexes}
                   isFrameTransitionDone={isFrameTransitionDone}
