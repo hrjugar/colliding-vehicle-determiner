@@ -276,6 +276,8 @@ export function runAccidentDetectionModel(confidenceThreshold: number, iouThresh
       console.log("Python script error")
       console.log(data.toString());
     })
+
+    pythonProcess.stderr.pipe(process.stderr);
   
     pythonProcess.on('exit', (code) => {
       console.log(`Python exited with code ${code}`);
