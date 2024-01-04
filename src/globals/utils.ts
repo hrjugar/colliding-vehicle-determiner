@@ -33,3 +33,10 @@ export function convertTimeToObject(time: number) {
 export function addLeadingZero(number: number) {
   return number < 10 ? `0${number}` : number;
 }
+
+export function getBoundingBoxColor(number: number): string {
+  const hue = (number * 137.5) % 360;
+  const saturation = 100;
+  const lightness = 50;
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+};

@@ -1,11 +1,20 @@
 import React from 'react';
+import FrameDetections from './FrameDetections';
+import { FramePrediction, hiddenPredictionIndexesAction } from '..';
 
 interface FrameDescriptionProps {
-  detections: any[],
-  selectedFrame: number
+  prediction: FramePrediction,
+  selectedFrame: number,
+  hiddenPredictionIndexes: number[],
+  dispatchHiddenPredictionIndexes: React.Dispatch<hiddenPredictionIndexesAction>
 }
 
-const FrameDescription: React.FC<FrameDescriptionProps> = ({ detections, selectedFrame }) => {
+const FrameDescription: React.FC<FrameDescriptionProps> = ({ 
+  prediction, 
+  selectedFrame,
+  hiddenPredictionIndexes,
+  dispatchHiddenPredictionIndexes
+}) => {
   return (
     <div className='h-full flex flex-col bg-white rounded-sm shadow-around hover:shadow-around-dark transition-shadow'>
       <div className='w-full flex flex-row justify-between items-center border-b-[1px] border-gray-300 px-4 py-2'>
@@ -18,6 +27,12 @@ const FrameDescription: React.FC<FrameDescriptionProps> = ({ detections, selecte
           <p>{selectedFrame + 1}</p>
         </div>
         <p className='font-semibold'>Detections:</p>
+        <FrameDetections 
+          prediction={prediction} 
+          selectedFrame={selectedFrame}
+          hiddenPredictionIndexes={hiddenPredictionIndexes}
+          dispatchHiddenPredictionIndexes={dispatchHiddenPredictionIndexes}
+        />
       </div>
     </div>
   );

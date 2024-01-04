@@ -53,6 +53,30 @@ const modelOutputReducer = (state: FramePrediction[], action: modelOutputAction)
   }
 };
 
+export type hiddenPredictionIndexesAction = {
+  type: 'ADD';
+  value: number;
+} | {
+  type: 'REMOVE';
+  value: number;
+} | {
+  type: 'CLEAR';
+};
+
+const hiddenPredictionIndexesReducer = (state: number[], action: hiddenPredictionIndexesAction): number[] => {
+  switch (action.type) {
+    case 'CLEAR':
+      return [];
+    case 'ADD':
+      return [...state, action.value];
+    case 'REMOVE':
+      return state.filter((_, index) => index !== action.value);
+    default:
+      return state;
+  }
+};
+
+
 const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({ 
   selectedTabIndex,
   setAreTabsDisabled,
@@ -63,6 +87,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
   const [loadingText, setLoadingText] = useState<string>("");
   const [loadingProgress, setLoadingProgress] = useState<Progress>({ percent: 0, displayText: "0%"});
   const [isLoadingDone, setIsLoadingDone] = useState<boolean>(false);
+  const [isFrameTransitionDone, setIsFrameTransitionDone] = useState<boolean>(false);
   const [isPredictionDone, setIsPredictionDone] = useState<boolean>(false);
 
   const [confidenceThreshold, setConfidenceThreshold] = useState(50);
@@ -71,6 +96,8 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
   const [modelOutput, dispatchModelOutput] = useReducer(modelOutputReducer, []);
   const [selectedFrame, setSelectedFrame] = useState(0);
   const [selectedPrediction, setSelectedPrediction] = useState(-1);
+
+  const [hiddenPredictionIndexes, dispatchHiddenPredictionIndexes] = useReducer(hiddenPredictionIndexesReducer, []);
 
   const transitionAnimationFrameId = useRef<number | null>(null);
 
@@ -149,16 +176,24 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
 
   const rerunModel = () => {
     dispatchModelOutput({ type: 'CLEAR' });
+    dispatchHiddenPredictionIndexes({ type: 'CLEAR' });
     setSelectedFrame(0);
     setSelectedPrediction(-1);
-
+    
     setIsPredictionDone(false);
+    setIsFrameTransitionDone(false);
     setIsLoadingDone(false);
     setAreTabsDisabled(true);
 
     window.electronAPI.onRunAccidentDetectionModelProgress(handleOnRunAccidentDetectionModelProgress);
     detectAccidentsMutation.mutate();
   };
+
+  useEffect(() => {
+    if (isFrameTransitionDone) {
+      dispatchHiddenPredictionIndexes({ type: 'CLEAR' });
+    }
+  }, [selectedFrame]);
 
   useEffect(() => {
     if (isPredictionDone) {
@@ -199,6 +234,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
             } else {
               if (transitionAnimationFrameId.current) {
                 cancelAnimationFrame(transitionAnimationFrameId.current);
+                setIsFrameTransitionDone(true);
               }
             }
           };
@@ -207,8 +243,8 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
         }        
       }
       selectBestPrediction();
-      setAreTabsDisabled(false);
       setIsLoadingDone(true);
+      setAreTabsDisabled(false);
     }
 
     return () => {
@@ -222,10 +258,12 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
     console.log(`DetectAccidentPanel: selectedTabIndex: ${selectedTabIndex}`)
     if (selectedTabIndex === 1) {
       dispatchModelOutput({ type: 'CLEAR' });
+      dispatchHiddenPredictionIndexes({ type: 'CLEAR' });
       setSelectedFrame(0);
       setSelectedPrediction(-1);
-
+      
       setIsPredictionDone(false);
+      setIsFrameTransitionDone(false);
       setIsLoadingDone(false);
       setAreTabsDisabled(true);
 
@@ -258,11 +296,17 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
               <SelectFrameImage 
                 selectedFrame={selectedFrame} 
                 prediction={modelOutput[selectedFrame]}
-                isLoadingDone={isLoadingDone}
+                isFrameTransitionDone={isFrameTransitionDone}
+                hiddenPredictionIndexes={hiddenPredictionIndexes}
               />
 
               <div className='flex flex-col gap-4'>
-                <FrameDescription detections={[]} selectedFrame={selectedFrame} />
+                <FrameDescription 
+                  prediction={modelOutput[selectedFrame]} 
+                  selectedFrame={selectedFrame}
+                  hiddenPredictionIndexes={hiddenPredictionIndexes}
+                  dispatchHiddenPredictionIndexes={dispatchHiddenPredictionIndexes}
+                />
                 <DetectAccidentModelHandler 
                   confidenceThreshold={confidenceThreshold}
                   setConfidenceThreshold={setConfidenceThreshold}
