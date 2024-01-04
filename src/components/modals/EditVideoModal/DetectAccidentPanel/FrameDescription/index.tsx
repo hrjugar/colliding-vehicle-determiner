@@ -5,15 +5,17 @@ import { FramePrediction, hiddenPredictionIndexesAction } from '..';
 interface FrameDescriptionProps {
   prediction: FramePrediction,
   selectedFrame: number,
-  hiddenPredictionIndexes: number[],
-  dispatchHiddenPredictionIndexes: React.Dispatch<hiddenPredictionIndexesAction>
+  hiddenPredictionIndexes: Set<number>,
+  dispatchHiddenPredictionIndexes: React.Dispatch<hiddenPredictionIndexesAction>,
+  isFrameTransitionDone: boolean,
 }
 
 const FrameDescription: React.FC<FrameDescriptionProps> = ({ 
   prediction, 
   selectedFrame,
   hiddenPredictionIndexes,
-  dispatchHiddenPredictionIndexes
+  dispatchHiddenPredictionIndexes,
+  isFrameTransitionDone
 }) => {
   return (
     <div className='h-full flex flex-col bg-white rounded-sm shadow-around hover:shadow-around-dark transition-shadow'>
@@ -32,6 +34,7 @@ const FrameDescription: React.FC<FrameDescriptionProps> = ({
           selectedFrame={selectedFrame}
           hiddenPredictionIndexes={hiddenPredictionIndexes}
           dispatchHiddenPredictionIndexes={dispatchHiddenPredictionIndexes}
+          isFrameTransitionDone={isFrameTransitionDone}
         />
       </div>
     </div>

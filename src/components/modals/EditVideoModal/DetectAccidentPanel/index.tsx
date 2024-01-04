@@ -55,22 +55,29 @@ const modelOutputReducer = (state: FramePrediction[], action: modelOutputAction)
 
 export type hiddenPredictionIndexesAction = {
   type: 'ADD';
-  value: number;
+  index: number;
 } | {
   type: 'REMOVE';
-  value: number;
+  index: number;
+} | {
+  type: 'TOGGLE';
+  index: number;
 } | {
   type: 'CLEAR';
 };
 
-const hiddenPredictionIndexesReducer = (state: number[], action: hiddenPredictionIndexesAction): number[] => {
+const hiddenPredictionIndexesReducer = (state: Set<number>, action: hiddenPredictionIndexesAction): Set<number> => {
   switch (action.type) {
     case 'CLEAR':
-      return [];
-    case 'ADD':
-      return [...state, action.value];
-    case 'REMOVE':
-      return state.filter((_, index) => index !== action.value);
+      return new Set<number>();
+    case 'TOGGLE':
+      if (state.has(action.index)) {
+        state.delete(action.index);
+      } else {
+        state.add(action.index);
+      }
+
+      return new Set(state);
     default:
       return state;
   }
@@ -97,7 +104,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
   const [selectedFrame, setSelectedFrame] = useState(0);
   const [selectedPrediction, setSelectedPrediction] = useState(-1);
 
-  const [hiddenPredictionIndexes, dispatchHiddenPredictionIndexes] = useReducer(hiddenPredictionIndexesReducer, []);
+  const [hiddenPredictionIndexes, dispatchHiddenPredictionIndexes] = useReducer(hiddenPredictionIndexesReducer, new Set<number>());
 
   const transitionAnimationFrameId = useRef<number | null>(null);
 
@@ -191,6 +198,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
 
   useEffect(() => {
     if (isFrameTransitionDone) {
+      console.log("clear hidden prediction indexes");
       dispatchHiddenPredictionIndexes({ type: 'CLEAR' });
     }
   }, [selectedFrame]);
@@ -306,6 +314,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
                   selectedFrame={selectedFrame}
                   hiddenPredictionIndexes={hiddenPredictionIndexes}
                   dispatchHiddenPredictionIndexes={dispatchHiddenPredictionIndexes}
+                  isFrameTransitionDone={isFrameTransitionDone}
                 />
                 <DetectAccidentModelHandler 
                   confidenceThreshold={confidenceThreshold}

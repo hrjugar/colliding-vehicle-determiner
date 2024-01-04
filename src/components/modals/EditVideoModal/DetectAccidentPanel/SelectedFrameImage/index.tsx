@@ -6,7 +6,7 @@ interface SelectFrameImageProps {
   selectedFrame: number,
   prediction: FramePrediction,
   isFrameTransitionDone: boolean,
-  hiddenPredictionIndexes: number[]
+  hiddenPredictionIndexes: Set<number>
 }
 
 const SelectFrameImage: React.FC<SelectFrameImageProps> = ({ 
@@ -26,7 +26,7 @@ const SelectFrameImage: React.FC<SelectFrameImageProps> = ({
         
         {prediction && prediction.length > 0 ? (
           prediction.map((item, index) => {
-            if (hiddenPredictionIndexes.includes(index)) {
+            if (hiddenPredictionIndexes.has(index)) {
               return null;
             }
 
