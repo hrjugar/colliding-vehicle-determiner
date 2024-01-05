@@ -5,15 +5,7 @@ import FramePagination from './FramePagination';
 import DetectAccidentModelHandler from './DetectAccidentModelHandler';
 import FrameDescription from './FrameDescription';
 import SelectFrameImage from './SelectedFrameImage';
-
-
-interface DetectAccidentPanelProps {
-  setAreTabsDisabled: (disabled: boolean) => void,
-  selectedTabIndex: number,
-  videoPath: string,
-  startTime: number,
-  endTime: number
-}
+import useEditVideoModalStore from '@/store/useEditVideoModalStore';
 
 export interface PredictionBox {
   x: number,
@@ -84,13 +76,20 @@ const hiddenPredictionIndexesReducer = (state: Set<number>, action: hiddenPredic
 };
 
 
-const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({ 
-  selectedTabIndex,
-  setAreTabsDisabled,
-  videoPath,
-  startTime,
-  endTime
-}) => {
+const DetectAccidentPanel: React.FC = () => {
+  const [
+    videoPath,
+    startTime,
+    endTime,
+    setTabsDisabledState,
+    selectedTabIndex,
+  ] = useEditVideoModalStore((state) => [
+    state.videoPath,
+    state.sliderMarkers.start,
+    state.sliderMarkers.end,
+    state.setTabsDisabledState,
+    state.selectedTabIndex
+  ]);
   const [loadingText, setLoadingText] = useState<string>("");
   const [loadingProgress, setLoadingProgress] = useState<Progress>({ percent: 0, displayText: "0%"});
   const [isLoadingDone, setIsLoadingDone] = useState<boolean>(false);
@@ -190,7 +189,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
     setIsPredictionDone(false);
     setIsFrameTransitionDone(false);
     setIsLoadingDone(false);
-    setAreTabsDisabled(true);
+    setTabsDisabledState(true);
 
     window.electronAPI.onRunAccidentDetectionModelProgress(handleOnRunAccidentDetectionModelProgress);
     detectAccidentsMutation.mutate();
@@ -251,7 +250,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
       }
       selectBestPrediction();
       setIsLoadingDone(true);
-      setAreTabsDisabled(false);
+      setTabsDisabledState(false);
     }
 
     return () => {
@@ -272,7 +271,7 @@ const DetectAccidentPanel: React.FC<DetectAccidentPanelProps> = ({
       setIsPredictionDone(false);
       setIsFrameTransitionDone(false);
       setIsLoadingDone(false);
-      setAreTabsDisabled(true);
+      setTabsDisabledState(true);
 
       trimMutation.mutate();
       
