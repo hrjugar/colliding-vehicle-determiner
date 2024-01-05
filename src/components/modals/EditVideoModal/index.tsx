@@ -77,25 +77,6 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
   areTabsDisabled,
   setAreTabsDisabled
 }) => {
-  // EDIT VIDEO MODAL STATES -----------------------------------------------
-  const [tabDimensions, setTabDimensions] = useState({width: 0, left: 0});
-  const tabsRef = useRef<(HTMLElement | null)[]>([]);
-  const [isFirstTabRendered, setIsFirstTabRendered] = useState<boolean>(false);
-
-  useEffect(() => {
-    function setTabPosition() {
-      const selectedTab = tabsRef.current[selectedTabIndex];
-      setTabDimensions({
-        width: selectedTab?.clientWidth || 0,
-        left: selectedTab?.offsetLeft || 0,
-      });
-    }
-
-    setTabPosition();
-    window.addEventListener('resize', setTabPosition);
-    return () => window.removeEventListener('resize', setTabPosition);
-  }, [selectedTabIndex, isFirstTabRendered]);
-
   // TRIM VIDEO PANEL STATES -----------------------------------------------
   const [videoMetadata, setVideoMetadata] = useState<VideoMetadata>({
     isInitiallyLoading: true,
@@ -149,12 +130,6 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
                           key={`edit-modal-tab-${i}`}
                           disabled={isTabDisabled}
                           className={`z-[2] p-0`}
-                          ref={(el) => {
-                            tabsRef.current[i] = el
-                            if (i === 0) {
-                              setIsFirstTabRendered(true);
-                            }
-                          }}
                         >
                           {({ selected }) => (
                             <div 
