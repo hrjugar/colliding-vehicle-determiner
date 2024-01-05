@@ -1,5 +1,5 @@
 import React from 'react';
-import { convertSecondsAndMillisecondsToString, convertSecondsToMinutes } from '../../../../../globals/utils';
+import { convertSecondsAndMillisecondsToString, convertSecondsToMinutes } from '@/globals/utils';
 
 interface TrimmingSliderTicksProps {
   duration: number

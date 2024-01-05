@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { FramePrediction } from '..';
-import { getBoundingBoxColor } from '../../../../../globals/utils';
+import { getBoundingBoxColor } from '@/globals/utils';
 
 interface SelectFrameImageProps {
   selectedFrame: number,

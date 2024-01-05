@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { convertSecondsAndMillisecondsToString } from '../../../../../globals/utils';
+import { convertSecondsAndMillisecondsToString } from '@/globals/utils';
 import { SliderMarkersState } from '../..';
 
 interface TrimmingSliderHandle {

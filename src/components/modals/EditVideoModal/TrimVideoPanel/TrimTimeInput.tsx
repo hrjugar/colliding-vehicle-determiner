@@ -1,5 +1,5 @@
 import React from 'react';
-import { addLeadingZero, convertTimeToObject } from '../../../../globals/utils';
+import { addLeadingZero, convertTimeToObject } from '@/globals/utils';
 import { toast } from 'react-toastify';
 import { SliderMarkerType, SliderMarkersAction, SliderMarkersState } from '..';
 

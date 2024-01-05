@@ -1,5 +1,5 @@
-import { QueryKey } from "../../../globals/enums";
-import { getFileNameFromPath } from "../../../globals/utils";
+import { QueryKey } from "@/globals/enums";
+import { getFileNameFromPath } from "@/globals/utils";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
