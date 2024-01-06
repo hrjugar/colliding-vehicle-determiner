@@ -4,13 +4,13 @@ import useEditVideoModalStore from "../../store";
 import { SliderMarkerType } from "../../types";
 import { useShallow } from 'zustand/react/shallow';
 
-interface TrimmingSliderHandle {
+interface TrimmingSliderHandleProps {
   setValue: (newValue: number) => void,
   handleType: SliderMarkerType,
   updateVideoFromTimeHandle?: (newTime: number) => void
 }
 
-const TrimmingSliderHandle: React.FC<TrimmingSliderHandle> = ({
+const TrimmingSliderHandle: React.FC<TrimmingSliderHandleProps> = ({
   setValue,
   handleType,
   updateVideoFromTimeHandle

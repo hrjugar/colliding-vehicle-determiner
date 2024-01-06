@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import FramePaginationController from './FramePaginationController';
-import { FramePrediction } from '..';
+import { FramePrediction } from '../types';
 
 interface FramePaginationProps {
   selectedFrame: number,

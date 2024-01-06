@@ -1,6 +1,7 @@
 
 import { useEffect, useReducer } from 'react';
-import { FramePrediction, hiddenPredictionIndexesAction } from '..';
+import { hiddenPredictionIndexesAction } from '..';
+import { FramePrediction } from '../types';
 import { getBoundingBoxColor } from '@/globals/utils';
 
 interface FrameDetectionsProps {

@@ -1,5 +1,6 @@
 import FrameDetections from './FrameDetections';
-import { FramePrediction, hiddenPredictionIndexesAction } from '..';
+import { hiddenPredictionIndexesAction } from '..';
+import { FramePrediction } from '../types';
 
 interface FrameDescriptionProps {
   prediction: FramePrediction,

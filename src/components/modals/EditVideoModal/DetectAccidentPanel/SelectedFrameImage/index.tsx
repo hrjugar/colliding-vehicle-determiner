@@ -1,4 +1,4 @@
-import { FramePrediction } from '..';
+import { FramePrediction } from '../types';
 import { getBoundingBoxColor } from '@/globals/utils';
 
 interface SelectFrameImageProps {

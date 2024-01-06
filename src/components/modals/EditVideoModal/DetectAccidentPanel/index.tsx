@@ -7,26 +7,8 @@ import FrameDescription from './FrameDescription';
 import SelectFrameImage from './SelectedFrameImage';
 import useEditVideoModalStore from "../store";
 import { useShallow } from 'zustand/react/shallow';
-
-export interface PredictionBox {
-  x: number,
-  y: number,
-  w: number,
-  h: number,
-  xn: number,
-  yn: number,
-  wn: number,
-  hn: number,
-  confidence: number,
-}
-
-export type FramePrediction = PredictionBox[];
-
-interface Progress {
-  percent: number,
-  displayText: string,
-  frame?: FramePrediction
-}
+import { FramePrediction } from './types';
+import { Progress } from './types';
 
 type modelOutputAction = {
   type: 'ADD';
