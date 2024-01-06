@@ -1,4 +1,7 @@
 import { create } from "zustand";
+import { SliderMarkers } from "./types";
+import { SliderMarkerType } from "./types";
+import { VideoMetadata } from "./types";
 
 
 interface ModalState {
@@ -7,22 +10,18 @@ interface ModalState {
   selectedTabIndex: number;
   areTabsDisabled: boolean;
 }
+
 interface ModalAction {
   openModal: (videoPath: string) => void;
   closeModal: () => void;
   selectTab: (index: number) => void;
   setTabsDisabledState: (areTabsDisabled: boolean) => void;
 }
-interface SliderMarkers {
-  start: number;
-  time: number;
-  end: number;
-}
 
-export type SliderMarkerType = 'start' | 'time' | 'end';
 interface SliderState {
   sliderMarkers: SliderMarkers;
 }
+
 interface SliderAction {
   setSliderMarkers: (sliderMarkers: SliderMarkers) => void;
   setStartMarker: (value: number) => void;
@@ -30,20 +29,17 @@ interface SliderAction {
   setEndMarker: (value: number) => void;
   setDynamicMarker: (type: SliderMarkerType, value: number) => void;
 }
-interface VideoMetadata {
-  isInitiallyLoading: boolean;
-  duration: number;
-  paused: boolean;
-}
 interface VideoMetadataState {
   videoMetadata: VideoMetadata;
 }
+
 interface VideoMetadataAction {
   finishInitialVideoLoading: (duration: number) => void;
   setVideoMetadata: (videoMetadata: VideoMetadata) => void;
   playVideo: () => void;
   pauseVideo: () => void;
 }
+
 type EditVideoModalState = ModalState & SliderState & VideoMetadataState;
 type EditVideoModalAction = ModalAction & SliderAction & VideoMetadataAction;
 type EditVideoModalStore = EditVideoModalState & EditVideoModalAction;
@@ -63,6 +59,7 @@ const defaultState: EditVideoModalState = {
     paused: true,
   }
 };
+
 const useEditVideoModalStore = create<EditVideoModalStore>((set) => ({
   ...defaultState,
 

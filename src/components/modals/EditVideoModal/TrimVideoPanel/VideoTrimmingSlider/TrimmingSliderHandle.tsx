@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { convertSecondsAndMillisecondsToString } from '@/globals/utils';
-import useEditVideoModalStore, { SliderMarkerType } from "../../store";
+import useEditVideoModalStore from "../../store";
+import { SliderMarkerType } from "../../types";
 import { useShallow } from 'zustand/react/shallow';
 
 interface TrimmingSliderHandle {
