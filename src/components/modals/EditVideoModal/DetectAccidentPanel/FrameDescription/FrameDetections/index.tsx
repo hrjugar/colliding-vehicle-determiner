@@ -1,27 +1,9 @@
 
 import { useEffect, useReducer } from 'react';
 import { getBoundingBoxColor } from '@/globals/utils';
-import useDetectAccidentPanelStore from '../store';
+import useDetectAccidentPanelStore from '../../store';
 import { useShallow } from 'zustand/react/shallow';
-
-type Action = { 
-  type: 'TOGGLE'; 
-  index: number;
-} | {
-  type: 'INIT';
-  predictionCount: number;
-};
-
-const reducer = (state: boolean[], action: Action): boolean[] => {
-  switch (action.type) {
-    case 'TOGGLE':
-      const updatedDetections = [...state];
-      updatedDetections[action.index] = !updatedDetections[action.index];
-      return updatedDetections;
-    case 'INIT':
-      return new Array(action.predictionCount).fill(true);
-  }
-};
+import useFrameDetectionsStore from './store';
 
 const FrameDetections: React.FC = () => {
   const [
@@ -43,11 +25,21 @@ const FrameDetections: React.FC = () => {
   )
   const prediction = getSelectedFramePredictions();
 
-  const [descriptionToggles, dispatchDescriptionToggles] = useReducer(reducer, []);
+  const [
+    descriptionToggles,
+    initializeDescriptionToggles,
+    toggleBoxDescription,
+  ] = useFrameDetectionsStore(
+    useShallow((state) => [
+      state.descriptionToggles,
+      state.initializeDescriptionToggles,
+      state.toggleBoxDescription
+    ])
+  )
 
   useEffect(() => {
     if (isFrameTransitionDone) {
-      dispatchDescriptionToggles({ type: 'INIT', predictionCount: prediction.length });
+      initializeDescriptionToggles(prediction.length);
     }
   }, [isFrameTransitionDone, selectedFrameIndex]);
 
@@ -64,7 +56,7 @@ const FrameDetections: React.FC = () => {
                 <div className='flex flex-row justify-between items-center'>
                   <div 
                     className='flex flex-row items-center gap-2'
-                    onClick={() => dispatchDescriptionToggles({ type: 'TOGGLE', index: index })}
+                    onClick={() => toggleBoxDescription(index)}
                   >
                     {/* <svg 
                       width="64" 
