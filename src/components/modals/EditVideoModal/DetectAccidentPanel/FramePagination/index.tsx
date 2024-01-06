@@ -79,11 +79,10 @@ const FramePagination: React.FC = () => {
   }, [imageSize]);
   
   return (
-    <div className='w-full flex flex-col items-center bg-white shadow-around hover:shadow-around-dark transition-shadow rounded-md'>
-      <div className='w-full flex flex-row justify-between items-center border-b-[1px] border-gray-300 px-4 py-2'>
-        <h2 className='font-semibold text-lg'>Frames</h2>
-        <button 
-          className='p-0 text-sm font-medium bg-transparent hover:font-semibold'
+    <div className='w-full flex flex-col items-center card'>
+      <div className='card-header'>
+        <h2>Frames</h2>
+        <button
           onClick={goToSelectedFramePage}
         >
           Go to selected frame
