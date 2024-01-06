@@ -1,5 +1,5 @@
 import { Tab } from '@headlessui/react';
-import { useEffect, useReducer, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useMutation } from 'react-query';
 import FramePagination from './FramePagination';
 import DetectAccidentModelHandler from './DetectAccidentModelHandler';
@@ -7,57 +7,8 @@ import FrameDescription from './FrameDescription';
 import SelectFrameImage from './SelectedFrameImage';
 import useEditVideoModalStore from "../store";
 import { useShallow } from 'zustand/react/shallow';
-import { FramePrediction } from './types';
 import { Progress } from './types';
-
-type modelOutputAction = {
-  type: 'ADD';
-  item: FramePrediction;
-} | {
-  type: 'CLEAR';
-};
-
-const modelOutputReducer = (state: FramePrediction[], action: modelOutputAction): FramePrediction[] => {
-  switch (action.type) {
-    case 'ADD':
-      return [...state, action.item];
-    case 'CLEAR':
-      return [];
-    default:
-      return state;
-  }
-};
-
-export type hiddenPredictionIndexesAction = {
-  type: 'ADD';
-  index: number;
-} | {
-  type: 'REMOVE';
-  index: number;
-} | {
-  type: 'TOGGLE';
-  index: number;
-} | {
-  type: 'CLEAR';
-};
-
-const hiddenPredictionIndexesReducer = (state: Set<number>, action: hiddenPredictionIndexesAction): Set<number> => {
-  switch (action.type) {
-    case 'CLEAR':
-      return new Set<number>();
-    case 'TOGGLE':
-      if (state.has(action.index)) {
-        state.delete(action.index);
-      } else {
-        state.add(action.index);
-      }
-
-      return new Set(state);
-    default:
-      return state;
-  }
-};
-
+import useDetectAccidentPanelStore from './store';
 
 const DetectAccidentPanel: React.FC = () => {
   const [
@@ -75,20 +26,66 @@ const DetectAccidentPanel: React.FC = () => {
       state.selectedTabIndex
     ])
   );
-  const [loadingText, setLoadingText] = useState<string>("");
-  const [loadingProgress, setLoadingProgress] = useState<Progress>({ percent: 0, displayText: "0%"});
-  const [isLoadingDone, setIsLoadingDone] = useState<boolean>(false);
-  const [isFrameTransitionDone, setIsFrameTransitionDone] = useState<boolean>(false);
-  const [isPredictionDone, setIsPredictionDone] = useState<boolean>(false);
 
-  const [confidenceThreshold, setConfidenceThreshold] = useState(50);
-  const [iouThreshold, setIouThreshold] = useState(50);
-  
-  const [modelOutput, dispatchModelOutput] = useReducer(modelOutputReducer, []);
-  const [selectedFrame, setSelectedFrame] = useState(0);
-  const [bestPrediction, setBestPrediction] = useState({ frame: -1, box: -1 });
+  const [
+    loadingText,
+    setLoadingText,
+    loadingProgress,
+    setLoadingProgress,
 
-  const [hiddenPredictionIndexes, dispatchHiddenPredictionIndexes] = useReducer(hiddenPredictionIndexesReducer, new Set<number>());
+    isPredictionDone,
+    setIsPredictionDone,
+    isLoadingDone,
+    setIsLoadingDone,
+    isFrameTransitionDone,
+    setIsFrameTransitionDone,
+
+    confidenceThreshold,
+    iouThreshold,
+    
+    allPredictions,
+    addFramePredictions,
+    
+    selectedFrameIndex,
+    setSelectedFrameIndex,
+
+    bestPredictionBoxIndexes,
+    setBestPredictionBoxIndexes,
+
+    clearHiddenPredictionBoxIndexes,
+
+    resetModelStates
+  ] = useDetectAccidentPanelStore(
+    useShallow((state) => [
+      state.loadingText,
+      state.setLoadingText,
+      state.loadingProgress,
+      state.setLoadingProgress,
+
+      state.isPredictionDone,
+      state.setIsPredictionDone,
+      state.isLoadingDone,
+      state.setIsLoadingDone,
+      state.isFrameTransitionDone,
+      state.setIsFrameTransitionDone,
+
+      state.confidenceThreshold,
+      state.iouThreshold,
+
+      state.allPredictions,
+      state.addFramePredictions,
+
+      state.selectedFrameIndex,
+      state.setSelectedFrameIndex,
+
+      state.bestPredictionBoxIndexes,
+      state.setBestPredictionBoxIndexes,
+
+      state.clearHiddenPredictionBoxIndexes,
+
+      state.resetModelStates
+    ])
+  );
 
   const transitionAnimationFrameId = useRef<number | null>(null);
 
@@ -160,22 +157,13 @@ const DetectAccidentPanel: React.FC = () => {
       })
 
       if (progress.frame !== undefined) {
-        dispatchModelOutput({ type: 'ADD', item: progress.frame})
+        addFramePredictions(progress.frame)
       }
     }
   };
 
   const rerunModel = () => {
-    dispatchModelOutput({ type: 'CLEAR' });
-    dispatchHiddenPredictionIndexes({ type: 'CLEAR' });
-    setSelectedFrame(0);
-    setBestPrediction({ frame: -1, box: -1 });
-    
-    setIsPredictionDone(false);
-    setIsFrameTransitionDone(false);
-    setIsLoadingDone(false);
-    setTabsDisabledState(true);
-
+    resetModelStates();
     window.electronAPI.onRunAccidentDetectionModelProgress(handleOnRunAccidentDetectionModelProgress);
     detectAccidentsMutation.mutate();
   };
@@ -183,9 +171,9 @@ const DetectAccidentPanel: React.FC = () => {
   useEffect(() => {
     if (isFrameTransitionDone) {
       console.log("clear hidden prediction indexes");
-      dispatchHiddenPredictionIndexes({ type: 'CLEAR' });
+      clearHiddenPredictionBoxIndexes();
     }
-  }, [selectedFrame]);
+  }, [selectedFrameIndex]);
 
   useEffect(() => {
     if (isPredictionDone) {
@@ -196,8 +184,8 @@ const DetectAccidentPanel: React.FC = () => {
         let bestFrameIndex = -1;
         let bestPredictionIndex = -1;
     
-        modelOutput.forEach((framePrediction, frameIndex) => {
-          framePrediction.forEach((prediction, predictionIndex) => {
+        allPredictions.forEach((framePredictions, frameIndex) => {
+          framePredictions.forEach((prediction, predictionIndex) => {
             if (prediction.confidence > highestConfidence) {
               highestConfidence = prediction.confidence;
               bestFrameIndex = frameIndex;
@@ -209,15 +197,15 @@ const DetectAccidentPanel: React.FC = () => {
         console.log(`Best prediction: frame ${bestFrameIndex} at box #${bestPredictionIndex} with confidence: ${highestConfidence}`);
     
         if (bestPredictionIndex !== -1) {
-          setBestPrediction({ frame: bestFrameIndex, box: bestPredictionIndex });
+          setBestPredictionBoxIndexes({ frameIndex: bestFrameIndex, boxIndex: bestPredictionIndex });
 
-          const startFrame = selectedFrame;
-          const endFrame = bestFrameIndex;
-          const steps = Math.abs(endFrame - startFrame);
+          const startFrameIndex = selectedFrameIndex;
+          const endFrameIndex = bestFrameIndex;
+          const steps = Math.abs(endFrameIndex - startFrameIndex);
           let currentStep = 0;
   
           const animate = () => {
-            setSelectedFrame(startFrame + Math.round((endFrame - startFrame) * (currentStep / steps)));
+            setSelectedFrameIndex(startFrameIndex + Math.round((endFrameIndex - startFrameIndex) * (currentStep / steps)));
             currentStep++;
   
             if (currentStep <= steps) {
@@ -248,22 +236,12 @@ const DetectAccidentPanel: React.FC = () => {
   useEffect(() => {
     console.log(`DetectAccidentPanel: selectedTabIndex: ${selectedTabIndex}`)
     if (selectedTabIndex === 1) {
-      dispatchModelOutput({ type: 'CLEAR' });
-      dispatchHiddenPredictionIndexes({ type: 'CLEAR' });
-      setSelectedFrame(0);
-      setBestPrediction({ frame: -1, box: -1 });
-      
-      setIsPredictionDone(false);
-      setIsFrameTransitionDone(false);
-      setIsLoadingDone(false);
-      setTabsDisabledState(true);
+      resetModelStates();
 
       trimMutation.mutate();
       
       window.electronAPI.onTrimProgress(handleOnProgress)
-
       window.electronAPI.onExtractFramesProgress(handleOnProgress)
-
       window.electronAPI.onRunAccidentDetectionModelProgress(handleOnRunAccidentDetectionModelProgress)
     }
 
@@ -285,43 +263,21 @@ const DetectAccidentPanel: React.FC = () => {
           <button
             disabled={!isFrameTransitionDone}
             className={`bg-transparent text-color-primary p-0 self-end hover:font-semibold ${isFrameTransitionDone ? 'cursor-pointer' : 'opacity-30 pointer-events-none'}}`}
-            onClick={() => setSelectedFrame(bestPrediction.frame)}
+            onClick={() => setSelectedFrameIndex(bestPredictionBoxIndexes.frameIndex)}
           >
             Select best prediction
           </button>
           <div className='flex flex-col w-full h-full gap-4'>
             <div className='flex flex-row gap-4'>
-              <SelectFrameImage 
-                selectedFrame={selectedFrame} 
-                prediction={modelOutput[selectedFrame]}
-                isFrameTransitionDone={isFrameTransitionDone}
-                hiddenPredictionIndexes={hiddenPredictionIndexes}
-              />
+              <SelectFrameImage />
 
               <div className='flex flex-col gap-4'>
-                <FrameDescription 
-                  prediction={modelOutput[selectedFrame]} 
-                  selectedFrame={selectedFrame}
-                  bestPrediction={bestPrediction}
-                  hiddenPredictionIndexes={hiddenPredictionIndexes}
-                  dispatchHiddenPredictionIndexes={dispatchHiddenPredictionIndexes}
-                  isFrameTransitionDone={isFrameTransitionDone}
-                />
-                <DetectAccidentModelHandler 
-                  confidenceThreshold={confidenceThreshold}
-                  setConfidenceThreshold={setConfidenceThreshold}
-                  iouThreshold={iouThreshold}
-                  setIouThreshold={setIouThreshold}
-                  rerunModel={rerunModel}
-                />
+                <FrameDescription />
+                <DetectAccidentModelHandler rerunModel={rerunModel} />
               </div>          
             </div>
 
-            <FramePagination 
-              selectedFrame={selectedFrame}
-              setSelectedFrame={setSelectedFrame}
-              modelOutput={modelOutput} 
-            />
+            <FramePagination />
           </div>
         </div>
       ) : (

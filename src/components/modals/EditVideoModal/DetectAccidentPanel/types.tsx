@@ -10,11 +10,16 @@ export interface PredictionBox {
   confidence: number;
 }
 
-export type FramePrediction = PredictionBox[];
+export type FramePredictions = PredictionBox[];
 
 export interface Progress {
   percent: number;
   displayText: string;
-  frame?: FramePrediction;
+  frame?: FramePredictions;
+}
+
+export interface PredictionBoxIndexes {
+  frameIndex: number;
+  boxIndex: number;
 }
 

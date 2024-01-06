@@ -1,33 +1,39 @@
 import { useEffect, useRef, useState } from 'react';
 import FramePaginationController from './FramePaginationController';
-import { FramePrediction } from '../types';
-
-interface FramePaginationProps {
-  selectedFrame: number,
-  setSelectedFrame: (frame: number) => void,
-  modelOutput: FramePrediction[]
-}
+import useDetectAccidentPanelStore from '../store';
+import { useShallow } from 'zustand/react/shallow';
 
 interface ImageSizeState {
   width: number,
   height: number
 }
 
-const FramePagination: React.FC<FramePaginationProps> = ({ selectedFrame, setSelectedFrame, modelOutput }) => {
-  const frameCount = modelOutput.length;
+const FramePagination: React.FC = () => {
+  const [
+    selectedFrameIndex,
+    setSelectedFrameIndex,
+    allPredictions,
+  ] = useDetectAccidentPanelStore(
+    useShallow((state) => [
+      state.selectedFrameIndex,
+      state.setSelectedFrameIndex,
+      state.allPredictions
+    ])
+  );
+
+  const frameCount = allPredictions.length;
 
   const [imageSize, setImageSize] = useState<ImageSizeState>({ width: 0, height: 0 });
 
   const [rowFirstImageIndex, setRowFirstImageIndex] = useState<number>(0);
   const [maxImagesPerRow, setMaxImagesPerRow] = useState<number>(10);
-  const [shouldHideFramesWithoutDetection, setShouldHideFramesWithoutDetection] = useState<boolean>(false);
   const imageContainerRef = useRef<HTMLDivElement>(null);
 
   const rowLastImageIndex = Math.min(frameCount, rowFirstImageIndex + maxImagesPerRow);
   const currImagesPerRow = rowLastImageIndex - rowFirstImageIndex;
 
   const goToSelectedFramePage = () => {
-    const selectedFramePage = Math.floor(selectedFrame / maxImagesPerRow);
+    const selectedFramePage = Math.floor(selectedFrameIndex / maxImagesPerRow);
     const newFirstImageIndex = selectedFramePage * maxImagesPerRow;
     setRowFirstImageIndex(newFirstImageIndex);
   }
@@ -47,7 +53,7 @@ const FramePagination: React.FC<FramePaginationProps> = ({ selectedFrame, setSel
 
   useEffect(() => {
     goToSelectedFramePage();
-  }, [selectedFrame]);
+  }, [selectedFrameIndex]);
 
   useEffect(() => {
     if (imageSize.width == 0 || imageSize.height == 0) return;
@@ -91,22 +97,22 @@ const FramePagination: React.FC<FramePaginationProps> = ({ selectedFrame, setSel
           >
             {Array(currImagesPerRow).fill(null).map((_, index) => {
               const currFrameIndex = rowFirstImageIndex + index;
-              const currFramePrediction = modelOutput[currFrameIndex];
+              const currFramePrediction = allPredictions[currFrameIndex];
 
               return (
                 <div
                   key={`frame-pagination-${index}`}
-                  className={`relative transition-shadow flex justify-center items-center ${selectedFrame === currFrameIndex ? 'shadow-around-dark opacity-100' : ''}`}>
+                  className={`relative transition-shadow flex justify-center items-center ${selectedFrameIndex === currFrameIndex ? 'shadow-around-dark opacity-100' : ''}`}>
                   <img 
                     className={`w-auto h-full grow-0 shrink-0 cursor-pointer`}
                     src={`fileHandler://tempFrame//${currFrameIndex + 1}`}
-                    onClick={() => setSelectedFrame(currFrameIndex)}
+                    onClick={() => setSelectedFrameIndex(currFrameIndex)}
                   />
 
-                  <div className={`absolute inset-0 pointer-events-none bg-white transition-opacity ${selectedFrame === currFrameIndex ? 'opacity-50' : 'opacity-0'}`}/>
+                  <div className={`absolute inset-0 pointer-events-none bg-white transition-opacity ${selectedFrameIndex === currFrameIndex ? 'opacity-50' : 'opacity-0'}`}/>
                   
                   {currFramePrediction ? (
-                    <span className={`absolute bottom-1 right-1 text-xs font-semibold p-1 w-6 h-6 rounded-full flex items-center justify-center border-[1px] border-primary select-none transition-colors ${selectedFrame === currFrameIndex ? 'bg-white ' : 'bg-gray-200 '}`}>
+                    <span className={`absolute bottom-1 right-1 text-xs font-semibold p-1 w-6 h-6 rounded-full flex items-center justify-center border-[1px] border-primary select-none transition-colors ${selectedFrameIndex === currFrameIndex ? 'bg-white ' : 'bg-gray-200 '}`}>
                       {currFramePrediction.length}
                     </span>
                   ) : null}

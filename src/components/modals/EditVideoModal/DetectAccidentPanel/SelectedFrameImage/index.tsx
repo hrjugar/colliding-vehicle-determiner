@@ -1,37 +1,42 @@
-import { FramePrediction } from '../types';
+import { useShallow } from 'zustand/react/shallow';
+import useDetectAccidentPanelStore from '../store';
+import { FramePredictions } from '../types';
 import { getBoundingBoxColor } from '@/globals/utils';
 
-interface SelectFrameImageProps {
-  selectedFrame: number,
-  prediction: FramePrediction,
-  isFrameTransitionDone: boolean,
-  hiddenPredictionIndexes: Set<number>
-}
 
-const SelectFrameImage: React.FC<SelectFrameImageProps> = ({ 
-  selectedFrame, 
-  prediction, 
-  isFrameTransitionDone, 
-  hiddenPredictionIndexes 
-}) => {
+const SelectFrameImage: React.FC = () => {
+  const [
+    selectedFrameIndex,
+    getSelectedFramePredictions,
+    isFrameTransitionDone,
+    hiddenPredictionBoxIndexes,
+  ] = useDetectAccidentPanelStore(
+    useShallow((state) => [
+      state.selectedFrameIndex,
+      state.getSelectedFramePredictions,
+      state.isFrameTransitionDone,
+      state.hiddenPredictionBoxIndexes,
+    ])
+  )
+  const framePredictions = getSelectedFramePredictions();
 
   return (
     <div className='bg-black flex justify-center items-center w-full'>
       <div className='relative inline-block'>
         <img
-          src={`fileHandler://tempFrame//${selectedFrame + 1}`}
+          src={`fileHandler://tempFrame//${selectedFrameIndex + 1}`}
           className='object-contain'
         />
         
-        {prediction && prediction.length > 0 ? (
-          prediction.map((item, index) => {
-            if (hiddenPredictionIndexes.has(index)) {
+        {framePredictions && framePredictions.length > 0 ? (
+          framePredictions.map((item, index) => {
+            if (hiddenPredictionBoxIndexes.has(index)) {
               return null;
             }
 
             return (
               <div 
-                key={`prediction-${selectedFrame}-${index}`}
+                key={`prediction-${selectedFrameIndex}-${index}`}
                 className={`absolute border-2 border-primary ${isFrameTransitionDone ? 'animate-scale-up' : ''}`}
                 style={{
                   borderColor: getBoundingBoxColor(index),
