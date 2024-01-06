@@ -20,6 +20,7 @@ interface ModalAction {
 
 interface SliderState {
   sliderMarkers: SliderMarkers;
+  isTrimmedPortionChanged: boolean;
 }
 
 interface SliderAction {
@@ -28,6 +29,7 @@ interface SliderAction {
   setTimeMarker: (value: number) => void;
   setEndMarker: (value: number) => void;
   setDynamicMarker: (type: SliderMarkerType, value: number) => void;
+  setIsTrimmedPortionChanged: (isTrimmedPortionChanged: boolean) => void;
 }
 interface VideoMetadataState {
   videoMetadata: VideoMetadata;
@@ -53,6 +55,7 @@ const defaultState: EditVideoModalState = {
     time: 0,
     end: 0,
   },
+  isTrimmedPortionChanged: false,
   videoMetadata: {
     isInitiallyLoading: true,
     duration: 0,
@@ -66,6 +69,7 @@ const useEditVideoModalStore = create<EditVideoModalStore>((set) => ({
   openModal: (videoPath: string) => set({
     isOpen: true,
     videoPath,
+    isTrimmedPortionChanged: true
   }),
   closeModal: () => set({
     ...defaultState,
@@ -75,10 +79,11 @@ const useEditVideoModalStore = create<EditVideoModalStore>((set) => ({
   setTabsDisabledState: (areTabsDisabled: boolean) => set({ areTabsDisabled }),
 
   setSliderMarkers: (newSliderMarkers: SliderMarkers) => set({ sliderMarkers: newSliderMarkers }),
-  setStartMarker: (value: number) => set((state) => ({ sliderMarkers: { ...state.sliderMarkers, start: value } })),
+  setStartMarker: (value: number) => set((state) => ({ sliderMarkers: { ...state.sliderMarkers, start: value }, isTrimmedPortionChanged: true })),
   setTimeMarker: (value: number) => set((state) => ({ sliderMarkers: { ...state.sliderMarkers, time: value } })),
-  setEndMarker: (value: number) => set((state) => ({ sliderMarkers: { ...state.sliderMarkers, end: value } })),
+  setEndMarker: (value: number) => set((state) => ({ sliderMarkers: { ...state.sliderMarkers, end: value }, isTrimmedPortionChanged: true })),
   setDynamicMarker: (type: SliderMarkerType, value: number) => set((state) => ({ sliderMarkers: { ...state.sliderMarkers, [type]: value } })),
+  setIsTrimmedPortionChanged: (isTrimmedPortionChanged: boolean) => set({ isTrimmedPortionChanged }),
 
   finishInitialVideoLoading: (duration: number) => set({ videoMetadata: { paused: true, isInitiallyLoading: false, duration } }),
   setVideoMetadata: (videoMetadata: VideoMetadata) => set({ videoMetadata }),

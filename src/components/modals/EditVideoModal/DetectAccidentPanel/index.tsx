@@ -17,13 +17,17 @@ const DetectAccidentPanel: React.FC = () => {
     endTime,
     setTabsDisabledState,
     selectedTabIndex,
+    isTrimmedPortionChanged,
+    setIsTrimmedPortionChanged
   ] = useEditVideoModalStore(
     useShallow((state) => [
       state.videoPath,
       state.sliderMarkers.start,
       state.sliderMarkers.end,
       state.setTabsDisabledState,
-      state.selectedTabIndex
+      state.selectedTabIndex,
+      state.isTrimmedPortionChanged,
+      state.setIsTrimmedPortionChanged
     ])
   );
 
@@ -102,6 +106,7 @@ const DetectAccidentPanel: React.FC = () => {
         setTimeout(() => {
           window.electronAPI.removeRunAccidentDetectionModelProgressListener();
           setIsPredictionDone(true);
+          setIsTrimmedPortionChanged(false);
         }, 500)
       },
     }
@@ -143,6 +148,54 @@ const DetectAccidentPanel: React.FC = () => {
     }
   );
 
+  const selectBestPrediction = () => {
+    setLoadingText("Selecting best prediction...");
+
+    let highestConfidence = 0;
+    let bestFrameIndex = -1;
+    let bestPredictionIndex = -1;
+
+    allPredictions.forEach((framePredictions, frameIndex) => {
+      framePredictions.forEach((prediction, predictionIndex) => {
+        if (prediction.confidence > highestConfidence) {
+          highestConfidence = prediction.confidence;
+          bestFrameIndex = frameIndex;
+          bestPredictionIndex = predictionIndex;
+        }
+      });
+    });
+
+    console.log(`Best prediction: frame ${bestFrameIndex} at box #${bestPredictionIndex} with confidence: ${highestConfidence}`);
+
+    if (bestPredictionIndex !== -1) {
+      setBestPredictionBoxIndexes({ frameIndex: bestFrameIndex, boxIndex: bestPredictionIndex });
+
+      const startFrameIndex = selectedFrameIndex;
+      const endFrameIndex = bestFrameIndex;
+      const steps = Math.abs(endFrameIndex - startFrameIndex);
+      let currentStep = 0;
+
+      const animate = () => {
+        setSelectedFrameIndex(startFrameIndex + Math.round((endFrameIndex - startFrameIndex) * (currentStep / steps)));
+        currentStep++;
+
+        if (currentStep <= steps) {
+          transitionAnimationFrameId.current = requestAnimationFrame(animate);
+        } else {
+          if (transitionAnimationFrameId.current) {
+            cancelAnimationFrame(transitionAnimationFrameId.current);
+            setIsFrameTransitionDone(true);
+          }
+        }
+      };
+
+      animate();
+    }
+           
+    setIsLoadingDone(true);
+    setTabsDisabledState(false);
+  }  
+
   const handleOnProgress = (progress: Progress) => {
     if (progress) {
       setLoadingProgress(progress)
@@ -169,6 +222,12 @@ const DetectAccidentPanel: React.FC = () => {
   };
 
   useEffect(() => {
+    if (isPredictionDone) {
+      selectBestPrediction();
+    }
+  }, [isPredictionDone])
+
+  useEffect(() => {
     if (isFrameTransitionDone) {
       console.log("clear hidden prediction indexes");
       clearHiddenPredictionBoxIndexes();
@@ -176,66 +235,8 @@ const DetectAccidentPanel: React.FC = () => {
   }, [selectedFrameIndex]);
 
   useEffect(() => {
-    if (isPredictionDone) {
-      const selectBestPrediction = () => {
-        setLoadingText("Selecting best prediction...");
-
-        let highestConfidence = 0;
-        let bestFrameIndex = -1;
-        let bestPredictionIndex = -1;
-    
-        allPredictions.forEach((framePredictions, frameIndex) => {
-          framePredictions.forEach((prediction, predictionIndex) => {
-            if (prediction.confidence > highestConfidence) {
-              highestConfidence = prediction.confidence;
-              bestFrameIndex = frameIndex;
-              bestPredictionIndex = predictionIndex;
-            }
-          });
-        });
-    
-        console.log(`Best prediction: frame ${bestFrameIndex} at box #${bestPredictionIndex} with confidence: ${highestConfidence}`);
-    
-        if (bestPredictionIndex !== -1) {
-          setBestPredictionBoxIndexes({ frameIndex: bestFrameIndex, boxIndex: bestPredictionIndex });
-
-          const startFrameIndex = selectedFrameIndex;
-          const endFrameIndex = bestFrameIndex;
-          const steps = Math.abs(endFrameIndex - startFrameIndex);
-          let currentStep = 0;
-  
-          const animate = () => {
-            setSelectedFrameIndex(startFrameIndex + Math.round((endFrameIndex - startFrameIndex) * (currentStep / steps)));
-            currentStep++;
-  
-            if (currentStep <= steps) {
-              transitionAnimationFrameId.current = requestAnimationFrame(animate);
-            } else {
-              if (transitionAnimationFrameId.current) {
-                cancelAnimationFrame(transitionAnimationFrameId.current);
-                setIsFrameTransitionDone(true);
-              }
-            }
-          };
-
-          animate();
-        }        
-      }
-      selectBestPrediction();
-      setIsLoadingDone(true);
-      setTabsDisabledState(false);
-    }
-
-    return () => {
-      if (transitionAnimationFrameId.current) {
-        cancelAnimationFrame(transitionAnimationFrameId.current);
-      }
-    }
-  }, [isPredictionDone]);
-
-  useEffect(() => {
     console.log(`DetectAccidentPanel: selectedTabIndex: ${selectedTabIndex}`)
-    if (selectedTabIndex === 1) {
+    if (selectedTabIndex === 1 && isTrimmedPortionChanged) {
       resetModelStates();
 
       trimMutation.mutate();
@@ -246,9 +247,14 @@ const DetectAccidentPanel: React.FC = () => {
     }
 
     return () => {
+      if (transitionAnimationFrameId.current) {
+        cancelAnimationFrame(transitionAnimationFrameId.current);
+      }
+
       if (selectedTabIndex === 1) {
         window.electronAPI.killPythonProcess();
       }
+      
       window.electronAPI.removeTrimProgressListener();
       window.electronAPI.removeExtractFramesProgressListener();
       window.electronAPI.removeRunAccidentDetectionModelProgressListener();
