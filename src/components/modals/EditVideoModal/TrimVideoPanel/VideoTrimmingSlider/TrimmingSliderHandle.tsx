@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { convertSecondsAndMillisecondsToString } from '@/globals/utils';
 import useEditVideoModalStore, { SliderMarkerType } from '@/stores/useEditVideoModalStore';
 import { useShallow } from 'zustand/react/shallow';

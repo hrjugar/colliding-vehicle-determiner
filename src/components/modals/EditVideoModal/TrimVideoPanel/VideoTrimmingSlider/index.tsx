@@ -1,4 +1,3 @@
-import React from 'react';
 import TrimmingSliderHandle from './TrimmingSliderHandle';
 import TrimmingSliderTicks from './TrimmingSliderTicks';
 import { toast } from 'react-toastify';

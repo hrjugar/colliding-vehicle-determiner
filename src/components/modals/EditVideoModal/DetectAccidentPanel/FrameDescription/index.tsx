@@ -1,4 +1,3 @@
-import React from 'react';
 import FrameDetections from './FrameDetections';
 import { FramePrediction, hiddenPredictionIndexesAction } from '..';
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import { addLeadingZero, convertTimeToObject } from '@/globals/utils';
 import { toast } from 'react-toastify';
 import useEditVideoModalStore, { SliderMarkerType } from '@/stores/useEditVideoModalStore';

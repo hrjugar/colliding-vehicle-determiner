@@ -1,4 +1,3 @@
-import React from 'react';
 import { convertSecondsAndMillisecondsToString } from '@/globals/utils';
 import useEditVideoModalStore from '@/stores/useEditVideoModalStore';
 

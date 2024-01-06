@@ -1,7 +1,6 @@
 
-import React, { useEffect, useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import { FramePrediction, hiddenPredictionIndexesAction } from '..';
-import { Transition } from '@headlessui/react';
 import { getBoundingBoxColor } from '@/globals/utils';
 
 interface FrameDetectionsProps {

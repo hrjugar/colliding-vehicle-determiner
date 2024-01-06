@@ -1,5 +1,5 @@
 import { Tab } from '@headlessui/react';
-import React, { useEffect, useReducer, useRef, useState } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import { useMutation } from 'react-query';
 import FramePagination from './FramePagination';
 import DetectAccidentModelHandler from './DetectAccidentModelHandler';
