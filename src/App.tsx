@@ -8,11 +8,6 @@ import WindowButtonGroup from './components/WindowButtonGroup';
 const queryClient = new QueryClient();
 
 function App() {
-  /* TODO: 
-    - edit Window interface in electron-env.d.ts to include the properties on preload.ts 
-    properties used in exposeInMainWorld()
-    - remove the "as any" here
-  */
   const test = (window as any).testExpose;
 
   return (
