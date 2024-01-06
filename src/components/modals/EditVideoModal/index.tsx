@@ -3,7 +3,7 @@ import { Fragment, useEffect, useReducer, useRef, useState } from "react";
 import TrimVideoPanel from "./TrimVideoPanel";
 import DetectAccidentPanel from "./DetectAccidentPanel";
 import IdentifyVehiclesPanel from "./IdentifyVehiclesPanel";
-import useEditVideoModalStore from "@/store/useEditVideoModalStore";
+import useEditVideoModalStore from "@/stores/useEditVideoModalStore";
 import { useShallow } from "zustand/react/shallow";
 
 const tabs = [

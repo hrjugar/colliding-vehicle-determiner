@@ -2,7 +2,7 @@ import { Tab } from "@headlessui/react"
 import { useEffect, useRef } from "react";
 import TrimTimeInput from "./TrimTimeInput";
 import VideoTrimmingSlider from "./VideoTrimmingSlider";
-import useEditVideoModalStore from "@/store/useEditVideoModalStore";
+import useEditVideoModalStore from "@/stores/useEditVideoModalStore";
 import { useShallow } from "zustand/react/shallow";
 
 const TrimVideoPanel: React.FC = () => {

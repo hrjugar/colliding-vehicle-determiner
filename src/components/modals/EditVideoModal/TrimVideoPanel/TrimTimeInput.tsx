@@ -1,7 +1,8 @@
 import React from 'react';
 import { addLeadingZero, convertTimeToObject } from '@/globals/utils';
 import { toast } from 'react-toastify';
-import useEditVideoModalStore, { SliderMarkerType } from '@/store/useEditVideoModalStore';
+import useEditVideoModalStore, { SliderMarkerType } from '@/stores/useEditVideoModalStore';
+import { useShallow } from 'zustand/react/shallow';
 
 interface TrimStartHandleInputProps {
   label: string,
@@ -17,11 +18,13 @@ const TrimTimeInput: React.FC<TrimStartHandleInputProps> = ({
     sliderMarkers,
     setDynamicMarker,
     duration
-  ] = useEditVideoModalStore((state) => [
-    state.sliderMarkers,
-    state.setDynamicMarker,
-    state.videoMetadata.duration,
-  ]);
+  ] = useEditVideoModalStore(
+    useShallow((state) => [
+      state.sliderMarkers,
+      state.setDynamicMarker,
+      state.videoMetadata.duration,
+    ])
+  );
   
   const timeObject = convertTimeToObject(sliderMarkers[sliderMarkerType]);
   

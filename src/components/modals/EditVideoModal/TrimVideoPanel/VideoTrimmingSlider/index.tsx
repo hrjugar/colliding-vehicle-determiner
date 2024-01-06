@@ -2,7 +2,8 @@ import React, { useReducer } from 'react';
 import TrimmingSliderHandle from './TrimmingSliderHandle';
 import TrimmingSliderTicks from './TrimmingSliderTicks';
 import { toast } from 'react-toastify';
-import useEditVideoModalStore from '@/store/useEditVideoModalStore';
+import useEditVideoModalStore from '@/stores/useEditVideoModalStore';
+import { useShallow } from 'zustand/react/shallow';
 
 interface VideoTrimmingSliderProps {
   updateVideoFromTimeHandle: (newTime: number) => void
@@ -17,13 +18,15 @@ const VideoTrimmingSlider: React.FC<VideoTrimmingSliderProps> = ({
     setStartMarker,
     setTimeMarker,
     setEndMarker,
-  ] = useEditVideoModalStore((state) => [
-    state.videoMetadata.duration,
-    state.sliderMarkers,
-    state.setStartMarker,
-    state.setTimeMarker,
-    state.setEndMarker,
-  ])
+  ] = useEditVideoModalStore(
+    useShallow((state) => [
+      state.videoMetadata.duration,
+      state.sliderMarkers,
+      state.setStartMarker,
+      state.setTimeMarker,
+      state.setEndMarker,
+    ])
+  )
 
   const handleSliderClick = (e: React.MouseEvent) => {
     const rect = e.currentTarget.getBoundingClientRect();

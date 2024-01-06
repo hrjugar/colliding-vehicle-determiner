@@ -5,7 +5,8 @@ import FramePagination from './FramePagination';
 import DetectAccidentModelHandler from './DetectAccidentModelHandler';
 import FrameDescription from './FrameDescription';
 import SelectFrameImage from './SelectedFrameImage';
-import useEditVideoModalStore from '@/store/useEditVideoModalStore';
+import useEditVideoModalStore from '@/stores/useEditVideoModalStore';
+import { useShallow } from 'zustand/react/shallow';
 
 export interface PredictionBox {
   x: number,
@@ -83,13 +84,15 @@ const DetectAccidentPanel: React.FC = () => {
     endTime,
     setTabsDisabledState,
     selectedTabIndex,
-  ] = useEditVideoModalStore((state) => [
-    state.videoPath,
-    state.sliderMarkers.start,
-    state.sliderMarkers.end,
-    state.setTabsDisabledState,
-    state.selectedTabIndex
-  ]);
+  ] = useEditVideoModalStore(
+    useShallow((state) => [
+      state.videoPath,
+      state.sliderMarkers.start,
+      state.sliderMarkers.end,
+      state.setTabsDisabledState,
+      state.selectedTabIndex
+    ])
+  );
   const [loadingText, setLoadingText] = useState<string>("");
   const [loadingProgress, setLoadingProgress] = useState<Progress>({ percent: 0, displayText: "0%"});
   const [isLoadingDone, setIsLoadingDone] = useState<boolean>(false);

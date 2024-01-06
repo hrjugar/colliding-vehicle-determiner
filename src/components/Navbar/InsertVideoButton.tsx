@@ -2,7 +2,7 @@
 import React, { useReducer } from 'react';
 import { useMutation } from "react-query";
 import EditVideoModal from '../modals/EditVideoModal';
-import useEditVideoModalStore from '@/store/useEditVideoModalStore';
+import useEditVideoModalStore from '@/stores/useEditVideoModalStore';
 
 const InsertVideoButton: React.FC = () => {
   const openModal = useEditVideoModalStore((state) => state.openModal);
