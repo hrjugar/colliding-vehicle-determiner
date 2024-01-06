@@ -1,7 +1,7 @@
 import TrimmingSliderHandle from './TrimmingSliderHandle';
 import TrimmingSliderTicks from './TrimmingSliderTicks';
 import { toast } from 'react-toastify';
-import useEditVideoModalStore from '@/stores/useEditVideoModalStore';
+import useEditVideoModalStore from "../../store";
 import { useShallow } from 'zustand/react/shallow';
 
 interface VideoTrimmingSliderProps {

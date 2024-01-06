@@ -1,5 +1,5 @@
 import { convertSecondsAndMillisecondsToString } from '@/globals/utils';
-import useEditVideoModalStore from '@/stores/useEditVideoModalStore';
+import useEditVideoModalStore from "../../store";
 
 const TrimmingSliderTicks: React.FC = () => {
   const duration = useEditVideoModalStore((state) => state.videoMetadata.duration);

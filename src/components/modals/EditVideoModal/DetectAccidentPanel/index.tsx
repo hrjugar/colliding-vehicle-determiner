@@ -5,7 +5,7 @@ import FramePagination from './FramePagination';
 import DetectAccidentModelHandler from './DetectAccidentModelHandler';
 import FrameDescription from './FrameDescription';
 import SelectFrameImage from './SelectedFrameImage';
-import useEditVideoModalStore from '@/stores/useEditVideoModalStore';
+import useEditVideoModalStore from "../store";
 import { useShallow } from 'zustand/react/shallow';
 
 export interface PredictionBox {

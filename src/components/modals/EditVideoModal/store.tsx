@@ -1,19 +1,18 @@
 import { create } from "zustand";
 
+
 interface ModalState {
   isOpen: boolean;
   videoPath: string;
   selectedTabIndex: number;
   areTabsDisabled: boolean;
 }
-
 interface ModalAction {
   openModal: (videoPath: string) => void;
   closeModal: () => void;
   selectTab: (index: number) => void;
   setTabsDisabledState: (areTabsDisabled: boolean) => void;
 }
-
 interface SliderMarkers {
   start: number;
   time: number;
@@ -21,11 +20,9 @@ interface SliderMarkers {
 }
 
 export type SliderMarkerType = 'start' | 'time' | 'end';
-
 interface SliderState {
-  sliderMarkers: SliderMarkers
+  sliderMarkers: SliderMarkers;
 }
-
 interface SliderAction {
   setSliderMarkers: (sliderMarkers: SliderMarkers) => void;
   setStartMarker: (value: number) => void;
@@ -33,28 +30,23 @@ interface SliderAction {
   setEndMarker: (value: number) => void;
   setDynamicMarker: (type: SliderMarkerType, value: number) => void;
 }
-
 interface VideoMetadata {
   isInitiallyLoading: boolean;
   duration: number;
   paused: boolean;
 }
-
 interface VideoMetadataState {
   videoMetadata: VideoMetadata;
 }
-
 interface VideoMetadataAction {
   finishInitialVideoLoading: (duration: number) => void;
   setVideoMetadata: (videoMetadata: VideoMetadata) => void;
   playVideo: () => void;
   pauseVideo: () => void;
 }
-
 type EditVideoModalState = ModalState & SliderState & VideoMetadataState;
 type EditVideoModalAction = ModalAction & SliderAction & VideoMetadataAction;
 type EditVideoModalStore = EditVideoModalState & EditVideoModalAction;
-
 const defaultState: EditVideoModalState = {
   isOpen: false,
   videoPath: '',
@@ -70,16 +62,15 @@ const defaultState: EditVideoModalState = {
     duration: 0,
     paused: true,
   }
-}
-
+};
 const useEditVideoModalStore = create<EditVideoModalStore>((set) => ({
   ...defaultState,
-  
-  openModal: (videoPath: string) => set({ 
-    isOpen: true, 
+
+  openModal: (videoPath: string) => set({
+    isOpen: true,
     videoPath,
   }),
-  closeModal: () => set({ 
+  closeModal: () => set({
     ...defaultState,
   }),
 
@@ -92,10 +83,9 @@ const useEditVideoModalStore = create<EditVideoModalStore>((set) => ({
   setEndMarker: (value: number) => set((state) => ({ sliderMarkers: { ...state.sliderMarkers, end: value } })),
   setDynamicMarker: (type: SliderMarkerType, value: number) => set((state) => ({ sliderMarkers: { ...state.sliderMarkers, [type]: value } })),
 
-  finishInitialVideoLoading: (duration: number) => set({ videoMetadata: { paused: true, isInitiallyLoading: false, duration }}),
+  finishInitialVideoLoading: (duration: number) => set({ videoMetadata: { paused: true, isInitiallyLoading: false, duration } }),
   setVideoMetadata: (videoMetadata: VideoMetadata) => set({ videoMetadata }),
   playVideo: () => set((state) => ({ videoMetadata: { ...state.videoMetadata, paused: false } })),
   pauseVideo: () => set((state) => ({ videoMetadata: { ...state.videoMetadata, paused: true } })),
 }));
-
 export default useEditVideoModalStore;

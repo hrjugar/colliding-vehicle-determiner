@@ -1,6 +1,6 @@
 import { addLeadingZero, convertTimeToObject } from '@/globals/utils';
 import { toast } from 'react-toastify';
-import useEditVideoModalStore, { SliderMarkerType } from '@/stores/useEditVideoModalStore';
+import useEditVideoModalStore, { SliderMarkerType } from "../store";
 import { useShallow } from 'zustand/react/shallow';
 
 interface TrimStartHandleInputProps {
