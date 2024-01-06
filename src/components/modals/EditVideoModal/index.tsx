@@ -18,12 +18,6 @@ const tabs = [
   }
 ]
 
-export interface VideoMetadata {
-  isInitiallyLoading: boolean,
-  duration: number,
-  paused: boolean
-}
-
 const EditVideoModal: React.FC = () => {
   const [
     isOpen, 
