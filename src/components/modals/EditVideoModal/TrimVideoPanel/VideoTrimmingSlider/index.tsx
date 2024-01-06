@@ -1,22 +1,32 @@
-import React, { useReducer } from 'react';
 import TrimmingSliderHandle from './TrimmingSliderHandle';
 import TrimmingSliderTicks from './TrimmingSliderTicks';
-import { SliderMarkersAction, SliderMarkersState } from '../..';
 import { toast } from 'react-toastify';
+import useEditVideoModalStore from "../../store";
+import { useShallow } from 'zustand/react/shallow';
 
 interface VideoTrimmingSliderProps {
-  duration: number,
-  sliderMarkers: SliderMarkersState,
-  sliderMarkersDispatch: React.Dispatch<SliderMarkersAction>,
   updateVideoFromTimeHandle: (newTime: number) => void
 }
 
 const VideoTrimmingSlider: React.FC<VideoTrimmingSliderProps> = ({ 
-  duration,
-  sliderMarkers,
-  sliderMarkersDispatch,
   updateVideoFromTimeHandle
 }) => {
+  const [
+    duration,
+    sliderMarkers,
+    setStartMarker,
+    setTimeMarker,
+    setEndMarker,
+  ] = useEditVideoModalStore(
+    useShallow((state) => [
+      state.videoMetadata.duration,
+      state.sliderMarkers,
+      state.setStartMarker,
+      state.setTimeMarker,
+      state.setEndMarker,
+    ])
+  )
+
   const handleSliderClick = (e: React.MouseEvent) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -28,7 +38,7 @@ const VideoTrimmingSlider: React.FC<VideoTrimmingSliderProps> = ({
       return;
     }
 
-    sliderMarkersDispatch({ type: 'SET_TIME', payload: newTime });
+    setTimeMarker(newTime);
     
     if (updateVideoFromTimeHandle) {
       updateVideoFromTimeHandle(newTime);
@@ -54,27 +64,19 @@ const VideoTrimmingSlider: React.FC<VideoTrimmingSliderProps> = ({
         />
 
         <TrimmingSliderHandle 
-          duration={duration}
-          sliderMarkers={sliderMarkers}
-          setValue={(newStart) => sliderMarkersDispatch({ type: 'SET_START', payload: newStart })}
+          setValue={(newStart) => setStartMarker(newStart)}
           handleType='start'
         />
         <TrimmingSliderHandle 
-          duration={duration}
-          sliderMarkers={sliderMarkers}
-          setValue={(newEnd) => sliderMarkersDispatch({ type: 'SET_END', payload: newEnd })}
+          setValue={(newEnd) => setEndMarker(newEnd)}
           handleType='end'
         />
         <TrimmingSliderHandle 
-          duration={duration}
-          sliderMarkers={sliderMarkers}
-          setValue={(newTime) => sliderMarkersDispatch({ type: 'SET_TIME', payload: newTime })}
+          setValue={(newTime) => setTimeMarker(newTime)}
           handleType='time'
           updateVideoFromTimeHandle={updateVideoFromTimeHandle}
         />
-        <TrimmingSliderTicks 
-          duration={duration}
-        />
+        <TrimmingSliderTicks />
       </div>
     </div>
   );

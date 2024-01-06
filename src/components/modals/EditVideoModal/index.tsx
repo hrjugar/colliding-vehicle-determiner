@@ -1,8 +1,10 @@
 import { Dialog, Tab, Transition } from "@headlessui/react";
-import { Fragment, useEffect, useReducer, useRef, useState } from "react";
+import { Fragment } from "react";
 import TrimVideoPanel from "./TrimVideoPanel";
 import DetectAccidentPanel from "./DetectAccidentPanel";
 import IdentifyVehiclesPanel from "./IdentifyVehiclesPanel";
+import useEditVideoModalStore from "./store";
+import { useShallow } from "zustand/react/shallow";
 
 const tabs = [
   {
@@ -16,86 +18,29 @@ const tabs = [
   }
 ]
 
-interface EditVideoModalProps {
-  videoPath: string,
-  isOpen: boolean,
-  close: any,
-  selectedTabIndex: number,
-  setSelectedTabIndex: (index: number) => void,
-  areTabsDisabled: boolean,
-  setAreTabsDisabled: (disabled: boolean) => void
-}
-
-export interface VideoMetadata {
-  isInitiallyLoading: boolean,
-  duration: number,
-  paused: boolean
-}
-
-export type SliderMarkerType = "start" | "time" | "end";
-
-export interface SliderMarkersState {
-  start: number;
-  time: number;
-  end: number;
-}
-
-export type SliderMarkersAction = (
-  { type: 'SET'; payload: SliderMarkersState} |
-  { type: 'SET_START'; payload: number } | 
-  { type: 'SET_TIME'; payload: number } | 
-  { type: 'SET_END'; payload: number } |
-  { type: 'SET_DYNAMIC'; payload: { type: SliderMarkerType, value: number } }
-);
-
-const sliderMarkersReducer = (
-  state: SliderMarkersState,
-  action: SliderMarkersAction
-): SliderMarkersState => {
-  switch (action.type) {
-    case 'SET':
-      return { ...action.payload };
-    case 'SET_START':
-      return { ...state, start: action.payload };
-    case 'SET_TIME':
-      return { ...state, time: action.payload };
-    case 'SET_END':
-      return { ...state, end: action.payload };
-    case 'SET_DYNAMIC':
-      return { ...state, [action.payload.type]: action.payload.value };
-    default:
-      return state;
-  }
-};
-
-const EditVideoModal: React.FC<EditVideoModalProps> = ({ 
-  videoPath, 
-  isOpen, 
-  close, 
-  selectedTabIndex, 
-  setSelectedTabIndex,
-  areTabsDisabled,
-  setAreTabsDisabled
-}) => {
-  // TRIM VIDEO PANEL STATES -----------------------------------------------
-  const [videoMetadata, setVideoMetadata] = useState<VideoMetadata>({
-    isInitiallyLoading: true,
-    duration: 0,
-    paused: true
-  });
-  
-  const [sliderMarkers, sliderMarkersDispatch] = useReducer(sliderMarkersReducer, {
-    start: 0,
-    time: 0,
-    end: 0
-  });
+const EditVideoModal: React.FC = () => {
+  const [
+    isOpen, 
+    selectedTabIndex, 
+    areTabsDisabled, 
+    closeModal, 
+    selectTab
+  ] = useEditVideoModalStore(
+    useShallow((state) => [
+      state.isOpen, 
+      state.selectedTabIndex, 
+      state.areTabsDisabled, 
+      state.closeModal, 
+      state.selectTab
+    ])
+  );
 
   return (
     <Transition
       show={isOpen}
       as={Fragment}
     >
-      <Dialog onClose={() => close()}>
+      <Dialog onClose={closeModal}>
         <div className="fixed inset-0 w-screen h-full flex flex-col items-center justify-end">
           <Transition.Child
             as={Fragment}
@@ -106,7 +51,7 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-black/30" onClick={() => close()} />
+            <Dialog.Overlay className="fixed inset-0 bg-black/30" onClick={closeModal} />
           </Transition.Child>
           <Transition.Child
             as={Fragment}
@@ -118,7 +63,7 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
             leaveTo="translate-y-full"          
           >
             <Dialog.Panel className='w-full h-[calc(100vh_-_2.75rem)] flex flex-col bg-white rounded-t-2xl'>
-              <Tab.Group as={Fragment} selectedIndex={selectedTabIndex} onChange={setSelectedTabIndex}>
+              <Tab.Group as={Fragment} selectedIndex={selectedTabIndex} onChange={selectTab}>
                 <div className="w-full flex flex-row items-start justify-between px-6 py-4 border-b-[1px] border-gray-300 gap-2">
                   {/* <div className="flex-1"/> */}
                   <Tab.List className='relative flex flex-row items-center gap-8'>
@@ -149,7 +94,7 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
                   </Tab.List>
                   <button 
                     className="group/edit-modal-close-btn p-2 rounded-full bg-transparent hover:bg-color-primary-active"
-                    onClick={() => close()}
+                    onClick={closeModal}
                   >
                     <svg 
                       width="64" 
@@ -172,23 +117,12 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
                       return (
                         <TrimVideoPanel
                           key={'edit-modal-tab-panel-0'}
-                          videoPath={videoPath} 
-                          videoMetadata={videoMetadata}
-                          setVideoMetadata={setVideoMetadata}
-                          sliderMarkers={sliderMarkers}
-                          sliderMarkersDispatch={sliderMarkersDispatch}
-                          selectedTabIndex={selectedTabIndex}
                         />
                       )
                     } else if (i === 1) {
                       return (
                         <DetectAccidentPanel 
                           key={'edit-modal-tab-panel-1'} 
-                          selectedTabIndex={selectedTabIndex} 
-                          setAreTabsDisabled={setAreTabsDisabled}
-                          videoPath={videoPath}
-                          startTime={sliderMarkers.start}
-                          endTime={sliderMarkers.end}
                         />
                       )
                     } else if (i === 2) {
@@ -207,7 +141,7 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
                     <button
                       className={`bg-transparent px-4 py-2 text-color-primary disabled:text-gray-300`}
                       disabled={areTabsDisabled}
-                      onClick={() => close()}
+                      onClick={closeModal}
                     >
                       Cancel
                     </button>
@@ -215,7 +149,7 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
                     <button 
                       className={`bg-transparent px-4 py-2 text-color-primary disabled:text-gray-300`}
                       disabled={areTabsDisabled}
-                      onClick={() => setSelectedTabIndex(selectedTabIndex - 1)}
+                      onClick={() => selectTab(selectedTabIndex - 1)}
                     >
                       Previous
                     </button>
@@ -223,7 +157,7 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
                   {selectedTabIndex === tabs.length - 1 ? (
                     <button
                       className="bg-transparent px-4 py-2 text-color-primary disabled:text-gray-300"
-                      onClick={() => close()}
+                      onClick={closeModal}
                       disabled={areTabsDisabled}
                     >
                       Finish
@@ -232,7 +166,7 @@ const EditVideoModal: React.FC<EditVideoModalProps> = ({
                     <button 
                       className="bg-transparent px-4 py-2 text-color-primary disabled:text-gray-300"
                       disabled={selectedTabIndex === tabs.length - 1 || areTabsDisabled}
-                      onClick={() => setSelectedTabIndex(selectedTabIndex + 1)}
+                      onClick={() => selectTab(selectedTabIndex + 1)}
                     >
                       Next
                     </button>

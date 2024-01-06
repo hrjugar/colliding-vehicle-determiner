@@ -1,11 +1,9 @@
-import React from 'react';
-import { convertSecondsAndMillisecondsToString, convertSecondsToMinutes } from '../../../../../globals/utils';
+import { convertSecondsAndMillisecondsToString } from '@/globals/utils';
+import useEditVideoModalStore from "../../store";
 
-interface TrimmingSliderTicksProps {
-  duration: number
-}
+const TrimmingSliderTicks: React.FC = () => {
+  const duration = useEditVideoModalStore((state) => state.videoMetadata.duration);
 
-const TrimmingSliderTicks: React.FC<TrimmingSliderTicksProps> = ({ duration }) => {
   return (
     // Add your JSX code here
     <div className='absolute top-0 w-full h-4 transform translate-y-4'>

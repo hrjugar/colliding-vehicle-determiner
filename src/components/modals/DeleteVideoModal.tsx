@@ -1,7 +1,7 @@
-import { getFileNameFromPath } from '../../globals/utils';
+import { getFileNameFromPath } from '@/globals/utils';
 import { useQueryClient, useMutation } from 'react-query';
 import { toast } from 'react-toastify';
-import { QueryKey } from '../../globals/enums';
+import { QueryKey } from '@/globals/enums';
 import { Dialog } from '@headlessui/react';
 import { useState } from 'react';
 

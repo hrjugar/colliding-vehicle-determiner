@@ -1,27 +1,34 @@
 import { Tab } from "@headlessui/react"
 import { useEffect, useRef } from "react";
-import { SliderMarkersAction, SliderMarkersState, VideoMetadata } from "..";
 import TrimTimeInput from "./TrimTimeInput";
 import VideoTrimmingSlider from "./VideoTrimmingSlider";
+import useEditVideoModalStore from "../store";
+import { useShallow } from "zustand/react/shallow";
 
-interface TrimVideoPanelProps {
-  videoPath: string,
-  videoMetadata: VideoMetadata,
-  setVideoMetadata: React.Dispatch<React.SetStateAction<VideoMetadata>>,
-  sliderMarkers: SliderMarkersState,
-  sliderMarkersDispatch: React.Dispatch<SliderMarkersAction>
-  selectedTabIndex: number
-}
-
-// TODO: Fix part where sliders are intersecting and causing bugs
-const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({ 
-  videoPath,
-  videoMetadata,
-  setVideoMetadata,
-  sliderMarkers,
-  sliderMarkersDispatch,
-  selectedTabIndex
-}) => {
+const TrimVideoPanel: React.FC = () => {
+  const [
+    videoPath, 
+    selectedTabIndex, 
+    sliderMarkers,
+    setSliderMarkers,
+    setTimeMarker,
+    videoMetadata,
+    finishInitialVideoLoading,
+    playVideo,
+    pauseVideo
+  ] = useEditVideoModalStore(
+    useShallow((state) => [
+      state.videoPath,
+      state.selectedTabIndex,
+      state.sliderMarkers,
+      state.setSliderMarkers,
+      state.setTimeMarker,
+      state.videoMetadata,
+      state.finishInitialVideoLoading,
+      state.playVideo,
+      state.pauseVideo
+    ])
+  )
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const handleVideoSkip = (isBackwards : boolean) => {
@@ -34,10 +41,10 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
     if (videoRef.current) {
       if (videoRef.current.paused) {
         videoRef.current.play();
-        setVideoMetadata((prevState) => ({...prevState, paused: false}))
+        playVideo();
       } else {
         videoRef.current.pause();
-        setVideoMetadata((prevState) => ({...prevState, paused: true}))
+        pauseVideo();
       }
     }
   }
@@ -54,15 +61,12 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
     if (videoRef.current && videoRef.current.readyState >= 3 && videoMetadata.isInitiallyLoading) {
       const duration = videoRef.current!.duration
       console.log(`duration: ${duration}`)
-      setVideoMetadata((prevState) => ({...prevState,
-        isInitiallyLoading: false,
-        duration
-      }))
-      sliderMarkersDispatch({ type: 'SET', payload: {
+      finishInitialVideoLoading(duration)
+      setSliderMarkers({
         start: 0,
         time: 0,
         end: duration
-      }});
+      });
     }
   };
 
@@ -73,10 +77,10 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
       if (currentTime > sliderMarkers.end) {
         videoRef.current.currentTime = sliderMarkers.start;
         videoRef.current.pause();
-        setVideoMetadata((prevState) => ({...prevState, paused: true}))
+        pauseVideo();
       }
 
-      sliderMarkersDispatch({ type: 'SET_TIME', payload: currentTime });
+      setTimeMarker(currentTime);
     }
   };
 
@@ -84,18 +88,18 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
     if (videoRef.current) {
       videoRef.current.currentTime = sliderMarkers.start;
       videoRef.current.pause();
-      setVideoMetadata((prevState) => ({...prevState, paused: true}))
+      pauseVideo();
     }
   }
 
-  useEffect(() => {
-    setVideoMetadata((prevState) => ({...prevState, isInitiallyLoading: true, paused: true, duration: 0}));
-  }, [videoPath]);
+  // useEffect(() => {
+  //   setVideoMetadata((prevState) => ({...prevState, isInitiallyLoading: true, paused: true, duration: 0}));
+  // }, [videoPath]);
 
   useEffect(() => {
     if (selectedTabIndex === 0 && videoRef.current) {
       videoRef.current.pause();
-      setVideoMetadata((prevState) => ({...prevState, paused: true}))
+      pauseVideo();
       videoRef.current.currentTime = sliderMarkers.time;
     }
   }, [selectedTabIndex, videoRef.current])
@@ -125,10 +129,7 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
             <div className="flex-1 flex flex-row justify-start items-center">
               <TrimTimeInput 
                 label={"Start"}
-                sliderMarkers={sliderMarkers}
-                sliderMarkersDispatch={sliderMarkersDispatch}
                 sliderMarkerType="start"
-                duration={videoMetadata.duration}
               />
             </div>
 
@@ -184,18 +185,12 @@ const TrimVideoPanel: React.FC<TrimVideoPanelProps> = ({
             <div className="flex-1 flex flex-row justify-end items-center">
               <TrimTimeInput 
                 label={"End"}
-                sliderMarkers={sliderMarkers}
-                sliderMarkersDispatch={sliderMarkersDispatch}
                 sliderMarkerType="end"
-                duration={videoMetadata.duration}
               />
             </div>
           </div>
           
           <VideoTrimmingSlider 
-            duration={videoMetadata.duration}
-            sliderMarkers={sliderMarkers}
-            sliderMarkersDispatch={sliderMarkersDispatch}
             updateVideoFromTimeHandle={updateVideoFromTimeHandle}
           />
         </div>

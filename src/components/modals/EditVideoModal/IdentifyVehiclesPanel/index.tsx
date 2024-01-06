@@ -1,5 +1,5 @@
 import { Tab } from '@headlessui/react';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 
 interface IdentifyVehiclesPanelProps {

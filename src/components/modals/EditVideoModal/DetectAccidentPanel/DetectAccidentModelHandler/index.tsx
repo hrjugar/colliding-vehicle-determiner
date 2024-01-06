@@ -1,21 +1,27 @@
-import React from 'react';
+import { useShallow } from 'zustand/react/shallow';
+import useDetectAccidentPanelStore from '../store';
 import ThresholdHandler from './ThresholdHandler';
 
 interface DetectAccidentModelHandlerProps {
-  confidenceThreshold: number,
-  setConfidenceThreshold: (confidenceThreshold: number) => void,
-  iouThreshold: number,
-  setIouThreshold: (iouThreshold: number) => void,
   rerunModel: () => void,
 }
 
 const DetectAccidentModelHandler: React.FC<DetectAccidentModelHandlerProps> = ({ 
-  confidenceThreshold,
-  setConfidenceThreshold,
-  iouThreshold,
-  setIouThreshold,
   rerunModel
 }) => {
+  const [
+    confidenceThreshold,
+    setConfidenceThreshold,
+    iouThreshold,
+    setIouThreshold
+  ] = useDetectAccidentPanelStore(
+    useShallow((state) => [
+      state.confidenceThreshold,
+      state.setConfidenceThreshold,
+      state.iouThreshold,
+      state.setIouThreshold,
+    ])
+  )
 
   return (
     <div className='flex flex-col bg-white rounded-md shadow-around hover:shadow-around-dark transition-shadow'>

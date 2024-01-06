@@ -1,22 +1,30 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { convertSecondsAndMillisecondsToString } from '../../../../../globals/utils';
-import { SliderMarkersState } from '../..';
+import { useEffect, useRef } from 'react';
+import { convertSecondsAndMillisecondsToString } from '@/globals/utils';
+import useEditVideoModalStore from "../../store";
+import { SliderMarkerType } from "../../types";
+import { useShallow } from 'zustand/react/shallow';
 
-interface TrimmingSliderHandle {
-  duration: number,
-  sliderMarkers: SliderMarkersState,
+interface TrimmingSliderHandleProps {
   setValue: (newValue: number) => void,
-  handleType: "start" | "time" | "end",
+  handleType: SliderMarkerType,
   updateVideoFromTimeHandle?: (newTime: number) => void
 }
 
-const TrimmingSliderHandle: React.FC<TrimmingSliderHandle> = ({
-  duration,
-  sliderMarkers,
+const TrimmingSliderHandle: React.FC<TrimmingSliderHandleProps> = ({
   setValue,
   handleType,
   updateVideoFromTimeHandle
 }) => {
+  const [
+    sliderMarkers,
+    duration
+  ] = useEditVideoModalStore(
+    useShallow((state) => [
+      state.sliderMarkers,
+      state.videoMetadata.duration
+    ])
+  )
+
   const value = sliderMarkers[handleType];
   const sliderPercentage = value / duration * 100;
   const handleRef = useRef<HTMLDivElement>(null);
