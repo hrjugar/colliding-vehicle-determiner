@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React from 'react';
 import TrimmingSliderHandle from './TrimmingSliderHandle';
 import TrimmingSliderTicks from './TrimmingSliderTicks';
 import { toast } from 'react-toastify';
@@ -65,27 +65,19 @@ const VideoTrimmingSlider: React.FC<VideoTrimmingSliderProps> = ({
         />
 
         <TrimmingSliderHandle 
-          duration={duration}
-          sliderMarkers={sliderMarkers}
           setValue={(newStart) => setStartMarker(newStart)}
           handleType='start'
         />
         <TrimmingSliderHandle 
-          duration={duration}
-          sliderMarkers={sliderMarkers}
           setValue={(newEnd) => setEndMarker(newEnd)}
           handleType='end'
         />
         <TrimmingSliderHandle 
-          duration={duration}
-          sliderMarkers={sliderMarkers}
           setValue={(newTime) => setTimeMarker(newTime)}
           handleType='time'
           updateVideoFromTimeHandle={updateVideoFromTimeHandle}
         />
-        <TrimmingSliderTicks 
-          duration={duration}
-        />
+        <TrimmingSliderTicks />
       </div>
     </div>
   );
