@@ -285,3 +285,52 @@ export function runAccidentDetectionModel(confidenceThreshold: number, iouThresh
     })
   })
 }
+
+export function runDeepSORTModel() {
+  let scriptPath = path.join(
+    app.getAppPath(),
+    'python-scripts',
+    'yolov8-deepsort',
+    'ultralytics_yolov8_deepsort',
+    'yolo',
+    'v8',
+    'detect',
+    'predict.py'
+  );
+  let inputVideoPath = path.join(
+    app.getPath('userData'),
+    'temp',
+    'trimmed.mp4'
+  );
+  let outputFolderPath = path.join(
+    app.getPath('userData'),
+    'temp'
+  );
+
+  console.log(`runDeepSORTModel: scriptPath = ${scriptPath}`);
+  console.log(`runDeepSORTModel: inputVideoPath = ${inputVideoPath}`);
+  console.log(`runDeepSORTModel: outputFolderPath = ${outputFolderPath}`);
+
+  if (pythonProcess) {
+    pythonProcess.kill();
+  }
+  pythonProcess = spawn('python', [
+    scriptPath,
+    "model=yolov8l.pt",
+    `source="${inputVideoPath}"`,
+    `save_dir="${outputFolderPath}"`,
+  ]);
+
+  return new Promise((resolve, reject) => {
+    pythonProcess.on('error', (err) => {
+      console.log("Python script error")
+      console.log(err)
+      reject(err);
+    })
+  
+    pythonProcess.on('exit', (code) => {
+      console.log(`Python exited with code ${code}`);
+      resolve(code);
+    })
+  })
+}

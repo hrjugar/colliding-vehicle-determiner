@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, net, protocol, shell } from 'electron'
 import path from 'node:path'
 import fs from 'node:fs'
 import { getSqlite3 } from './better-sqlite3'
-import { closeWindow, createThumbnailFromId, deleteVideo, extractFrames, findNewVideo, insertVideo, isFileExisting, killPythonProcess, maximizeWindow, minimizeWindow, openVideoFolder, renameVideo, runAccidentDetectionModel, selectAllVideos, THUMBNAIL_FILENAME, trimVideo, updateVideo } from './mainUtils'
+import { closeWindow, createThumbnailFromId, deleteVideo, extractFrames, findNewVideo, insertVideo, isFileExisting, killPythonProcess, maximizeWindow, minimizeWindow, openVideoFolder, renameVideo, runAccidentDetectionModel, runDeepSORTModel, selectAllVideos, THUMBNAIL_FILENAME, trimVideo, updateVideo } from './mainUtils'
 import Database from 'better-sqlite3'
 import { stopServer } from './server'
 import { initSocket } from './zeromq'
@@ -172,6 +172,6 @@ app.whenReady().then(() => {
   ipcMain.on('killPythonProcess', () => killPythonProcess())
 
   ipcMain.handle('model:accidentDetection', (_, confidenceThreshold, iouThreshold) => runAccidentDetectionModel(confidenceThreshold, iouThreshold))
-  
+  ipcMain.handle('model:deepSORT', () => runDeepSORTModel())
   createWindow()
 })

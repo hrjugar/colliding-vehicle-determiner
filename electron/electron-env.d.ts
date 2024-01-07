@@ -48,6 +48,8 @@ interface ElectronAPI {
   runAccidentDetectionModel(confidenceThreshold: number, iouThreshold: number): Promise,
   onRunAccidentDetectionModelProgress(callback: Function): void,
   removeRunAccidentDetectionModelProgressListener(): void,
+
+  runDeepSORTModel(): Promise<string>,
 }
 
 // Used in Renderer process, expose in `preload.ts`
