@@ -33,6 +33,7 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
       }
     }
   )
+  
   useEffect(() => {
     console.log("IN IdentifyVehiclesPanel");
     console.log(`isAccidentDetectionModelChanged: ${isAccidentDetectionModelChanged}`);
@@ -51,7 +52,7 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
           <DetectedObjects />
 
           <div className='bg-black w-full flex justify-center items-center'>
-            {/* <video
+            <video
               className="max-w-full max-h-full flex object-scale-down aspect-video"
               muted
             >
@@ -59,7 +60,7 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
                 src={`http://localhost:3000/video?source=app&temp=true`} 
                 type="video/mp4" 
               />
-            </video> */}
+            </video>
           </div>
         </>
       ) : (

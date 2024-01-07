@@ -319,6 +319,7 @@ export function runDeepSORTModel() {
     "model=yolov8l.pt",
     `source="${inputVideoPath}"`,
     `save_dir="${outputFolderPath}"`,
+    `socket_port=6789`
   ]);
 
   return new Promise((resolve, reject) => {
