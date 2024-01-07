@@ -11,7 +11,15 @@ interface IdentifyVehiclesPanelProps {
 }
 
 const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedTabIndex }) => {
-  const isAccidentDetectionModelChanged = useEditVideoModalStore((state) => state.isAccidentDetectionModelChanged)
+  const [
+    isAccidentDetectionModelChanged,
+    setIsAccidentDetectionModelChanged
+  ] = useEditVideoModalStore( 
+    useShallow((state) => [
+      state.isAccidentDetectionModelChanged,
+      state.setIsAccidentDetectionModelChanged
+    ])
+  )
 
   const [
     loadingText,
@@ -42,6 +50,7 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
       },
       onSuccess: (data) => {
         console.log(`Python DeepSORT script exit code: ${data}`)
+        setIsAccidentDetectionModelChanged(false);
         setIsLoadingDone(true);
       }
     }
