@@ -7,7 +7,7 @@ import FrameDescription from './FrameDescription';
 import SelectFrameImage from './SelectedFrameImage';
 import useEditVideoModalStore from "../store";
 import { useShallow } from 'zustand/react/shallow';
-import { Progress } from './types';
+import { AccidentDetectionModelProgress } from './types';
 import useDetectAccidentPanelStore from './store';
 
 const DetectAccidentPanel: React.FC = () => {
@@ -199,13 +199,13 @@ const DetectAccidentPanel: React.FC = () => {
     setTabsDisabledState(false);
   }  
 
-  const handleOnProgress = (progress: Progress) => {
+  const handleOnProgress = (progress: AccidentDetectionModelProgress) => {
     if (progress) {
       setLoadingProgress(progress)
     }
   };
 
-  const handleOnRunAccidentDetectionModelProgress = (progress: Progress) => {
+  const handleOnRunAccidentDetectionModelProgress = (progress: AccidentDetectionModelProgress) => {
     if (progress) {
       setLoadingProgress({
         displayText: progress.displayText,

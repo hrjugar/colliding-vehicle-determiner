@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import { FramePredictions, PredictionBoxIndexes, Progress } from "./types";
+import { FramePredictions, PredictionBoxIndexes, AccidentDetectionModelProgress } from "./types";
 
 interface CompletionState {
   loadingText: string;
-  loadingProgress: Progress;
+  loadingProgress: AccidentDetectionModelProgress;
   isPredictionDone: boolean;
   isLoadingDone: boolean;
   isFrameTransitionDone: boolean;
@@ -11,7 +11,7 @@ interface CompletionState {
 
 interface CompletionAction {
   setLoadingText: (loadingText: string) => void;
-  setLoadingProgress: (progress: Progress) => void;
+  setLoadingProgress: (progress: AccidentDetectionModelProgress) => void;
   setIsPredictionDone: (isPredictionDone: boolean) => void;
   setIsLoadingDone: (isLoadingDone: boolean) => void;
   setIsFrameTransitionDone: (isFrameTransitionDone: boolean) => void;
@@ -83,7 +83,7 @@ const useDetectAccidentPanelStore = create<DetectAccidentPanelStore>((set, get) 
   ...defaultState,
 
   setLoadingText: (loadingText: string) => set({ loadingText }),
-  setLoadingProgress:(loadingProgress: Progress) => set({ loadingProgress }),
+  setLoadingProgress:(loadingProgress: AccidentDetectionModelProgress) => set({ loadingProgress }),
   setIsPredictionDone: (isPredictionDone: boolean) => set({ isPredictionDone }),
   setIsLoadingDone: (isLoadingDone: boolean) => set({ isLoadingDone }),
   setIsFrameTransitionDone: (isFrameTransitionDone: boolean) => set({ isFrameTransitionDone }),

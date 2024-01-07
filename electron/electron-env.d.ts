@@ -50,6 +50,8 @@ interface ElectronAPI {
   removeRunAccidentDetectionModelProgressListener(): void,
 
   runDeepSORTModel(): Promise<string>,
+  onRunDeepSORTModelProgress(callback: Function): void,
+  removeRunDeepSORTModelProgressListener(): void,
 }
 
 // Used in Renderer process, expose in `preload.ts`

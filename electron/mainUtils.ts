@@ -319,7 +319,6 @@ export function runDeepSORTModel() {
     "model=yolov8l.pt",
     `source="${inputVideoPath}"`,
     `save_dir="${outputFolderPath}"`,
-    `socket_port=6789`
   ]);
 
   return new Promise((resolve, reject) => {
@@ -327,6 +326,11 @@ export function runDeepSORTModel() {
       console.log("Python script error")
       console.log(err)
       reject(err);
+    })
+
+    pythonProcess.stderr.on('data', (data) => {
+      console.log("Python script error")
+      console.log(data.toString());
     })
   
     pythonProcess.on('exit', (code) => {

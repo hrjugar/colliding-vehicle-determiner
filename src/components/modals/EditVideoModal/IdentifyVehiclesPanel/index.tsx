@@ -11,21 +11,34 @@ interface IdentifyVehiclesPanelProps {
 }
 
 const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedTabIndex }) => {
+  const isAccidentDetectionModelChanged = useEditVideoModalStore((state) => state.isAccidentDetectionModelChanged)
+
   const [
-    isAccidentDetectionModelChanged
-  ] = useEditVideoModalStore(
+    loadingText,
+    setLoadingText,
+    loadingProgress,
+    setLoadingProgress,
+    isLoadingDone,
+    setIsLoadingDone,
+    resetModelStates,
+  ] = useIdentifyVehiclesPanelStore(
     useShallow((state) => [
-      state.isAccidentDetectionModelChanged
+      state.loadingText,
+      state.setLoadingText,
+      state.loadingProgress,
+      state.setLoadingProgress,
+      state.isLoadingDone,
+      state.setIsLoadingDone,
+      state.resetModelStates
     ])
   )
-
-  const [isLoadingDone, setIsLoadingDone] = useState<boolean>(false);
 
   const deepSORTMutation = useMutation(
     async () => await window.electronAPI.runDeepSORTModel(),
     {
       onMutate: () => {
-
+        setLoadingProgress({ percent: 0, displayText: "Loading Python script" });
+        setLoadingText("Identifying vehicles...");
       },
       onSuccess: (data) => {
         console.log(`Python DeepSORT script exit code: ${data}`)
@@ -38,10 +51,16 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
     console.log("IN IdentifyVehiclesPanel");
     console.log(`isAccidentDetectionModelChanged: ${isAccidentDetectionModelChanged}`);
     if (selectedTabIndex === 2 && isAccidentDetectionModelChanged) {
-      setIsLoadingDone(false);
-      console.log("RESET STATES IN IdentifyVehiclesPanel");
+      resetModelStates();
       deepSORTMutation.mutate();
-      // RUN DEEPSORT HERE
+
+      window.electronAPI.onRunDeepSORTModelProgress((progress: Progress) => {
+        setLoadingProgress(progress);
+      })
+    }
+
+    return () => {
+      window.electronAPI.removeRunDeepSORTModelProgressListener();
     }
   }, [selectedTabIndex])
 
@@ -64,7 +83,16 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
           </div>
         </>
       ) : (
-        <p>Loading...</p>
+        <div className='w-full h-full flex flex-col justify-center items-center gap-2 px-8'>
+          <div className='w-full flex flex-row justify-between gap-1'>
+            <p className='font-medium'>{loadingText}</p>
+            <p className='font-medium text-gray-400'>{loadingProgress.displayText}</p>
+          </div>
+          
+          <div className="w-full bg-gray-300 rounded-full">
+            <div className="bg-color-primary rounded-full h-2 transition-width duration-300" style={{ width: `${loadingProgress.percent}%` }}></div>
+          </div>
+        </div>    
       )}
     </Tab.Panel>
   );

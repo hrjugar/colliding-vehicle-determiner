@@ -12,9 +12,7 @@ export interface PredictionBox {
 
 export type FramePredictions = PredictionBox[];
 
-export interface Progress {
-  percent: number;
-  displayText: string;
+export interface AccidentDetectionModelProgress extends Progress {
   frame?: FramePredictions;
 }
 
