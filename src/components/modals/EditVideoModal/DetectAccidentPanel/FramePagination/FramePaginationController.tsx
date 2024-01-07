@@ -105,7 +105,7 @@ const FramePaginationController: React.FC<FramePaginationControllerProps> = ({
             >
               <path 
                 d="M48 0 L16 32 L48 64"
-                className={`fill-current stroke-[8] stroke-color-primary ${isPrevButtonDisabled ? 'opacity-30' : 'group-hover:stroke-color-primary-active'}`}
+                className={`fill-current stroke-[8] stroke-color-primary ${isPrevButtonDisabled ? 'opacity-30' : 'group-hover:stroke-[12] group-hover:stroke-color-primary-inactive'}`}
               />
             </svg>
           </button>  
@@ -128,7 +128,7 @@ const FramePaginationController: React.FC<FramePaginationControllerProps> = ({
             >
               <path 
                 d="M16 0 L48 32 L16 64"
-                className={`fill-current stroke-[8] stroke-color-primary ${isNextButtonDisabled ? 'opacity-30' : 'group-hover:stroke-color-primary-active'}`}
+                className={`fill-current stroke-[8] stroke-color-primary ${isNextButtonDisabled ? 'opacity-30' : 'group-hover:stroke-[12] group-hover:stroke-color-primary-inactive'}`}
               />
             </svg>
           </button>     

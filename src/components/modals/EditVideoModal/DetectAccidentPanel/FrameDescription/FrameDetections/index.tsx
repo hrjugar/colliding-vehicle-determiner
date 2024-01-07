@@ -76,7 +76,7 @@ const FrameDetections: React.FC = () => {
                         backgroundColor: getBoundingBoxColor(index)
                       }}
                     />               
-                    <div className='flex flex-row items-center gap-1 text-sm select-none text-color-primary font-semibold text-center'>
+                    <div className='flex flex-row items-center gap-1 select-none text-color-primary font-semibold text-center'>
                       <p>Box {index + 1}</p>
                       {bestPredictionBoxIndexes.frameIndex === selectedFrameIndex && bestPredictionBoxIndexes.boxIndex === index ? (
                         <svg 
@@ -120,7 +120,7 @@ const FrameDetections: React.FC = () => {
                 </div>
 
                 <div className={`grid transition-all duration-300 ${descriptionToggles[index] ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
-                  <div className='flex flex-col pl-6 overflow-y-hidden text-xs'>
+                  <div className='flex flex-col pl-6 overflow-y-hidden text-sm'>
                     <div className='flex flex-row justify-between items-center'>
                       <p className='font-medium'>x</p>
                       <p>{detection.x.toFixed(2)}</p>

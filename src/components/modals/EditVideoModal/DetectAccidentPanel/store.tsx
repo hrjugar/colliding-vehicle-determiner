@@ -36,6 +36,7 @@ interface OutputState {
 interface OutputAction {
   addFramePredictions: (framePredictions: FramePredictions) => void;
   clearPredictions: () => void;
+  getFrameCount: () => number;
   getSelectedFramePredictions: () => FramePredictions;
   setSelectedFrameIndex: (selectedFrameIndex: number) => void;
   setBestPredictionBoxIndexes: (bestPredictionBoxIndexes: PredictionBoxIndexes) => void;
@@ -94,6 +95,7 @@ const useDetectAccidentPanelStore = create<DetectAccidentPanelStore>((set, get) 
     allPredictions: [ ...state.allPredictions, framePredictions ]
   })),
   clearPredictions: () => set({ allPredictions: [] }),
+  getFrameCount: () => get().allPredictions.length,
   getSelectedFramePredictions: () => get().allPredictions[get().selectedFrameIndex],
   setSelectedFrameIndex: (selectedFrameIndex: number) => set({ selectedFrameIndex }),
   setBestPredictionBoxIndexes: (bestPredictionBoxIndexes: PredictionBoxIndexes) => set({ bestPredictionBoxIndexes }),

@@ -13,15 +13,17 @@ const FramePagination: React.FC = () => {
     selectedFrameIndex,
     setSelectedFrameIndex,
     allPredictions,
+    getFrameCount
   ] = useDetectAccidentPanelStore(
     useShallow((state) => [
       state.selectedFrameIndex,
       state.setSelectedFrameIndex,
-      state.allPredictions
+      state.allPredictions,
+      state.getFrameCount
     ])
   );
 
-  const frameCount = allPredictions.length;
+  const frameCount = getFrameCount();
 
   const [imageSize, setImageSize] = useState<ImageSizeState>({ width: 0, height: 0 });
 
