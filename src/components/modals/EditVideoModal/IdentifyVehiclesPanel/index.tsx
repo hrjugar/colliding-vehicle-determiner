@@ -10,11 +10,22 @@ interface IdentifyVehiclesPanelProps {
   selectedTabIndex: number,
 }
 
-const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedTabIndex }) => {  
+const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedTabIndex }) => {
+  const [
+    isAccidentDetectionModelChanged
+  ] = useEditVideoModalStore(
+    useShallow((state) => [
+      state.isAccidentDetectionModelChanged
+    ])
+  ) 
+
   const [isLoadingDone, setIsLoadingDone] = useState<boolean>(false);
 
   useEffect(() => {
-    if (selectedTabIndex === 2) {
+    console.log("IN IdentifyVehiclesPanel");
+    console.log(`isAccidentDetectionModelChanged: ${isAccidentDetectionModelChanged}`);
+    if (selectedTabIndex === 2 && isAccidentDetectionModelChanged) {
+      console.log("RESET STATES IN IdentifyVehiclesPanel");
       // RUN DEEPSORT HERE
     }
   }, [selectedTabIndex])

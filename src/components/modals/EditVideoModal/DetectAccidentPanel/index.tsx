@@ -16,6 +16,7 @@ const DetectAccidentPanel: React.FC = () => {
     startTime,
     endTime,
     setTabsDisabledState,
+    setIsAccidentDetectionModelChanged,
     selectedTabIndex,
     isTrimmedPortionChanged,
     setIsTrimmedPortionChanged
@@ -25,6 +26,7 @@ const DetectAccidentPanel: React.FC = () => {
       state.sliderMarkers.start,
       state.sliderMarkers.end,
       state.setTabsDisabledState,
+      state.setIsAccidentDetectionModelChanged,
       state.selectedTabIndex,
       state.isTrimmedPortionChanged,
       state.setIsTrimmedPortionChanged
@@ -107,6 +109,7 @@ const DetectAccidentPanel: React.FC = () => {
           window.electronAPI.removeRunAccidentDetectionModelProgressListener();
           setIsPredictionDone(true);
           setIsTrimmedPortionChanged(false);
+          setIsAccidentDetectionModelChanged(true);
         }, 500)
       },
     }
@@ -217,6 +220,7 @@ const DetectAccidentPanel: React.FC = () => {
 
   const rerunModel = () => {
     resetModelStates();
+    setTabsDisabledState(true);
     window.electronAPI.onRunAccidentDetectionModelProgress(handleOnRunAccidentDetectionModelProgress);
     detectAccidentsMutation.mutate();
   };
@@ -238,6 +242,7 @@ const DetectAccidentPanel: React.FC = () => {
     console.log(`DetectAccidentPanel: selectedTabIndex: ${selectedTabIndex}`)
     if (selectedTabIndex === 1 && isTrimmedPortionChanged) {
       resetModelStates();
+      setTabsDisabledState(true);
 
       trimMutation.mutate();
       
