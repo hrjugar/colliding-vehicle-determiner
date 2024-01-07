@@ -10,15 +10,7 @@ interface IdentifyVehiclesPanelProps {
   selectedTabIndex: number,
 }
 
-const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedTabIndex }) => {
-  const [
-    videoPath
-  ] = useEditVideoModalStore(
-    useShallow((state) => [
-      state.videoPath
-    ])
-  );
-  
+const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedTabIndex }) => {  
   const [isLoadingDone, setIsLoadingDone] = useState<boolean>(false);
 
   useEffect(() => {
