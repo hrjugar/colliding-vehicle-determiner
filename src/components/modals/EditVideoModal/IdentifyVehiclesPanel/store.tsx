@@ -13,11 +13,13 @@ interface CompletionAction {
 }
 
 interface ObjectState {
+  deepSORTOutput: DeepSORTOutput,
   selectedObjectIndex: number,
   shouldShowOnlyVehicles: boolean,
 }
 
 interface ObjectAction {
+  setDeepSORTOutput: (deepSORTOutput: DeepSORTOutput) => void,
   setSelectedObjectIndex: (selectedObjectIndex: number) => void,
   setShouldShowOnlyVehicles: (shouldShowOnlyVehicles: boolean) => void,
 }
@@ -37,6 +39,7 @@ const defaultState: IdentifyVehiclesPanelState = {
     displayText: "",
   },
   isLoadingDone: false,
+  deepSORTOutput: [],
   selectedObjectIndex: 0,
   shouldShowOnlyVehicles: true,
 }
@@ -48,6 +51,7 @@ const useIdentifyVehiclesPanelStore = create<IdentifyVehiclesPanelStore>((set) =
   setLoadingProgress: (loadingProgress: Progress) => set({ loadingProgress }),
   setIsLoadingDone: (isLoadingDone: boolean) => set({ isLoadingDone }),
 
+  setDeepSORTOutput: (deepSORTOutput: DeepSORTOutput) => set(() => ({ deepSORTOutput })),
   setSelectedObjectIndex: (selectedObjectIndex: number) => set(() => ({ selectedObjectIndex })),
   setShouldShowOnlyVehicles: (shouldShowOnlyVehicles: boolean) => set(() => ({ shouldShowOnlyVehicles })),
 

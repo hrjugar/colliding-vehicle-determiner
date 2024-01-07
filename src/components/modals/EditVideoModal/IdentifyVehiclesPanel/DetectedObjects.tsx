@@ -1,14 +1,17 @@
 import { useShallow } from "zustand/react/shallow";
 import useIdentifyVehiclesPanelStore from "./store";
+import { getBoundingBoxColor } from "@/globals/utils";
 
 const DetectedObjects: React.FC = () => {
   const [
+    deepSORTOutput,
     selectedObjectIndex,
     setSelectedObjectIndex,
     shouldShowOnlyVehicles,
     setShouldShowOnlyVehicles
   ] = useIdentifyVehiclesPanelStore(
     useShallow((state) => [
+      state.deepSORTOutput,
       state.selectedObjectIndex,
       state.setSelectedObjectIndex,
       state.shouldShowOnlyVehicles,
@@ -52,7 +55,7 @@ const DetectedObjects: React.FC = () => {
       </div>
 
       <div className='flex flex-col'>
-        {sampleObjects.map((object, index) => {
+        {deepSORTOutput.map((object, index) => {
           if (shouldShowOnlyVehicles && object.classification !== 'car' && object.classification !== 'truck') {
             return null;
           }
@@ -63,7 +66,10 @@ const DetectedObjects: React.FC = () => {
               className={`flex flex-row items-center gap-2 px-4 py-0.5 cursor-pointer border-[2px] border-transparent ${selectedObjectIndex === index ? 'bg-color-primary-active' : 'hover:border-color-primary-active'}`}
               onClick={() => setSelectedObjectIndex(index)}
             >
-              <div className='w-3 h-3 bg-yellow-500 border-[1px] border-gray-200'></div>
+              <div 
+                className='w-3 h-3 border-[1px] border-gray-200' 
+                style={{ backgroundColor: getBoundingBoxColor(object.id) }} 
+              />
               <p className="font-medium">{object.id}</p>
               <span className='text-xs text-gray-500'>{object.classification}</span>              
             </div>

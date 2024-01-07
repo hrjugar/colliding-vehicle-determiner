@@ -28,6 +28,7 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
     setLoadingProgress,
     isLoadingDone,
     setIsLoadingDone,
+    setDeepSORTOutput,
     resetModelStates,
   ] = useIdentifyVehiclesPanelStore(
     useShallow((state) => [
@@ -37,6 +38,7 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
       state.setLoadingProgress,
       state.isLoadingDone,
       state.setIsLoadingDone,
+      state.setDeepSORTOutput,
       state.resetModelStates
     ])
   )
@@ -50,6 +52,7 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
       },
       onSuccess: (data) => {
         console.log(`Python DeepSORT script exit code: ${data}`)
+        setDeepSORTOutput(data as DeepSORTOutput);
         setIsAccidentDetectionModelChanged(false);
         setIsLoadingDone(true);
       }

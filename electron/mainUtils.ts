@@ -311,6 +311,7 @@ export function runDeepSORTModel() {
   console.log(`runDeepSORTModel: inputVideoPath = ${inputVideoPath}`);
   console.log(`runDeepSORTModel: outputFolderPath = ${outputFolderPath}`);
 
+  
   if (pythonProcess) {
     pythonProcess.kill();
   }
@@ -327,15 +328,20 @@ export function runDeepSORTModel() {
       console.log(err)
       reject(err);
     })
-
-    pythonProcess.stderr.on('data', (data) => {
-      console.log("Python script error")
-      console.log(data.toString());
-    })
   
     pythonProcess.on('exit', (code) => {
       console.log(`Python exited with code ${code}`);
-      resolve(code);
+
+      if (code === 0) {
+        try {
+          const deepSORTOutputFile = fs.readFileSync(path.join(outputFolderPath, 'deepsort-output.json'), "utf-8");
+          const deepSORTOutput = JSON.parse(deepSORTOutputFile);
+          resolve(deepSORTOutput);
+        } catch (error) {
+          console.error("Error reading or parsing the JSON file:", error);
+          reject(error)
+        }
+      }
     })
   })
 }
