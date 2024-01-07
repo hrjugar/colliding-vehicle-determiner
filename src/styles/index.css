@@ -102,7 +102,7 @@ button {
 }
 
 .card-header h2 {
-  @apply font-semibold text-lg;
+  @apply font-semibold text-lg whitespace-nowrap;
 }
 
 .card-header button {

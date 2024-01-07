@@ -1,24 +1,44 @@
 import express from 'express';
 import fs from 'fs';
 import path from 'path';
+import { app as electronApp } from 'electron';
 
 const app = express();
 const port = import.meta.env.VITE_EXPRESS_PORT as number;
 
 app.get('/video', (req, res) => {
-  const reqPath = req.query.path;
+  const source = req.query.source;
+  let filePath;
+
+  switch (source) {
+    case 'app':
+      console.log("source is app")
+      console.log(req.query)
+
+      if (req.query.temp) {
+        filePath = path.join(electronApp.getPath('userData'), 'temp', 'trimmed.mp4');
+        console.log(filePath);
+      }
+
+      break;
+    default:
+    case 'local':
+      filePath = req.query.path;
+      break;
+  }
+
   const range = req.headers.range;
   if (!range) {
     res.status(400).send("Requires Range header");
     return;
   }
 
-  if (!reqPath) {
+  if (!filePath) {
     res.status(400).send("Missing video path");
     return;
   }
 
-  const videoPath = path.resolve(reqPath as string);
+  const videoPath = path.resolve(filePath as string);
   const videoSize = fs.statSync(videoPath).size;
   const CHUNK_SIZE = 10 ** 6; // 1MB
   const start = Number(range.replace(/\D/g, ""));

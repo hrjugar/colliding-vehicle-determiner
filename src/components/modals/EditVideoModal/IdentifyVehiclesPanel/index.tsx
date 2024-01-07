@@ -1,12 +1,24 @@
 import { Tab } from '@headlessui/react';
 import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
+import useEditVideoModalStore from '../store';
+import { useShallow } from 'zustand/react/shallow';
+import useIdentifyVehiclesPanelStore from './store';
+import DetectedObjects from './DetectedObjects';
 
 interface IdentifyVehiclesPanelProps {
   selectedTabIndex: number,
 }
 
 const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedTabIndex }) => {
+  const [
+    videoPath
+  ] = useEditVideoModalStore(
+    useShallow((state) => [
+      state.videoPath
+    ])
+  );
+  
   const [isLoadingDone, setIsLoadingDone] = useState<boolean>(false);
 
   useEffect(() => {
@@ -16,31 +28,19 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
   }, [selectedTabIndex])
 
   return (
-    <Tab.Panel className="w-full h-full bg-white p-4 flex flex-col justify-start items-start">
-      <div className='card'>
-        <div className='card-header'>
-          <h2>Detected Objects</h2>
-        </div>
+    <Tab.Panel className="w-full h-full bg-white p-4 flex flex-row justify-start items-start gap-4">
+      <DetectedObjects />
 
-        <div className='px-4 py-2 flex flex-col gap-2'>
-          <div className='flex flex-row items-center gap-2'>
-            <div className='w-3 h-3 bg-yellow-500'></div>
-            <p>Object 1</p>
-            <span className='text-xs text-gray-500'>Car</span>
-          </div>
-
-          <div className='flex flex-row items-center gap-2'>
-            <div className='w-3 h-3 bg-red-500'></div>
-            <p>Object 2</p>
-            <span className='text-xs text-gray-500'>Car</span>
-          </div>
-
-          <div className='flex flex-row items-center gap-2'>
-            <div className='w-3 h-3 bg-orange-500'></div>
-            <p>Object 3</p>
-            <span className='text-xs text-gray-500'>Car</span>
-          </div>
-        </div>
+      <div className='bg-black w-full flex justify-center items-center'>
+        <video
+          className="max-w-full max-h-full flex object-scale-down aspect-video"
+          muted
+        >
+          <source 
+            src={`http://localhost:3000/video?source=app&temp=true`} 
+            type="video/mp4" 
+          />
+        </video>
       </div>
     </Tab.Panel>
   );
