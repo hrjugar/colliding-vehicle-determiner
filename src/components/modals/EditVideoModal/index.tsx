@@ -136,10 +136,10 @@ const EditVideoModal: React.FC = () => {
                   })}
                 </Tab.Panels>
 
-                <div className="flex flex-row justify-center gap-2 py-1 border-[1px] border-gray-300">
+                <div className="flex flex-row justify-end gap-8 pr-6 py-1 border-[1px] border-gray-300">
                   {selectedTabIndex === 0 ? (
                     <button
-                      className={`bg-transparent px-4 py-2 text-color-primary disabled:text-gray-300`}
+                      className={`bg-transparent px-0 py-2 text-color-primary disabled:text-gray-300`}
                       disabled={areTabsDisabled}
                       onClick={closeModal}
                     >
@@ -147,7 +147,7 @@ const EditVideoModal: React.FC = () => {
                     </button>
                   ) : (
                     <button 
-                      className={`bg-transparent px-4 py-2 text-color-primary disabled:text-gray-300`}
+                      className={`bg-transparent px-0 py-2 text-color-primary disabled:text-gray-300`}
                       disabled={areTabsDisabled}
                       onClick={() => selectTab(selectedTabIndex - 1)}
                     >
@@ -156,7 +156,7 @@ const EditVideoModal: React.FC = () => {
                   )}
                   {selectedTabIndex === tabs.length - 1 ? (
                     <button
-                      className="bg-transparent px-4 py-2 text-color-primary disabled:text-gray-300"
+                      className="bg-transparent px-0 py-2 text-color-primary disabled:text-gray-300"
                       onClick={closeModal}
                       disabled={areTabsDisabled}
                     >
@@ -164,7 +164,7 @@ const EditVideoModal: React.FC = () => {
                     </button>
                   ) : (
                     <button 
-                      className="bg-transparent px-4 py-2 text-color-primary disabled:text-gray-300"
+                      className="bg-transparent px-0 py-2 text-color-primary disabled:text-gray-300"
                       disabled={selectedTabIndex === tabs.length - 1 || areTabsDisabled}
                       onClick={() => selectTab(selectedTabIndex + 1)}
                     >

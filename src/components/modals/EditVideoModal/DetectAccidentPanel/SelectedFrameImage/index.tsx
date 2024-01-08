@@ -1,10 +1,9 @@
 import { useShallow } from 'zustand/react/shallow';
 import useDetectAccidentPanelStore from '../store';
-import { FramePredictions } from '../types';
 import { getBoundingBoxColor } from '@/globals/utils';
 
 
-const SelectFrameImage: React.FC = () => {
+const SelectedFrameImage: React.FC = () => {
   const [
     selectedFrameIndex,
     getSelectedFramePredictions,
@@ -21,7 +20,7 @@ const SelectFrameImage: React.FC = () => {
   const framePredictions = getSelectedFramePredictions();
 
   return (
-    <div className='bg-black flex justify-center items-center w-full'>
+    <div className='bg-black flex justify-center items-center w-full shadow-around'>
       <div className='relative inline-block'>
         <img
           src={`fileHandler://tempFrame//${selectedFrameIndex + 1}`}
@@ -56,4 +55,4 @@ const SelectFrameImage: React.FC = () => {
   );
 };
 
-export default SelectFrameImage;
+export default SelectedFrameImage;

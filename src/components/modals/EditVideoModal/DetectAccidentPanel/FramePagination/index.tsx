@@ -103,7 +103,7 @@ const FramePagination: React.FC = () => {
               return (
                 <div
                   key={`frame-pagination-${index}`}
-                  className={`relative transition-shadow flex justify-center items-center ${selectedFrameIndex === currFrameIndex ? 'shadow-around-dark opacity-100' : ''}`}>
+                  className={`group relative transition-shadow flex justify-center items-center ${selectedFrameIndex === currFrameIndex ? 'shadow-around-dark opacity-100' : ''}`}>
                   <img 
                     className={`w-auto h-full grow-0 shrink-0 cursor-pointer`}
                     src={`fileHandler://tempFrame//${currFrameIndex + 1}`}
@@ -113,9 +113,9 @@ const FramePagination: React.FC = () => {
                   <div className={`absolute inset-0 pointer-events-none bg-white transition-opacity ${selectedFrameIndex === currFrameIndex ? 'opacity-50' : 'opacity-0'}`}/>
                   
                   {currFramePrediction ? (
-                    <span className={`absolute bottom-1 right-1 text-xs font-semibold p-1 w-6 h-6 rounded-full flex items-center justify-center border-[1px] border-primary select-none transition-colors ${selectedFrameIndex === currFrameIndex ? 'bg-white ' : 'bg-gray-200 '}`}>
-                      {currFramePrediction.length}
-                    </span>
+                    <div className='absolute bottom-1 right-1 text-xs font-semibold py-1 px-2 h-6 rounded-full flex items-center justify-center bg-white'>
+                      <p>{currFramePrediction.length} <span className='hidden group-hover:contents'>collision{currFramePrediction.length === 1 ? '' : 's'}</span></p>
+                    </div>
                   ) : null}
                 </div>
               );

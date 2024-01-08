@@ -1,5 +1,5 @@
 import { Tab } from '@headlessui/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMutation } from 'react-query';
 import useEditVideoModalStore from '../store';
 import { useShallow } from 'zustand/react/shallow';
@@ -42,6 +42,8 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
       state.resetModelStates
     ])
   )
+  
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const deepSORTMutation = useMutation(
     async () => await window.electronAPI.runDeepSORTModel(),
@@ -82,16 +84,38 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
         <>
           <DetectedObjects />
 
-          <div className='bg-black w-full flex justify-center items-center'>
-            <video
-              className="max-w-full max-h-full flex object-scale-down aspect-video"
-              muted
+          <div className='w-full flex flex-col'>
+            <div className='bg-black w-full flex justify-center items-center'>
+              <video
+                ref={videoRef}
+                className="max-w-full max-h-full flex object-scale-down aspect-video"
+                muted
+              >
+                <source 
+                  src={`http://localhost:3000/video?source=app&temp=true`} 
+                  type="video/mp4" 
+                />
+              </video>
+            </div>
+
+            <svg 
+              width="64" 
+              height="64" 
+              viewBox="0 0 64 64" 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="w-10 h-10 text-color-primary cursor-pointer"
+              onClick={() => {}}
             >
-              <source 
-                src={`http://localhost:3000/video?source=app&temp=true`} 
-                type="video/mp4" 
+              <path 
+                d={true ? (
+                  "M21.3333 13.7067V51.04L50.6667 32.3733L21.3333 13.7067Z"
+                ): (
+                  "M37.3333 50.6667H48V13.3334H37.3333M16 50.6667H26.6667V13.3334H16V50.6667Z"
+                )}
+                className="fill-current"
               />
-            </video>
+            </svg>
+            <p>Aye Test</p>
           </div>
         </>
       ) : (

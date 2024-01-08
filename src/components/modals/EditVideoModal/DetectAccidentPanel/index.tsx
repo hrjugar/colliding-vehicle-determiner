@@ -4,7 +4,7 @@ import { useMutation } from 'react-query';
 import FramePagination from './FramePagination';
 import DetectAccidentModelHandler from './DetectAccidentModelHandler';
 import FrameDescription from './FrameDescription';
-import SelectFrameImage from './SelectedFrameImage';
+import SelectedFrameImage from './SelectedFrameImage';
 import useEditVideoModalStore from "../store";
 import { useShallow } from 'zustand/react/shallow';
 import { AccidentDetectionModelProgress } from './types';
@@ -280,7 +280,7 @@ const DetectAccidentPanel: React.FC = () => {
           </button>
           <div className='flex flex-col w-full h-full gap-4'>
             <div className='flex flex-row gap-4'>
-              <SelectFrameImage />
+              <SelectedFrameImage />
 
               <div className='flex flex-col gap-4'>
                 <FrameDescription />
