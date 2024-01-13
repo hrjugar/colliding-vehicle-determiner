@@ -3,6 +3,7 @@ import TrimmingSliderTicks from './TrimmingSliderTicks';
 import { toast } from 'react-toastify';
 import useEditVideoModalStore from "../../store";
 import { useShallow } from 'zustand/react/shallow';
+import TrimmingSliderFrames from './TrimmingSliderFrames';
 
 interface VideoTrimmingSliderProps {
   updateVideoFromTimeHandle: (newTime: number) => void
@@ -50,6 +51,8 @@ const VideoTrimmingSlider: React.FC<VideoTrimmingSliderProps> = ({
       <div 
         className="relative bg-gray-200 w-full h-14"
       >
+        <TrimmingSliderFrames />
+
         <div 
           className='absolute h-[60px] -translate-y-[2.5%] border-y-2 border-color-primary bg-color-primary-active/50'
           style={{ 
