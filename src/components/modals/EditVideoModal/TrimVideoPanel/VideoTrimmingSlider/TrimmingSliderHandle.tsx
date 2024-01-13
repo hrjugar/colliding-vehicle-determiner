@@ -43,23 +43,32 @@ const TrimmingSliderHandle: React.FC<TrimmingSliderHandleProps> = ({
 
   const onPointerMove = (e: PointerEvent) => {
     e.preventDefault();
+    const minimumTrimDuration = 0.5;
     const parentRect = handleRef.current?.parentElement!.getBoundingClientRect()!;
     const newPosition = (e.clientX - parentRect.left);
     const newPositionPercentage = newPosition / parentRect.width;
 
-    if (newPositionPercentage >= 0 && newPositionPercentage <= 1) {
-      const newValue = duration * newPositionPercentage;
-      if (
-        (handleType === "start" && newValue + 0.5 < sliderMarkers.end && newValue <= sliderMarkers.time) ||
-        (handleType === "end" && newValue - 0.5 > sliderMarkers.start && newValue >= sliderMarkers.time) ||
-        (handleType === "time" && newValue >= sliderMarkers.start && newValue <= sliderMarkers.end)
-      ) {
-        setValue(newValue);
+    const newValue = duration * newPositionPercentage;
 
-        if (handleType === "time" && updateVideoFromTimeHandle) {
-          updateVideoFromTimeHandle(newValue);
+    switch (handleType) {
+      case "start":
+        if (newValue + minimumTrimDuration < sliderMarkers.end) {
+          setValue(newValue > sliderMarkers.time ? sliderMarkers.time : Math.max(0, newValue));
         }
-      }
+        break;
+      case "end":
+        if (newValue - minimumTrimDuration > sliderMarkers.start) {
+          setValue(newValue < sliderMarkers.time ? sliderMarkers.time : Math.min(duration, newValue));
+        }
+        break;
+      case "time":
+        let finalTimeValue = newValue < sliderMarkers.start ? sliderMarkers.start : 
+                             newValue > sliderMarkers.end ? sliderMarkers.end : newValue;
+        setValue(finalTimeValue);
+        if (updateVideoFromTimeHandle) {
+          updateVideoFromTimeHandle(finalTimeValue);
+        }
+        break;
     }
   }
 
