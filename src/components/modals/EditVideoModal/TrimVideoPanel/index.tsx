@@ -12,7 +12,8 @@ const TrimVideoPanel: React.FC = () => {
     sliderMarkers,
     setSliderMarkers,
     setTimeMarker,
-    videoMetadata,
+    isVideoInitiallyLoading,
+    isPaused,
     finishInitialVideoLoading,
     playVideo,
     pauseVideo
@@ -23,7 +24,8 @@ const TrimVideoPanel: React.FC = () => {
       state.sliderMarkers,
       state.setSliderMarkers,
       state.setTimeMarker,
-      state.videoMetadata,
+      state.isVideoInitiallyLoading,
+      state.isPaused,
       state.finishInitialVideoLoading,
       state.playVideo,
       state.pauseVideo
@@ -58,7 +60,7 @@ const TrimVideoPanel: React.FC = () => {
   const handleInitialLoading = () => {
     console.log("handleInitialLoading: here")
 
-    if (videoRef.current && videoRef.current.readyState >= 3 && videoMetadata.isInitiallyLoading) {
+    if (videoRef.current && videoRef.current.readyState >= 3 && isVideoInitiallyLoading) {
       const duration = videoRef.current!.duration
       console.log(`duration: ${duration}`)
       finishInitialVideoLoading(duration)
@@ -123,7 +125,7 @@ const TrimVideoPanel: React.FC = () => {
         
       </div>
 
-      {videoMetadata.isInitiallyLoading ? null : (
+      {isVideoInitiallyLoading ? null : (
         <div className="w-full flex flex-col justify-center items-center pb-4 gap-4">
           <div className="w-full flex justify-between items-center">
             <div className="flex-1 flex flex-row justify-start items-center">
@@ -157,7 +159,7 @@ const TrimVideoPanel: React.FC = () => {
                 onClick={() => handlePlayPause()}
               >
                 <path 
-                  d={videoMetadata.paused ? (
+                  d={isPaused ? (
                     "M21.3333 13.7067V51.04L50.6667 32.3733L21.3333 13.7067Z"
                   ): (
                     "M37.3333 50.6667H48V13.3334H37.3333M16 50.6667H26.6667V13.3334H16V50.6667Z"

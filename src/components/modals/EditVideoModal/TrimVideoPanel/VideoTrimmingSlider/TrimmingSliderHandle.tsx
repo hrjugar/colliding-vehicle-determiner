@@ -17,16 +17,16 @@ const TrimmingSliderHandle: React.FC<TrimmingSliderHandleProps> = ({
 }) => {
   const [
     sliderMarkers,
-    duration
+    videoDuration
   ] = useEditVideoModalStore(
     useShallow((state) => [
       state.sliderMarkers,
-      state.videoMetadata.duration
+      state.videoDuration
     ])
   )
 
   const value = sliderMarkers[handleType];
-  const sliderPercentage = value / duration * 100;
+  const sliderPercentage = value / videoDuration * 100;
   const handleRef = useRef<HTMLDivElement>(null);
 
   const onPointerUp = (e: PointerEvent) => {
@@ -48,7 +48,7 @@ const TrimmingSliderHandle: React.FC<TrimmingSliderHandleProps> = ({
     const newPosition = (e.clientX - parentRect.left);
     const newPositionPercentage = newPosition / parentRect.width;
 
-    const newValue = duration * newPositionPercentage;
+    const newValue = videoDuration * newPositionPercentage;
 
     switch (handleType) {
       case "start":
@@ -58,7 +58,7 @@ const TrimmingSliderHandle: React.FC<TrimmingSliderHandleProps> = ({
         break;
       case "end":
         if (newValue - minimumTrimDuration > sliderMarkers.start) {
-          setValue(newValue < sliderMarkers.time ? sliderMarkers.time : Math.min(duration, newValue));
+          setValue(newValue < sliderMarkers.time ? sliderMarkers.time : Math.min(videoDuration, newValue));
         }
         break;
       case "time":

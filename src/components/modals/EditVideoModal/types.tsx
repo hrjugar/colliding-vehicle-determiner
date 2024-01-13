@@ -6,10 +6,3 @@ export interface SliderMarkers {
 }
 
 export type SliderMarkerType = 'start' | 'time' | 'end';
-
-export interface VideoMetadata {
-  isInitiallyLoading: boolean;
-  duration: number;
-  paused: boolean;
-}
-

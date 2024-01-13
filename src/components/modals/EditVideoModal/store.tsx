@@ -1,8 +1,6 @@
 import { create } from "zustand";
 import { SliderMarkers } from "./types";
 import { SliderMarkerType } from "./types";
-import { VideoMetadata } from "./types";
-
 
 interface ModalState {
   isOpen: boolean;
@@ -40,14 +38,17 @@ interface SliderAction {
   setDynamicMarker: (type: SliderMarkerType, value: number) => void;
 }
 interface VideoMetadataState {
-  videoMetadata: VideoMetadata;
+  isVideoInitiallyLoading: boolean;
+  isPaused: boolean;
+  videoDuration: number;
+  fps: number;
 }
 
 interface VideoMetadataAction {
   finishInitialVideoLoading: (duration: number) => void;
-  setVideoMetadata: (videoMetadata: VideoMetadata) => void;
   playVideo: () => void;
   pauseVideo: () => void;
+  setFps: (fps: number) => void;
 }
 
 type EditVideoModalState = ModalState & ChangeState & SliderState & VideoMetadataState;
@@ -65,11 +66,10 @@ const defaultState: EditVideoModalState = {
     time: 0,
     end: 0,
   },
-  videoMetadata: {
-    isInitiallyLoading: true,
-    duration: 0,
-    paused: true,
-  }
+  isVideoInitiallyLoading: true,
+  isPaused: true,
+  videoDuration: 0,
+  fps: 24
 };
 
 const useEditVideoModalStore = create<EditVideoModalStore>((set) => ({
@@ -96,9 +96,9 @@ const useEditVideoModalStore = create<EditVideoModalStore>((set) => ({
   setEndMarker: (value: number) => set((state) => ({ sliderMarkers: { ...state.sliderMarkers, end: value }, isTrimmedPortionChanged: true })),
   setDynamicMarker: (type: SliderMarkerType, value: number) => set((state) => ({ sliderMarkers: { ...state.sliderMarkers, [type]: value } })),
 
-  finishInitialVideoLoading: (duration: number) => set({ videoMetadata: { paused: true, isInitiallyLoading: false, duration } }),
-  setVideoMetadata: (videoMetadata: VideoMetadata) => set({ videoMetadata }),
-  playVideo: () => set((state) => ({ videoMetadata: { ...state.videoMetadata, paused: false } })),
-  pauseVideo: () => set((state) => ({ videoMetadata: { ...state.videoMetadata, paused: true } })),
+  finishInitialVideoLoading: (duration: number) => set({ isPaused: true, isVideoInitiallyLoading: false, videoDuration: duration }),
+  playVideo: () => set(({ isPaused: false })),
+  pauseVideo: () => set(({ isPaused: true })),
+  setFps: (fps: number) => set({ fps })
 }));
 export default useEditVideoModalStore;

@@ -12,14 +12,14 @@ const VideoTrimmingSlider: React.FC<VideoTrimmingSliderProps> = ({
   updateVideoFromTimeHandle
 }) => {
   const [
-    duration,
+    videoDuration,
     sliderMarkers,
     setStartMarker,
     setTimeMarker,
     setEndMarker,
   ] = useEditVideoModalStore(
     useShallow((state) => [
-      state.videoMetadata.duration,
+      state.videoDuration,
       state.sliderMarkers,
       state.setStartMarker,
       state.setTimeMarker,
@@ -31,7 +31,7 @@ const VideoTrimmingSlider: React.FC<VideoTrimmingSliderProps> = ({
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const leftPercentage = x / rect.width;
-    const newTime = duration * leftPercentage;
+    const newTime = videoDuration * leftPercentage;
 
     if (newTime < sliderMarkers.start || newTime > sliderMarkers.end) {
       toast(`Time must be within the start and end constraints`, { type: "error", autoClose: 3000 })
@@ -53,8 +53,8 @@ const VideoTrimmingSlider: React.FC<VideoTrimmingSliderProps> = ({
         <div 
           className='absolute h-full w-4 bg-color-primary-active'
           style={{ 
-            left: `${(sliderMarkers.start / duration) * 100}%`,
-            width: `${((sliderMarkers.end - sliderMarkers.start) / duration) * 100}%`
+            left: `${(sliderMarkers.start / videoDuration) * 100}%`,
+            width: `${((sliderMarkers.end - sliderMarkers.start) / videoDuration) * 100}%`
           }}
         />
 

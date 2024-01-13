@@ -17,12 +17,12 @@ const TrimTimeInput: React.FC<TrimStartHandleInputProps> = ({
   const [
     sliderMarkers,
     setDynamicMarker,
-    duration
+    videoDuration
   ] = useEditVideoModalStore(
     useShallow((state) => [
       state.sliderMarkers,
       state.setDynamicMarker,
-      state.videoMetadata.duration,
+      state.videoDuration,
     ])
   );
   
@@ -47,7 +47,7 @@ const TrimTimeInput: React.FC<TrimStartHandleInputProps> = ({
       return false;
     }
 
-    if (newDuration > duration) {
+    if (newDuration > videoDuration) {
       toast.error("Start and end time cannot go beyond the video duration");
       return false;
     }

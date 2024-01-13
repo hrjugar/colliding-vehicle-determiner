@@ -2,7 +2,7 @@ import { convertSecondsAndMillisecondsToString } from '@/globals/utils';
 import useEditVideoModalStore from "../../store";
 
 const TrimmingSliderTicks: React.FC = () => {
-  const duration = useEditVideoModalStore((state) => state.videoMetadata.duration);
+  const videoDuration = useEditVideoModalStore((state) => state.videoDuration);
 
   return (
     // Add your JSX code here
@@ -15,7 +15,7 @@ const TrimmingSliderTicks: React.FC = () => {
             key={`trimming-slider-tick-${i}`}
           >
             <div className='bg-color-primary-inactive w-[1px] h-2.5 mt-0.5'/>
-            <span className='text-xs text-color-primary-inactivey'>{convertSecondsAndMillisecondsToString(duration * (i * 0.2))}</span>
+            <span className='text-xs text-color-primary-inactivey'>{convertSecondsAndMillisecondsToString(videoDuration * (i * 0.2))}</span>
           </div>
         )
       })}
