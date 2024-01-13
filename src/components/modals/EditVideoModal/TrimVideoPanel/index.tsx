@@ -108,7 +108,7 @@ const TrimVideoPanel: React.FC = () => {
 
   return (
     <Tab.Panel className='w-full h-full flex flex-col justify-start items-center gap-2 p-4'>
-      <div className="relative w-full h-full flex flex-col items-center justify-center bg-black overflow-hidden">
+      <div className="group relative w-full h-full flex flex-col items-center justify-center bg-black overflow-hidden">
         <video
           className="max-w-full max-h-full flex object-scale-down aspect-video"
           muted
@@ -123,73 +123,67 @@ const TrimVideoPanel: React.FC = () => {
           />
         </video>
         
+        <div className={`opacity-0 group-hover:opacity-100 absolute flex justify-center items-center gap-8 text-white transition-opacity`}>
+          <svg 
+            width="64" 
+            height="64" 
+            viewBox="0 0 64 64" 
+            xmlns="http://www.w3.org/2000/svg" 
+            className="w-12 h-12 bg-black/50 rounded-full p-2 cursor-pointer"
+            onClick={() => handleVideoSkip(true)}
+          >
+            <path 
+              d="M16 48V16H21.3333V48H16ZM25.3333 32L48 16V48L25.3333 32Z"
+              className="fill-current"
+            />
+          </svg>
+
+          <svg 
+            width="64" 
+            height="64" 
+            viewBox="0 0 64 64" 
+            xmlns="http://www.w3.org/2000/svg" 
+            className="w-24 h-24 bg-black/50 rounded-full p-4 cursor-pointer"
+            onClick={() => handlePlayPause()}
+          >
+            <path 
+              d={isPaused ? (
+                "M21.3333 13.7067V51.04L50.6667 32.3733L21.3333 13.7067Z"
+              ): (
+                "M37.3333 50.6667H48V13.3334H37.3333M16 50.6667H26.6667V13.3334H16V50.6667Z"
+              )}
+              className="fill-current"
+            />
+          </svg>
+
+          <svg 
+            width="64" 
+            height="64" 
+            viewBox="0 0 64 64" 
+            xmlns="http://www.w3.org/2000/svg" 
+            className="w-12 h-12 bg-black/50 rounded-full p-2 cursor-pointer"
+            onClick={() => handleVideoSkip(false)}
+          >
+            <path 
+              d="M42.6667 48H48V16H42.6667M16 48L38.6667 32L16 16V48Z"
+              className="fill-current"
+            />
+          </svg>
+        </div>        
       </div>
 
       {isVideoInitiallyLoading ? null : (
         <div className="w-full flex flex-col justify-center items-center pb-4 gap-4">
           <div className="w-full flex justify-between items-center">
-            <div className="flex-1 flex flex-row justify-start items-center">
-              <TrimTimeInput 
-                label={"Start"}
-                sliderMarkerType="start"
-              />
-            </div>
+            <TrimTimeInput 
+              label={"Start"}
+              sliderMarkerType="start"
+            />
 
-            <div className="flex-1 flex justify-center items-center gap-1">
-              <svg 
-                width="64" 
-                height="64" 
-                viewBox="0 0 64 64" 
-                xmlns="http://www.w3.org/2000/svg" 
-                className="w-8 h-8 text-color-primary cursor-pointer"
-                onClick={() => handleVideoSkip(true)}
-              >
-                <path 
-                  d="M53.3333 13.3334V50.6667L34.6667 32M16 13.3334V50.6667H10.6667V13.3334M34.6667 13.3334V50.6667L16 32"
-                  className="fill-current"
-                />
-              </svg>
-
-              <svg 
-                width="64" 
-                height="64" 
-                viewBox="0 0 64 64" 
-                xmlns="http://www.w3.org/2000/svg" 
-                className="w-12 h-12 text-color-primary cursor-pointer"
-                onClick={() => handlePlayPause()}
-              >
-                <path 
-                  d={isPaused ? (
-                    "M21.3333 13.7067V51.04L50.6667 32.3733L21.3333 13.7067Z"
-                  ): (
-                    "M37.3333 50.6667H48V13.3334H37.3333M16 50.6667H26.6667V13.3334H16V50.6667Z"
-                  )}
-                  className="fill-current"
-                />
-              </svg>
-
-              <svg 
-                width="64" 
-                height="64" 
-                viewBox="0 0 64 64" 
-                xmlns="http://www.w3.org/2000/svg" 
-                className="w-8 h-8 text-color-primary cursor-pointer"
-                onClick={() => handleVideoSkip(false)}
-              >
-                <path 
-                  d="M10.6667 13.3334V50.6667L29.3333 32M48 13.3334V50.6667H53.3333V13.3334M29.3333 13.3334V50.6667L48 32"
-                  className="fill-current"
-                />
-              </svg>
-
-            </div>
-
-            <div className="flex-1 flex flex-row justify-end items-center">
-              <TrimTimeInput 
-                label={"End"}
-                sliderMarkerType="end"
-              />
-            </div>
+            <TrimTimeInput 
+              label={"End"}
+              sliderMarkerType="end"
+            />
           </div>
           
           <VideoTrimmingSlider 
