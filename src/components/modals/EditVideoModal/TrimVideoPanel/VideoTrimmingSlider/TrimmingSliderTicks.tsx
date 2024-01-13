@@ -6,7 +6,7 @@ const TrimmingSliderTicks: React.FC = () => {
 
   return (
     // Add your JSX code here
-    <div className='absolute top-0 w-full h-4 transform translate-y-4'>
+    <div className='absolute bottom-0 w-full h-4 transform translate-y-4'>
       {Array(6).fill(0).map((_, i) => {
         return (
           <div 

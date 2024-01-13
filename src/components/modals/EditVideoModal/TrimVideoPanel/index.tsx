@@ -4,6 +4,7 @@ import TrimTimeInput from "./TrimTimeInput";
 import VideoTrimmingSlider from "./VideoTrimmingSlider";
 import useEditVideoModalStore from "../store";
 import { useShallow } from "zustand/react/shallow";
+import { convertSecondsAndMillisecondsToString } from "@/globals/utils";
 
 const TrimVideoPanel: React.FC = () => {
   const [
@@ -179,6 +180,28 @@ const TrimVideoPanel: React.FC = () => {
               label={"Start"}
               sliderMarkerType="start"
             />
+
+            <div className="flex-1">
+            </div>
+
+            <p className="flex-1 flex flex-row justify-center items-end font-semibold text-lg gap-2">
+              <svg 
+                width="64" 
+                height="64" 
+                viewBox="0 0 64 64" 
+                xmlns="http://www.w3.org/2000/svg" 
+                className="w-8 h-8"
+              >
+                <path 
+                  d="M32 53.3333C27.0493 53.3333 22.3014 51.3666 18.8007 47.866C15.3 44.3653 13.3333 39.6173 13.3333 34.6666C13.3333 29.7159 15.3 24.968 18.8007 21.4673C22.3014 17.9666 27.0493 16 32 16C36.9507 16 41.6986 17.9666 45.1993 21.4673C48.7 24.968 50.6667 29.7159 50.6667 34.6666C50.6667 39.6173 48.7 44.3653 45.1993 47.866C41.6986 51.3666 36.9507 53.3333 32 53.3333ZM50.7467 19.7066L54.5333 15.92C53.3333 14.56 52.1333 13.3333 50.7733 12.16L46.9867 16C42.8533 12.64 37.6533 10.6666 32 10.6666C25.6348 10.6666 19.5303 13.1952 15.0294 17.6961C10.5286 22.1969 8 28.3014 8 34.6666C8 41.0318 10.5286 47.1363 15.0294 51.6372C19.5303 56.1381 25.6348 58.6666 32 58.6666C45.3333 58.6666 56 47.92 56 34.6666C56 29.0133 54.0267 23.8133 50.7467 19.7066ZM29.3333 37.3333H34.6667V21.3333H29.3333M40 2.66663H24V7.99996H40V2.66663Z"
+                  className="fill-current"
+                />
+              </svg>              
+              <span className="w-[8ch]">{convertSecondsAndMillisecondsToString(sliderMarkers.time)}</span>
+            </p>
+
+            <div className="flex-1">
+            </div>
 
             <TrimTimeInput 
               label={"End"}

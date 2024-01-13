@@ -84,22 +84,39 @@ const TrimmingSliderHandle: React.FC<TrimmingSliderHandleProps> = ({
     return (
       <div
         ref={handleRef}
-        className='absolute bottom-0 flex flex-col justify-start items-center transform -translate-x-1/2 cursor-pointer'
+        className='absolute bottom-0 flex flex-col justify-start items-center transform -translate-x-1/2 translate-y-[15%] cursor-pointer'
         style={{ left: `${sliderPercentage}%`}}
         onPointerDown={onPointerDown}
       >
-        <span className='bg-color-primary text-white text-xs px-4 py-2 rounded-full cursor-pointer'>{convertSecondsAndMillisecondsToString(value)}</span>
-        <div className='w-[1px] h-5 bg-color-primary cursor-pointer' />
+        {/* <span className='bg-color-primary text-white text-xs px-4 py-2 rounded-full cursor-pointer'>{convertSecondsAndMillisecondsToString(value)}</span> */}
+        <div className='w-[1px] h-20 bg-red-500 cursor-pointer' />
       </div>
     )
   } else {
     return (
       <div
         ref={handleRef}
-        className={"absolute w-4 h-4 rounded-full bg-white border-2 border-color-primary cursor-pointer transform -translate-x-1/2"}
+        className={"absolute transform -translate-x-1/2"}
         style={{ left: `${sliderPercentage}%`}}
-        onPointerDown={onPointerDown}
-      />
+      >
+        <div 
+          className={`absolute ${handleType === 'start' ? 'right-full rounded-l-lg' : 'left-full rounded-r-lg'} w-4 h-[60px] cursor-pointer -translate-y-[2.5%] bg-color-primary flex justify-center items-center`}
+          onPointerDown={onPointerDown}
+        >
+          <svg 
+            width="64" 
+            height="64" 
+            viewBox="0 0 64 64" 
+            xmlns="http://www.w3.org/2000/svg" 
+            className="w-8 h-8 text-white"
+          >
+            <path 
+              d="M29.3333 56H24V8H29.3333V56ZM40 8H34.6667V56H40V8Z"
+              className="fill-current"
+            />
+          </svg>           
+        </div>
+      </div>
     );
   }
 };
