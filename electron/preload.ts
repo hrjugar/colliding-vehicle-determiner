@@ -18,6 +18,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   isFileExisting: (filePath: string) => ipcRenderer.invoke('isFileExisting', filePath),
   updateVideo: (id: number | bigint) => ipcRenderer.invoke('updateVideo', id),
 
+  getVideoFPS: (videoPath: string) => ipcRenderer.invoke('getVideoFPS', videoPath),
+
   trimVideo: (videoPath: string, startTime: number, endTime: number) => ipcRenderer.invoke('trim:trimVideo', videoPath, startTime, endTime),
   onTrimProgress: (callback: Function) => ipcRenderer.on('trim:progress', (_, progress) => callback(progress)),
   removeTrimProgressListener: () => ipcRenderer.removeAllListeners('trim:progress'),

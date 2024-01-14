@@ -35,6 +35,8 @@ interface ElectronAPI {
   isFileExisting(filePath: string): Promise<boolean>,
   updateVideo(id: number | bigint): Promise<string>,
 
+  getVideoFPS(videoPath: string): Promise<number>,
+  
   trimVideo(videoPath: string, startTime: number, endTime: number): Promise<void>,
   onTrimProgress(callback: Function): void,
   removeTrimProgressListener(): void,

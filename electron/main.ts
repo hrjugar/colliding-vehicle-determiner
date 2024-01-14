@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, net, protocol, shell } from 'electron'
 import path from 'node:path'
 import fs from 'node:fs'
 import { getSqlite3 } from './better-sqlite3'
-import { closeWindow, createThumbnailFromId, deleteVideo, extractFrames, findNewVideo, insertVideo, isFileExisting, killPythonProcess, maximizeWindow, minimizeWindow, openVideoFolder, renameVideo, runAccidentDetectionModel, runDeepSORTModel, selectAllVideos, THUMBNAIL_FILENAME, trimVideo, updateVideo } from './mainUtils'
+import { closeWindow, createThumbnailFromId, deleteVideo, extractFrames, findNewVideo, getVideoFPS, insertVideo, isFileExisting, killPythonProcess, maximizeWindow, minimizeWindow, openVideoFolder, renameVideo, runAccidentDetectionModel, runDeepSORTModel, selectAllVideos, THUMBNAIL_FILENAME, trimVideo, updateVideo } from './mainUtils'
 import Database from 'better-sqlite3'
 import { stopServer } from './server'
 import { initSocket } from './zeromq'
@@ -165,6 +165,8 @@ app.whenReady().then(() => {
   ipcMain.handle('renameVideo', (_, id, oldFilePath, newFileName) => renameVideo(db, id, oldFilePath, newFileName))
   ipcMain.handle('isFileExisting', (_, filePath) => isFileExisting(filePath))
   ipcMain.handle('updateVideo', (_, id) => updateVideo(db, id))
+
+  ipcMain.handle('getVideoFPS', (_, videoPath) => getVideoFPS(videoPath))
 
   ipcMain.handle('trim:trimVideo', (event, videoPath, startTime, endTime) => trimVideo(event, videoPath, startTime, endTime))
   ipcMain.handle('extractFrames', (event) => extractFrames(event))

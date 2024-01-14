@@ -163,6 +163,21 @@ export async function updateVideo(db: Database.Database, id: number | bigint) {
   return ''
 }
 
+export function getVideoFPS(videoPath: string) {
+  return new Promise<number>((resolve, reject) => {
+    ffmpeg.ffprobe(videoPath, (err, metadata) => {
+      if (err) {
+        reject(err)
+        return;
+      }
+
+      const frameRate = metadata.streams[0].avg_frame_rate
+      const [numerator, denominator] = frameRate!.split('/')
+      resolve(parseInt(numerator) / parseInt(denominator))
+    })
+  })
+}
+
 export function trimVideo(event: Electron.IpcMainInvokeEvent, videoPath: string, startTime: number, endTime: number) {
   const tempFolderPath = path.join(app.getPath('userData'), 'temp')
   if (!fs.existsSync(tempFolderPath)) {
