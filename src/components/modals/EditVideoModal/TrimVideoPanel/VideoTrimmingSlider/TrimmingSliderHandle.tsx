@@ -89,7 +89,7 @@ const TrimmingSliderHandle: React.FC<TrimmingSliderHandleProps> = ({
         onPointerDown={onPointerDown}
       >
         {/* <span className='bg-color-primary text-white text-xs px-4 py-2 rounded-full cursor-pointer'>{convertSecondsAndMillisecondsToString(value)}</span> */}
-        <div className='w-[1px] h-20 bg-red-500 cursor-pointer' />
+        <div className='w-[2px] h-20 bg-red-500 cursor-pointer' />
       </div>
     )
   } else {
@@ -100,7 +100,7 @@ const TrimmingSliderHandle: React.FC<TrimmingSliderHandleProps> = ({
         style={{ left: `${sliderPercentage}%`}}
       >
         <div 
-          className={`absolute ${handleType === 'start' ? 'right-full rounded-l-lg' : 'left-full rounded-r-lg'} w-4 h-[60px] cursor-pointer -translate-y-[2.5%] bg-color-primary flex justify-center items-center`}
+          className={`absolute ${handleType === 'start' ? 'right-full rounded-l-lg' : 'left-full rounded-r-lg'} w-4 h-[60px] cursor-pointer -translate-y-[3.33%] bg-color-primary flex justify-center items-center`}
           onPointerDown={onPointerDown}
         >
           <svg 

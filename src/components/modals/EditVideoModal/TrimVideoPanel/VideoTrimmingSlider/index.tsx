@@ -49,17 +49,31 @@ const VideoTrimmingSlider: React.FC<VideoTrimmingSliderProps> = ({
   return (
     <div className='w-full pt-2 pb-6 px-6'>
       <div 
-        className="relative bg-gray-200 w-full h-14"
+        className="relative w-full h-14"
       >
         <TrimmingSliderFrames />
 
         <div 
-          className='absolute h-[60px] -translate-y-[2.5%] border-y-2 border-color-primary bg-color-primary-active/50'
+          className='absolute h-full bg-black/25 left-0'
+          style={{ 
+            width: `${((sliderMarkers.start) / videoDuration) * 100}%`
+          }}
+        />
+
+        <div 
+          className='absolute h-[60px] -translate-y-[3.33%] border-y-2 border-color-primary bg-color-primary-active/25'
           style={{ 
             left: `${(sliderMarkers.start / videoDuration) * 100}%`,
             width: `${((sliderMarkers.end - sliderMarkers.start) / videoDuration) * 100}%`
           }}
         />
+
+        <div 
+          className='absolute h-full bg-black/25 right-0'
+          style={{ 
+            width: `${((videoDuration - sliderMarkers.end) / videoDuration) * 100}%`
+          }}
+        />        
 
         <div 
           className='absolute w-full h-full'

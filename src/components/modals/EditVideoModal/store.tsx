@@ -69,7 +69,7 @@ const defaultState: EditVideoModalState = {
   isVideoInitiallyLoading: true,
   isPaused: true,
   videoDuration: 0,
-  fps: 24
+  fps: 0
 };
 
 const useEditVideoModalStore = create<EditVideoModalStore>((set) => ({
