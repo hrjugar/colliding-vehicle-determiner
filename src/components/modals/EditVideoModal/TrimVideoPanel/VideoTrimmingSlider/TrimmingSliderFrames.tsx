@@ -8,11 +8,13 @@ const TrimmingSliderFrames: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [
+    selectedTabIndex,
     videoPath,
     fps,
     setFps
   ] = useEditVideoModalStore(
     useShallow((state) => [
+      state.selectedTabIndex,
       state.videoPath,
       state.fps,
       state.setFps
@@ -59,6 +61,14 @@ const TrimmingSliderFrames: React.FC = () => {
       let frameWidth = canvas.width / totalFrameCount;
 
       const handleFrame = async (_: DOMHighResTimeStamp, __: any) => {
+        if (selectedTabIndex !== 0) {
+          if (frameCallbackId !== undefined) {
+            video.cancelVideoFrameCallback(frameCallbackId);
+          }
+
+          return;
+        }
+
         const xPos = (video.currentTime / video.duration) * canvas.width;        
 
         const imageBitmap = await createImageBitmap(video);
@@ -74,6 +84,15 @@ const TrimmingSliderFrames: React.FC = () => {
       };
 
       const handleResize = () => {
+        if (selectedTabIndex !== 0) {
+          if (frameCallbackId !== undefined) {
+            video.cancelVideoFrameCallback(frameCallbackId);
+          }
+
+          window.removeEventListener('resize', handleResizeRef.current)
+          return;
+        }
+
         const rect = canvas.getBoundingClientRect();
         canvas.width = rect.width;
         canvas.height = rect.height;
@@ -108,7 +127,7 @@ const TrimmingSliderFrames: React.FC = () => {
     return () => {
       video.removeEventListener('loadeddata', handleLoadedData);
       video.pause();
-      video.removeEventListener('resize', handleResizeRef.current);
+      window.removeEventListener('resize', handleResizeRef.current);
 
       if (frameCallbackId !== undefined) {
         video.cancelVideoFrameCallback(frameCallbackId);
