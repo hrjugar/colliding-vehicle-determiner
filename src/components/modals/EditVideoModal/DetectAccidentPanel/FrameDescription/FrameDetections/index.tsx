@@ -44,7 +44,7 @@ const FrameDetections: React.FC = () => {
   }, [isFrameTransitionDone, selectedFrameIndex]);
 
   return (
-    <div className='h-full flex-col'>
+    <div className='h-[150px] flex-col w-full px-4 py-2 overflow-y-auto'>
       <div className='flex flex-col h-full'>
         {prediction && prediction.length > 0 ? (
           prediction.map((detection, index) => {
@@ -145,6 +145,8 @@ const FrameDetections: React.FC = () => {
                       <p className='font-medium'>confidence</p>
                       <p className={bestPredictionBoxIndexes.frameIndex === selectedFrameIndex && bestPredictionBoxIndexes.boxIndex === index ? 'font-bold' : ''}>{(detection.confidence * 100).toFixed(2)}%</p>
                     </div>
+
+                    <div className='h-1'/>
                   </div>
                 </div>
               </div>

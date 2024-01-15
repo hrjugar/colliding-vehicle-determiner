@@ -51,12 +51,20 @@ interface hiddenPredictionBoxIndexesAction {
   toggleHiddenPredictionBoxIndex: (index: number) => void;
 }
 
+interface StyleState {
+  selectedFrameDivHeightPx: number;
+}
+
+interface StyleAction {
+  setSelectedFrameDivHeightPx: (selectedFrameDivHeightPx: number) => void;
+}
+
 interface PanelAction {
   resetModelStates: () => void;
 }
 
-type DetectAccidentPanelState = CompletionState & ThresholdState & OutputState & hiddenPredictionBoxIndexesState;
-type DetectAccidentPanelAction = CompletionAction & ThresholdAction & OutputAction & hiddenPredictionBoxIndexesAction & PanelAction;
+type DetectAccidentPanelState = CompletionState & ThresholdState & OutputState & hiddenPredictionBoxIndexesState & StyleState;
+type DetectAccidentPanelAction = CompletionAction & ThresholdAction & OutputAction & hiddenPredictionBoxIndexesAction & StyleAction & PanelAction;
 type DetectAccidentPanelStore = DetectAccidentPanelState & DetectAccidentPanelAction;
 
 const defaultState: DetectAccidentPanelState = {
@@ -76,7 +84,8 @@ const defaultState: DetectAccidentPanelState = {
     frameIndex: -1,
     boxIndex: -1
   },
-  hiddenPredictionBoxIndexes: new Set<number>()
+  hiddenPredictionBoxIndexes: new Set<number>(),
+  selectedFrameDivHeightPx: 0,
 };
 
 const useDetectAccidentPanelStore = create<DetectAccidentPanelStore>((set, get) => ({
@@ -112,6 +121,8 @@ const useDetectAccidentPanelStore = create<DetectAccidentPanelStore>((set, get) 
     return { hiddenPredictionBoxIndexes: new Set(newHiddenPredictionBoxIndexes) }
   }),
 
+  setSelectedFrameDivHeightPx: (selectedFrameDivHeightPx: number) => set({ selectedFrameDivHeightPx }),
+  
   resetModelStates: () => set({ ...defaultState })
 }));
 

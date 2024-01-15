@@ -20,11 +20,11 @@ const SelectedFrameImage: React.FC = () => {
   const framePredictions = getSelectedFramePredictions();
 
   return (
-    <div className='bg-black flex justify-center items-center w-full shadow-around'>
-      <div className='relative inline-block'>
+    <div className='h-full bg-black flex justify-center items-center shadow-around'>
+      <div className='relative inline-block h-full'>
         <img
           src={`fileHandler://tempFrame//${selectedFrameIndex + 1}`}
-          className='object-contain'
+          className='object-contain h-full'
         />
         
         {framePredictions && framePredictions.length > 0 ? (

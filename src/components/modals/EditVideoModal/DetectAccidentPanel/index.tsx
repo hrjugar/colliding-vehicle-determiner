@@ -1,5 +1,5 @@
 import { Tab } from '@headlessui/react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { useMutation } from 'react-query';
 import FramePagination from './FramePagination';
 import DetectAccidentModelHandler from './DetectAccidentModelHandler';
@@ -60,6 +60,9 @@ const DetectAccidentPanel: React.FC = () => {
 
     clearHiddenPredictionBoxIndexes,
 
+    selectedFrameDivHeightPx,
+    setSelectedFrameDivHeightPx,
+
     resetModelStates
   ] = useDetectAccidentPanelStore(
     useShallow((state) => [
@@ -89,11 +92,15 @@ const DetectAccidentPanel: React.FC = () => {
 
       state.clearHiddenPredictionBoxIndexes,
 
+      state.selectedFrameDivHeightPx,
+      state.setSelectedFrameDivHeightPx,
+
       state.resetModelStates
     ])
   );
 
   const transitionAnimationFrameId = useRef<number | null>(null);
+  const rightCardsDivRef = useRef<HTMLDivElement>(null);
 
   const detectAccidentsMutation = useMutation(
     async () => await window.electronAPI.runAccidentDetectionModel(confidenceThreshold, iouThreshold),
@@ -197,7 +204,7 @@ const DetectAccidentPanel: React.FC = () => {
            
     setIsLoadingDone(true);
     setTabsDisabledState(false);
-  }  
+  }
 
   const handleOnProgress = (progress: AccidentDetectionModelProgress) => {
     if (progress) {
@@ -226,6 +233,12 @@ const DetectAccidentPanel: React.FC = () => {
   };
 
   useEffect(() => {
+    if (isLoadingDone && rightCardsDivRef.current) {
+      setSelectedFrameDivHeightPx(rightCardsDivRef.current.offsetHeight);
+    }
+  }, [isLoadingDone]);
+
+  useEffect(() => {
     if (isPredictionDone) {
       selectBestPrediction();
     }
@@ -240,6 +253,7 @@ const DetectAccidentPanel: React.FC = () => {
 
   useEffect(() => {
     console.log(`DetectAccidentPanel: selectedTabIndex: ${selectedTabIndex}`)
+
     if (selectedTabIndex === 1 && isTrimmedPortionChanged) {
       resetModelStates();
       setTabsDisabledState(true);
@@ -278,11 +292,13 @@ const DetectAccidentPanel: React.FC = () => {
           >
             Select best prediction
           </button>
-          <div className='flex flex-col w-full h-full gap-4'>
+          <div className='flex flex-col w-full gap-4'>
             <div className='flex flex-row gap-4'>
-              <SelectedFrameImage />
+              <div className="w-full overflow-hidden" style={{ height: selectedFrameDivHeightPx }}>
+                <SelectedFrameImage />
+              </div>
 
-              <div className='flex flex-col gap-4'>
+              <div className='flex flex-col gap-4' ref={rightCardsDivRef}>
                 <FrameDescription />
                 <DetectAccidentModelHandler rerunModel={rerunModel} />
               </div>          

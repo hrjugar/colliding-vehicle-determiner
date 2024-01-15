@@ -20,12 +20,12 @@ const FrameDescription: React.FC = () => {
   const isNextButtonDisabled = selectedFrameIndex + 1 >= frameCount;
 
   return (
-    <div className='h-full flex flex-col card'>
+    <div className='flex flex-col card'>
       <div className='card-header'>
         <h2>Frame</h2>
       </div>
 
-      <div className='h-full px-4 py-2 flex flex-col gap-2 overflow-y-auto'>
+      <div className='flex flex-col'>
         {/* <div className='flex flex-row justify-between items-center'>
           <p className='font-semibold'>Video frame:</p>
           <p>{selectedFrameIndex + 1}</p>
@@ -33,7 +33,7 @@ const FrameDescription: React.FC = () => {
         <p className='font-semibold'>Detections:</p> */}
         <FrameDetections />
         
-        <div className='flex flex-row w-full justify-center items-center text-sm pt-2'>
+        <div className='flex flex-row w-full justify-center items-center text-sm p-1 border-t-[1px] border-gray-300'>
           <button 
             className={`group bg-transparent`}
             disabled={isPrevButtonDisabled}
