@@ -70,7 +70,7 @@ const DetectedObjects: React.FC = () => {
                 className='w-3 h-3 border-[1px] border-gray-200' 
                 style={{ backgroundColor: getBoundingBoxColor(object.id) }} 
               />
-              <p className="font-medium">{object.id}</p>
+              <p className="font-medium">Object {object.id}</p>
               <span className='text-xs text-gray-500'>{object.classification}</span>              
             </div>
           );

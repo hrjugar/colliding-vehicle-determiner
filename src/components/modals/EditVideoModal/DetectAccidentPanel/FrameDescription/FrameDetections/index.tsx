@@ -77,7 +77,7 @@ const FrameDetections: React.FC = () => {
                       }}
                     />               
                     <div className='flex flex-row items-center gap-1 select-none text-color-primary font-semibold text-center'>
-                      <p>Box {index + 1}</p>
+                      <p>Collision {index + 1}</p>
                       {bestPredictionBoxIndexes.frameIndex === selectedFrameIndex && bestPredictionBoxIndexes.boxIndex === index ? (
                         <svg 
                           width="64" 

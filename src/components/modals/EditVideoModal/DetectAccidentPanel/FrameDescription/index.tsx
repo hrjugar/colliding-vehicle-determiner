@@ -26,11 +26,11 @@ const FrameDescription: React.FC = () => {
       </div>
 
       <div className='h-full px-4 py-2 flex flex-col gap-2 overflow-y-auto'>
-        <div className='flex flex-row justify-between items-center'>
+        {/* <div className='flex flex-row justify-between items-center'>
           <p className='font-semibold'>Video frame:</p>
           <p>{selectedFrameIndex + 1}</p>
         </div>
-        <p className='font-semibold'>Detections:</p>
+        <p className='font-semibold'>Detections:</p> */}
         <FrameDetections />
         
         <div className='flex flex-row w-full justify-center items-center text-sm pt-2'>
