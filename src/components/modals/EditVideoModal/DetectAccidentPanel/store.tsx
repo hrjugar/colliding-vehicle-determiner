@@ -52,7 +52,7 @@ interface hiddenPredictionBoxIndexesAction {
 }
 
 interface PanelAction {
-  resetModelStates: () => void;
+  resetModelStates: (excludeThresholds?: boolean) => void;
 }
 
 type DetectAccidentPanelState = CompletionState & ThresholdState & OutputState & hiddenPredictionBoxIndexesState;
@@ -112,7 +112,10 @@ const useDetectAccidentPanelStore = create<DetectAccidentPanelStore>((set, get) 
     return { hiddenPredictionBoxIndexes: new Set(newHiddenPredictionBoxIndexes) }
   }),
   
-  resetModelStates: () => set({ ...defaultState })
+  resetModelStates: (excludeThresholds = false) => set({ ...defaultState, ...(excludeThresholds ? {
+    confidenceThreshold: get().confidenceThreshold,
+    iouThreshold: get().iouThreshold,
+  } : {})})
 }));
 
 export default useDetectAccidentPanelStore;

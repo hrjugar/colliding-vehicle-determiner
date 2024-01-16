@@ -220,7 +220,7 @@ const DetectAccidentPanel: React.FC = () => {
   };
 
   const rerunModel = () => {
-    resetModelStates();
+    resetModelStates(true);
     setTabsDisabledState(true);
     window.electronAPI.onRunAccidentDetectionModelProgress(handleOnRunAccidentDetectionModelProgress);
     detectAccidentsMutation.mutate();
