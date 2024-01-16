@@ -44,7 +44,7 @@ const FrameDetections: React.FC = () => {
   }, [isFrameTransitionDone, selectedFrameIndex]);
 
   return (
-    <div className='h-[150px] flex-col w-full px-4 py-2 overflow-y-auto'>
+    <div className='min-h-[150px] flex-grow flex-col w-full px-4 py-2 overflow-y-auto'>
       <div className='flex flex-col h-full'>
         {prediction && prediction.length > 0 ? (
           prediction.map((detection, index) => {

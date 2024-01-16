@@ -20,12 +20,12 @@ const FrameDescription: React.FC = () => {
   const isNextButtonDisabled = selectedFrameIndex + 1 >= frameCount;
 
   return (
-    <div className='flex flex-col card'>
+    <div className='flex flex-col card flex-grow'>
       <div className='card-header'>
         <h2>Frame</h2>
       </div>
 
-      <div className='flex flex-col'>
+      <div className='flex flex-col flex-grow'>
         {/* <div className='flex flex-row justify-between items-center'>
           <p className='font-semibold'>Video frame:</p>
           <p>{selectedFrameIndex + 1}</p>

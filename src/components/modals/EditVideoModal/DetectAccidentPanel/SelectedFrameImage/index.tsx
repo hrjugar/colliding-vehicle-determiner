@@ -1,9 +1,13 @@
 import { useShallow } from 'zustand/react/shallow';
 import useDetectAccidentPanelStore from '../store';
 import { getBoundingBoxColor } from '@/globals/utils';
+import { useEffect, useState } from 'react';
 
+interface SelectedFrameImageProps {
+  imageSideCardsDivRef: React.RefObject<HTMLDivElement>;
+}
 
-const SelectedFrameImage: React.FC = () => {
+const SelectedFrameImage: React.FC<SelectedFrameImageProps> = ({ imageSideCardsDivRef }) => {
   const [
     selectedFrameIndex,
     getSelectedFramePredictions,
@@ -17,10 +21,32 @@ const SelectedFrameImage: React.FC = () => {
       state.hiddenPredictionBoxIndexes,
     ])
   )
+
   const framePredictions = getSelectedFramePredictions();
 
+  const [selectedFrameImageHeight, setSelectedFrameImageHeight] = useState<number>(0);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (imageSideCardsDivRef.current) {
+        const height = imageSideCardsDivRef.current.offsetHeight;
+        setSelectedFrameImageHeight(height);
+      }
+    }
+
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+
+    return () => {
+      window.removeEventListener('resize', updateHeight);
+    }
+  }, [imageSideCardsDivRef]);
+
   return (
-    <div className='h-full bg-black flex justify-center items-center shadow-around'>
+    <div 
+      className='flex-shrink w-full h-full bg-black flex justify-center items-center shadow-around'
+      style={{ maxHeight: `${selectedFrameImageHeight}px` }}
+    >
       <div className='relative inline-block h-full'>
         <img
           src={`fileHandler://tempFrame//${selectedFrameIndex + 1}`}

@@ -60,9 +60,6 @@ const DetectAccidentPanel: React.FC = () => {
 
     clearHiddenPredictionBoxIndexes,
 
-    selectedFrameDivHeightPx,
-    setSelectedFrameDivHeightPx,
-
     resetModelStates
   ] = useDetectAccidentPanelStore(
     useShallow((state) => [
@@ -92,15 +89,12 @@ const DetectAccidentPanel: React.FC = () => {
 
       state.clearHiddenPredictionBoxIndexes,
 
-      state.selectedFrameDivHeightPx,
-      state.setSelectedFrameDivHeightPx,
-
       state.resetModelStates
     ])
   );
 
   const transitionAnimationFrameId = useRef<number | null>(null);
-  const rightCardsDivRef = useRef<HTMLDivElement>(null);
+  const imageSideCardsDivRef = useRef<HTMLDivElement>(null);
 
   const detectAccidentsMutation = useMutation(
     async () => await window.electronAPI.runAccidentDetectionModel(confidenceThreshold, iouThreshold),
@@ -233,12 +227,6 @@ const DetectAccidentPanel: React.FC = () => {
   };
 
   useEffect(() => {
-    if (isLoadingDone && rightCardsDivRef.current) {
-      setSelectedFrameDivHeightPx(rightCardsDivRef.current.offsetHeight);
-    }
-  }, [isLoadingDone]);
-
-  useEffect(() => {
     if (isPredictionDone) {
       selectBestPrediction();
     }
@@ -284,7 +272,7 @@ const DetectAccidentPanel: React.FC = () => {
   return (
     <Tab.Panel className="w-full h-full bg-gray-50 flex flex-col overflow-y-auto">
       {isLoadingDone ? (
-        <div className='w-full flex flex-col justify-start items-center p-4 gap-2'>
+        <div className='w-full flex flex-col justify-start items-center p-4 gap-2 flex-grow'>
           <button
             disabled={!isFrameTransitionDone}
             className={`bg-transparent text-color-primary p-0 self-end hover:font-semibold ${isFrameTransitionDone ? 'cursor-pointer' : 'opacity-30 pointer-events-none'}}`}
@@ -292,13 +280,11 @@ const DetectAccidentPanel: React.FC = () => {
           >
             Select best prediction
           </button>
-          <div className='flex flex-col w-full gap-4'>
-            <div className='flex flex-row gap-4'>
-              <div className="w-full overflow-hidden" style={{ height: selectedFrameDivHeightPx }}>
-                <SelectedFrameImage />
-              </div>
+          <div className='flex flex-col w-full gap-4 flex-grow'>
+            <div className='flex flex-row gap-4 flex-grow '>
+              <SelectedFrameImage imageSideCardsDivRef={imageSideCardsDivRef}/>
 
-              <div className='flex flex-col gap-4' ref={rightCardsDivRef}>
+              <div className='flex flex-col gap-4 flex-grow' ref={imageSideCardsDivRef}>
                 <FrameDescription />
                 <DetectAccidentModelHandler rerunModel={rerunModel} />
               </div>          
