@@ -29,14 +29,14 @@ const SelectedFrameImage: React.FC<SelectedFrameImageProps> = ({ imageSideCardsD
   const imageRef = useRef<HTMLImageElement>(null);
   const boundingBoxAreaRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const updateHeight = () => {
-      if (imageSideCardsDivRef.current) {
-        const height = imageSideCardsDivRef.current.offsetHeight;
-        setComponentHeight(height);
-      }
+  const updateHeight = () => {
+    if (imageSideCardsDivRef.current) {
+      const height = imageSideCardsDivRef.current.offsetHeight;
+      setComponentHeight(height);
     }
+  }
 
+  useEffect(() => {
     updateHeight();
     const resizeObserver = new ResizeObserver(() => updateHeight());
     if (imageSideCardsDivRef.current) {
@@ -51,17 +51,18 @@ const SelectedFrameImage: React.FC<SelectedFrameImageProps> = ({ imageSideCardsD
     }
   }, [imageSideCardsDivRef]);
 
-  useEffect(() => {
-    const updateBoundingBoxAreaSize = () => {
-      if (imageRef.current && boundingBoxAreaRef.current) {
-        const aspectRatio = imageRef.current.naturalWidth / imageRef.current.naturalHeight;
-        const areaWidth = imageRef.current.offsetWidth;
-        const areaHeight = areaWidth / aspectRatio;
-        boundingBoxAreaRef.current.style.width = `${areaWidth}px`;
-        boundingBoxAreaRef.current.style.height = `${areaHeight}px`;
-      }
-    }
+  const updateBoundingBoxAreaSize = () => {
+    if (imageRef.current && boundingBoxAreaRef.current) {
+      const aspectRatio = imageRef.current.naturalWidth / imageRef.current.naturalHeight;
+      const areaWidth = imageRef.current.offsetWidth;
+      const areaHeight = areaWidth / aspectRatio;
 
+      boundingBoxAreaRef.current.style.width = `${areaWidth}px`;
+      boundingBoxAreaRef.current.style.height = `${areaHeight}px`;
+    }
+  }
+
+  useEffect(() => {
     updateBoundingBoxAreaSize();
     const resizeObserver = new ResizeObserver(() => updateBoundingBoxAreaSize());
     if (imageRef.current) {
@@ -73,7 +74,7 @@ const SelectedFrameImage: React.FC<SelectedFrameImageProps> = ({ imageSideCardsD
         resizeObserver.unobserve(imageRef.current);
       }
     }
-  }, [componentHeight]);
+  }, [componentHeight, imageRef]);
 
   return (
     <div 
@@ -85,10 +86,11 @@ const SelectedFrameImage: React.FC<SelectedFrameImageProps> = ({ imageSideCardsD
           src={`fileHandler://tempFrame//${selectedFrameIndex + 1}`}
           className='object-contain h-full'
           ref={imageRef}
+          onLoad={updateBoundingBoxAreaSize}
         />
 
         <div 
-          className='absolute'
+          className='absolute w-[1px] h-[1px] bg-blue-400/25'
           ref={boundingBoxAreaRef}
         >
           {framePredictions && framePredictions.length > 0 ? (
