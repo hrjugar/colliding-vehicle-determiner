@@ -25,55 +25,48 @@ const FrameDescription: React.FC = () => {
         <h2>Frame</h2>
       </div>
 
-      <div className='flex flex-col flex-grow'>
-        {/* <div className='flex flex-row justify-between items-center'>
-          <p className='font-semibold'>Video frame:</p>
-          <p>{selectedFrameIndex + 1}</p>
-        </div>
-        <p className='font-semibold'>Detections:</p> */}
-        <FrameDetections />
-        
-        <div className='flex flex-row w-full justify-center items-center text-sm p-1 border-t-[1px] border-gray-300'>
-          <button 
-            className={`group bg-transparent`}
-            disabled={isPrevButtonDisabled}
-            onClick={() => setSelectedFrameIndex(selectedFrameIndex - 1)}
-          >
-            <svg 
-              width="64" 
-              height="64" 
-              viewBox="0 0 64 64"
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-2.5 h-2.5 text-transparent"
-            >
-              <path 
-                d="M48 0 L16 32 L48 64"
-                className={`fill-current stroke-[8] stroke-color-primary ${isPrevButtonDisabled ? 'opacity-30' : 'group-hover:stroke-[16] group-hover:stroke-color-primary-inactive'}`}
-              />
-            </svg>
-          </button>
+      <FrameDetections />
 
-          <p className='text-gray-500'>{selectedFrameIndex + 1}/{frameCount}</p>
-
-          <button 
-            className={`group bg-transparent`}
-            onClick={() => setSelectedFrameIndex(selectedFrameIndex + 1)}
-            disabled={isNextButtonDisabled}
+      <div className='flex flex-row w-full justify-center items-center text-sm p-1 border-t-[1px] border-gray-300 mt-auto'>
+        <button 
+          className={`group bg-transparent`}
+          disabled={isPrevButtonDisabled}
+          onClick={() => setSelectedFrameIndex(selectedFrameIndex - 1)}
+        >
+          <svg 
+            width="64" 
+            height="64" 
+            viewBox="0 0 64 64"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-2.5 h-2.5 text-transparent"
           >
-            <svg 
-              width="64" 
-              height="64" 
-              viewBox="0 0 64 64"
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-2.5 h-2.5 text-transparent"
-            >
-              <path 
-                d="M16 0 L48 32 L16 64"
-                className={`fill-current stroke-[8] stroke-color-primary ${isNextButtonDisabled ? 'opacity-30' : 'group-hover:stroke-[16] group-hover:stroke-color-primary-inactive'}`}
-              />
-            </svg>
-          </button>              
-        </div>
+            <path 
+              d="M48 0 L16 32 L48 64"
+              className={`fill-current stroke-[8] stroke-color-primary ${isPrevButtonDisabled ? 'opacity-30' : 'group-hover:stroke-[16] group-hover:stroke-color-primary-inactive'}`}
+            />
+          </svg>
+        </button>
+
+        <p className='text-gray-500'>{selectedFrameIndex + 1}/{frameCount}</p>
+
+        <button 
+          className={`group bg-transparent`}
+          onClick={() => setSelectedFrameIndex(selectedFrameIndex + 1)}
+          disabled={isNextButtonDisabled}
+        >
+          <svg 
+            width="64" 
+            height="64" 
+            viewBox="0 0 64 64"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-2.5 h-2.5 text-transparent"
+          >
+            <path 
+              d="M16 0 L48 32 L16 64"
+              className={`fill-current stroke-[8] stroke-color-primary ${isNextButtonDisabled ? 'opacity-30' : 'group-hover:stroke-[16] group-hover:stroke-color-primary-inactive'}`}
+            />
+          </svg>
+        </button>              
       </div>
     </div>
   );

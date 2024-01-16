@@ -26,19 +26,25 @@ const SelectedFrameImage: React.FC<SelectedFrameImageProps> = ({ imageSideCardsD
 
   const [selectedFrameImageHeight, setSelectedFrameImageHeight] = useState<number>(0);
 
+  const updateHeight = () => {
+    if (imageSideCardsDivRef.current) {
+      const height = imageSideCardsDivRef.current.offsetHeight;
+      setSelectedFrameImageHeight(height);
+    }
+  }
+
   useEffect(() => {
-    const updateHeight = () => {
-      if (imageSideCardsDivRef.current) {
-        const height = imageSideCardsDivRef.current.offsetHeight;
-        setSelectedFrameImageHeight(height);
-      }
+    updateHeight();
+    const resizeObserver = new ResizeObserver(() => updateHeight());
+    if (imageSideCardsDivRef.current) {
+      resizeObserver.observe(imageSideCardsDivRef.current);
     }
 
-    updateHeight();
-    window.addEventListener('resize', updateHeight);
-
     return () => {
-      window.removeEventListener('resize', updateHeight);
+      if (imageSideCardsDivRef.current) {
+        resizeObserver.unobserve(imageSideCardsDivRef.current);
+
+      }
     }
   }, [imageSideCardsDivRef]);
 
