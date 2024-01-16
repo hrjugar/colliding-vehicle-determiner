@@ -1,7 +1,7 @@
 import { useShallow } from 'zustand/react/shallow';
 import useDetectAccidentPanelStore from '../store';
 import { getBoundingBoxColor } from '@/globals/utils';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface SelectedFrameImageProps {
   imageSideCardsDivRef: React.RefObject<HTMLDivElement>;
@@ -24,16 +24,19 @@ const SelectedFrameImage: React.FC<SelectedFrameImageProps> = ({ imageSideCardsD
 
   const framePredictions = getSelectedFramePredictions();
 
-  const [selectedFrameImageHeight, setSelectedFrameImageHeight] = useState<number>(0);
+  const [componentHeight, setComponentHeight] = useState<number>(0);
 
-  const updateHeight = () => {
-    if (imageSideCardsDivRef.current) {
-      const height = imageSideCardsDivRef.current.offsetHeight;
-      setSelectedFrameImageHeight(height);
-    }
-  }
+  const imageRef = useRef<HTMLImageElement>(null);
+  const boundingBoxAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const updateHeight = () => {
+      if (imageSideCardsDivRef.current) {
+        const height = imageSideCardsDivRef.current.offsetHeight;
+        setComponentHeight(height);
+      }
+    }
+
     updateHeight();
     const resizeObserver = new ResizeObserver(() => updateHeight());
     if (imageSideCardsDivRef.current) {
@@ -48,40 +51,71 @@ const SelectedFrameImage: React.FC<SelectedFrameImageProps> = ({ imageSideCardsD
     }
   }, [imageSideCardsDivRef]);
 
+  useEffect(() => {
+    const updateBoundingBoxAreaSize = () => {
+      if (imageRef.current && boundingBoxAreaRef.current) {
+        const aspectRatio = imageRef.current.naturalWidth / imageRef.current.naturalHeight;
+        const areaWidth = imageRef.current.offsetWidth;
+        const areaHeight = areaWidth / aspectRatio;
+        boundingBoxAreaRef.current.style.width = `${areaWidth}px`;
+        boundingBoxAreaRef.current.style.height = `${areaHeight}px`;
+      }
+    }
+
+    updateBoundingBoxAreaSize();
+    const resizeObserver = new ResizeObserver(() => updateBoundingBoxAreaSize());
+    if (imageRef.current) {
+      resizeObserver.observe(imageRef.current);
+    }
+
+    return () => {
+      if (imageRef.current) {
+        resizeObserver.unobserve(imageRef.current);
+      }
+    }
+  }, [componentHeight]);
+
   return (
     <div 
       className='flex-shrink w-full h-full bg-black flex justify-center items-center shadow-around'
-      style={{ maxHeight: `${selectedFrameImageHeight}px` }}
+      style={{ maxHeight: `${componentHeight}px` }}
     >
-      <div className='relative inline-block h-full'>
+      <div className='relative flex justify-center items-center h-full '>
         <img
           src={`fileHandler://tempFrame//${selectedFrameIndex + 1}`}
           className='object-contain h-full'
+          ref={imageRef}
         />
-        
-        {framePredictions && framePredictions.length > 0 ? (
-          framePredictions.map((item, index) => {
-            if (hiddenPredictionBoxIndexes.has(index)) {
-              return null;
-            }
 
-            return (
-              <div 
-                key={`prediction-${selectedFrameIndex}-${index}`}
-                className={`absolute border-2 border-primary ${isFrameTransitionDone ? 'animate-scale-up' : ''}`}
-                style={{
-                  borderColor: getBoundingBoxColor(index),
-                  left: `${(item.xn - item.wn / 2) * 100}%`,
-                  top: `${(item.yn - item.hn / 2) * 100}%`,
-                  width: `${(item.wn) * 100}%`,
-                  height: `${(item.hn) * 100}%`,
-                  zIndex: Math.round(item.confidence * 100),
-                  transformOrigin: 'top left',
-                }}
-              />
-            );
-          })
-        ) : null}
+        <div 
+          className='absolute'
+          ref={boundingBoxAreaRef}
+        >
+          {framePredictions && framePredictions.length > 0 ? (
+            framePredictions.map((item, index) => {
+              if (hiddenPredictionBoxIndexes.has(index)) {
+                return null;
+              }
+
+              return (
+                <div 
+                  key={`prediction-${selectedFrameIndex}-${index}`}
+                  className={`absolute border-2 border-primary ${isFrameTransitionDone ? 'animate-scale-up' : ''}`}
+                  style={{
+                    borderColor: getBoundingBoxColor(index),
+                    left: `${(item.xn - item.wn / 2) * 100}%`,
+                    top: `${(item.yn - item.hn / 2) * 100}%`,
+                    width: `${(item.wn) * 100}%`,
+                    height: `${(item.hn) * 100}%`,
+                    zIndex: Math.round(item.confidence * 100),
+                    transformOrigin: 'top left',
+                  }}
+                />
+              );
+            })
+          ) : null}
+        </div>
+        
       </div>
     </div>
   );
