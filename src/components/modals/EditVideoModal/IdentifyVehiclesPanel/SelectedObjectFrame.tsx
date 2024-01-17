@@ -58,7 +58,9 @@ const SelectedObjectFrame: React.FC<SelectedObjectFrameProps> = () => {
             </div>
           </>
         ) : (
-          <p>No frame selected.</p>
+          <div className="h-full flex justify-center items-center">
+            <p>No frame selected.</p>
+          </div>
         )}
       </div>
       {/* Add your component content here */}

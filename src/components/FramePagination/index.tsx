@@ -146,7 +146,7 @@ export const FramePagination: React.FC<FramePaginationProps> = ({
         </div>
 
         {frameList.length > 0 ? (
-          <div className='w-full flex flex-row justify-center items-center'>
+          <div className='relative w-full flex flex-row justify-center items-center'>
             <FramePaginationController 
               rowFirstImageIndex={rowFirstFrameIndex}
               setRowFirstImageIndex={setRowFirstFrameIndex}
