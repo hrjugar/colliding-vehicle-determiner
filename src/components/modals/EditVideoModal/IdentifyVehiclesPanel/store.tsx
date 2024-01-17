@@ -24,12 +24,21 @@ interface ObjectAction {
   setShouldShowOnlyVehicles: (shouldShowOnlyVehicles: boolean) => void,
 }
 
+interface VideoState {
+  isPaused: boolean;
+}
+
+interface VideoAction {
+  playVideo: () => void,
+  pauseVideo: () => void,
+}
+
 interface PanelAction {
   resetModelStates: () => void,
 }
 
-type IdentifyVehiclesPanelState = CompletionState & ObjectState;
-type IdentifyVehiclesPanelAction = CompletionAction & ObjectAction & PanelAction;
+type IdentifyVehiclesPanelState = CompletionState & ObjectState & VideoState;
+type IdentifyVehiclesPanelAction = CompletionAction & ObjectAction & VideoAction & PanelAction;
 type IdentifyVehiclesPanelStore = IdentifyVehiclesPanelState & IdentifyVehiclesPanelAction;
 
 const defaultState: IdentifyVehiclesPanelState = {
@@ -42,6 +51,7 @@ const defaultState: IdentifyVehiclesPanelState = {
   deepSORTOutput: [],
   selectedObjectIndex: 0,
   shouldShowOnlyVehicles: true,
+  isPaused: true,
 }
 
 const useIdentifyVehiclesPanelStore = create<IdentifyVehiclesPanelStore>((set) => ({
@@ -55,6 +65,9 @@ const useIdentifyVehiclesPanelStore = create<IdentifyVehiclesPanelStore>((set) =
   setSelectedObjectIndex: (selectedObjectIndex: number) => set(() => ({ selectedObjectIndex })),
   setShouldShowOnlyVehicles: (shouldShowOnlyVehicles: boolean) => set(() => ({ shouldShowOnlyVehicles })),
 
+  playVideo: () => set(() => ({ isPaused: false })),
+  pauseVideo: () => set(() => ({ isPaused: true })),
+  
   resetModelStates: () => set(() => defaultState),
 }));
 

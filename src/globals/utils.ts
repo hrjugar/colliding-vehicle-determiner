@@ -40,3 +40,7 @@ export function getBoundingBoxColor(number: number): string {
   const lightness = 50;
   return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 };
+
+export function capitalizeFirstLetter(text: string) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
