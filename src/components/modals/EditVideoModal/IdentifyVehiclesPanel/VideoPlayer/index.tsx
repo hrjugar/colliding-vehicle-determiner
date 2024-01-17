@@ -3,9 +3,13 @@ import useIdentifyVehiclesPanelStore from '../store';
 import { useShallow } from 'zustand/react/shallow';
 import { convertSecondsToMinutes } from '@/globals/utils';
 import SeekBar from './SeekBar';
+import useEditVideoModalStore from '../../store';
 
 const VideoPlayer: React.FC = () => {
+  const fps = useEditVideoModalStore((state) => state.fps);
+
   const [
+    selectedFrame,
     setDuration,
     isPaused,
     playVideo,
@@ -13,6 +17,7 @@ const VideoPlayer: React.FC = () => {
     setTimePercentage
   ] = useIdentifyVehiclesPanelStore(
     useShallow((state) => [
+      state.selectedFrame,
       state.setDuration,
       state.isPaused,
       state.playVideo,
@@ -53,6 +58,15 @@ const VideoPlayer: React.FC = () => {
       setDuration(videoRef.current.duration);
     }
   };
+
+  useEffect(() => {
+    if (selectedFrame === -1) return;
+
+    if (videoRef.current) {
+      const frameTime = selectedFrame / fps;
+      videoRef.current.currentTime = frameTime;
+    }
+  }, [selectedFrame]);
 
   return (
     <div className='card w-full max-h-[60vh] flex flex-col'>
