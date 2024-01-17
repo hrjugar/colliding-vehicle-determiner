@@ -22,9 +22,9 @@ const DetectedObjects: React.FC = () => {
   )
   
   const objectListRef = useRef<HTMLDivElement>(null);
-  useOutsideAlerter(objectListRef, () => {
-    setSelectedObjectId(-1);
-  });
+  // useOutsideAlerter(objectListRef, () => {
+  //   setSelectedObjectId(-1);
+  // });
 
   return (
     <div className='card h-full w-64'>

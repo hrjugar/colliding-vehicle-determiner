@@ -5,7 +5,7 @@ import useEditVideoModalStore from '../store';
 import { useShallow } from 'zustand/react/shallow';
 import useIdentifyVehiclesPanelStore from './store';
 import DetectedObjects from './DetectedObjects';
-import IdentifyVehiclesVideoPlayer from './IdentifyVehiclesVideoPlayer';
+import VideoPlayer from './VideoPlayer';
 
 interface IdentifyVehiclesPanelProps {
   selectedTabIndex: number,
@@ -90,7 +90,7 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
       {isLoadingDone ? (
         <div className='w-full h-full flex flex-row p-4 gap-4'>
           <DetectedObjects />
-          <IdentifyVehiclesVideoPlayer />
+          <VideoPlayer />
         </div>
       ) : (
         <div className='w-full h-full flex flex-col justify-center items-center gap-2 px-8'>
