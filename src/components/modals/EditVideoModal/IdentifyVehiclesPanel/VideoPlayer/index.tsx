@@ -71,7 +71,7 @@ const VideoPlayer: React.FC = () => {
           />
         </video>
 
-        <div className={`${isPaused ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 absolute flex justify-center items-center gap-8 text-white transition-opacity`}>
+        <div className={`opacity-0 group-hover:opacity-100 absolute flex justify-center items-center gap-8 text-white transition-opacity`}>
           <svg 
             width="64" 
             height="64" 

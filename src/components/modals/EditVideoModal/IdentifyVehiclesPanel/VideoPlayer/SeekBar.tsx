@@ -51,7 +51,7 @@ const SeekBar: React.FC<SeekBarProps> = ({ videoRef }) => {
 
       const selectedObjectSeekBarAreas = [];
       for (const frameGroup of frameGroupList) {
-        const startPercentage = (frameGroup[0] / (videoRef.current.duration * fps)) * 100;
+        const startPercentage = ((frameGroup[0] - 1) / (videoRef.current.duration * fps)) * 100;
         const endPercentage = (frameGroup[frameGroup.length - 1] / (videoRef.current.duration * fps)) * 100;
         const widthPercentage = endPercentage - startPercentage;
 
