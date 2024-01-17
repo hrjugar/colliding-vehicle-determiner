@@ -54,6 +54,8 @@ interface ElectronAPI {
   runDeepSORTModel(): Promise<any[]>,
   onRunDeepSORTModelProgress(callback: Function): void,
   removeRunDeepSORTModelProgressListener(): void,
+
+  copyDeepSORTVideo(): Promise<void>,
 }
 
 // Used in Renderer process, expose in `preload.ts`

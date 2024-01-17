@@ -50,6 +50,21 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
     ])
   )
 
+  const copyVideoMutation = useMutation(
+    async () => await window.electronAPI.copyDeepSORTVideo(),
+    {
+      onMutate: () => {
+        setLoadingProgress({ percent: 0, displayText: "Loading Python script" });
+        setLoadingText("Getting video with labelled vehicles...");
+      },
+      onSuccess: (_) => {
+        console.log("Finished copying video.");
+        setIsAccidentDetectionModelChanged(false);
+        setIsLoadingDone(true);
+      }
+    }
+  )
+
   const deepSORTMutation = useMutation(
     async () => await window.electronAPI.runDeepSORTModel(),
     {
@@ -60,8 +75,7 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
       onSuccess: (data) => {
         console.log(`Python DeepSORT script exit code: ${data}`)
         setDeepSORTOutput(data as DeepSORTOutput);
-        setIsAccidentDetectionModelChanged(false);
-        setIsLoadingDone(true);
+        copyVideoMutation.mutate();
       }
     }
   )

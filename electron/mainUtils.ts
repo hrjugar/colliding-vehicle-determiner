@@ -360,3 +360,25 @@ export function runDeepSORTModel() {
     })
   })
 }
+
+// NOTE: This is needed because the DeepSORT video file created from the Python script cannot be accessed due to an unknown bug.
+export function copyDeepSORTVideo() {
+  const tempFolderPath = path.join(app.getPath('userData'), 'temp')
+  const oldVideoPath = path.join(tempFolderPath, 'deepsort.mp4')
+  const newVideoPath = path.join(tempFolderPath, 'deepsort-output.mp4')
+
+  return new Promise<void>((resolve, reject) => {
+    ffmpeg(oldVideoPath)
+    .output(newVideoPath)
+    .on('end', () => { 
+      console.log('Finished copying deepSORT video.');
+      fs.rmSync(oldVideoPath, { force: true })
+      resolve();
+    })
+    .on('error', (err) => { 
+      console.log('An error occurred: ' + err.message); 
+      reject(err);
+    })
+    .run();
+  });
+}

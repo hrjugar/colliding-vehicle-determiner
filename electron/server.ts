@@ -16,7 +16,7 @@ app.get('/video', (req, res) => {
       console.log(req.query)
 
       if (req.query.temp) {
-        filePath = path.join(electronApp.getPath('userData'), 'temp', 'trimmed.mp4');
+        filePath = path.join(electronApp.getPath('userData'), 'temp', 'deepsort-output.mp4');
         console.log(filePath);
       }
 
