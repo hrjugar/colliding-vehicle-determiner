@@ -34,11 +34,11 @@ export function addLeadingZero(number: number) {
   return number < 10 ? `0${number}` : number;
 }
 
-export function getBoundingBoxColor(number: number): string {
+export function getBoundingBoxColor(number: number, alpha: number = 100): string {
   const hue = (number * 137.5) % 360;
   const saturation = 100;
   const lightness = 50;
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+  return `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha}%)`;
 };
 
 export function capitalizeFirstLetter(text: string) {

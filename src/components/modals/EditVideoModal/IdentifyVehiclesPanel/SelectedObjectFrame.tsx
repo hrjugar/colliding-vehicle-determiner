@@ -1,5 +1,6 @@
 import { useShallow } from "zustand/react/shallow";
 import useIdentifyVehiclesPanelStore from "./store";
+import { getBoundingBoxColor } from "@/globals/utils";
 
 interface SelectedObjectFrameProps {
   // Add any props you need for the component
@@ -31,8 +32,20 @@ const SelectedObjectFrame: React.FC<SelectedObjectFrameProps> = () => {
         {selectedFrameItem ? (
           <>
             <div className="flex flex-col items-center">
-              <div className="relative flex items-center justify-center h-20 w-full">
-                <img src={`fileHandler://tempFrame//${selectedFrame}`} className="object-contain h-20"/>
+              <div className="relative flex items-center justify-center h-20">
+                <img src={`fileHandler://tempFrame//${selectedFrame}`} className="object-contain max-w-full h-full"/>
+                <div 
+                  className="absolute border-[1px] animate-scale-up"
+                  style={{
+                    borderColor: `${getBoundingBoxColor(selectedObject?.id ?? 0)}`,
+                    backgroundColor: `${getBoundingBoxColor(selectedObject?.id ?? 0, 20)}`,
+                    top: `${selectedFrameItem.yn * 100}%`,
+                    left: `${selectedFrameItem.xn * 100}%`,
+                    width: `${selectedFrameItem.wn * 100}%`,
+                    height: `${selectedFrameItem.hn * 100}%`,
+                    transformOrigin: 'top left'
+                  }}
+                />
               </div>
               <p className="text-xs text-center">Frame {selectedFrame}</p>
             </div>
