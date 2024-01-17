@@ -55,7 +55,7 @@ const VideoPlayer: React.FC = () => {
   };
 
   return (
-    <div className='card w-full h-full flex flex-col'>
+    <div className='card w-full max-h-[60vh] flex flex-col'>
       <div className='group relative bg-black w-full h-full flex justify-center items-center overflow-hidden'>
         <video
           ref={videoRef}

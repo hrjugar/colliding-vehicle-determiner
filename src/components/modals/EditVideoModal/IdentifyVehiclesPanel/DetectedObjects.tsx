@@ -2,7 +2,6 @@ import { useShallow } from "zustand/react/shallow";
 import useIdentifyVehiclesPanelStore from "./store";
 import { capitalizeFirstLetter, getBoundingBoxColor } from "@/globals/utils";
 import { useRef } from "react";
-import { useOutsideAlerter } from "@/globals/hooks";
 
 const DetectedObjects: React.FC = () => {
   const [
@@ -27,7 +26,7 @@ const DetectedObjects: React.FC = () => {
   // });
 
   return (
-    <div className='card h-full w-64'>
+    <div className='card flex-grow w-64'>
       <div className='card-header flex flex-row justify-between items-center'>
         <h2>Objects</h2>
         {/* <label className="relative inline-flex items-center cursor-pointer whitespace-nowrap select-none">

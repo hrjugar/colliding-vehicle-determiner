@@ -6,6 +6,8 @@ import { useShallow } from 'zustand/react/shallow';
 import useIdentifyVehiclesPanelStore from './store';
 import DetectedObjects from './DetectedObjects';
 import VideoPlayer from './VideoPlayer';
+import SelectedObjectFramePagination from './SelectedObjectFramePagination';
+import SelectedObjectFrame from './SelectedObjectFrame';
 
 interface IdentifyVehiclesPanelProps {
   selectedTabIndex: number,
@@ -100,14 +102,23 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
   }, [selectedTabIndex])
 
   return (
-    <Tab.Panel className="w-full h-full bg-white flex flex-row justify-start items-start overflow-y-auto">
+    <Tab.Panel className="w-full h-full bg-white flex flex-col justify-start items-start overflow-y-auto gap-4 p-4">
       {isLoadingDone ? (
-        <div className='w-full h-full flex flex-row p-4 gap-4'>
-          <DetectedObjects />
-          <VideoPlayer />
-        </div>
+        <>
+          <div className='w-full flex flex-row gap-4'>
+            <DetectedObjects />
+            <VideoPlayer />
+          </div>
+
+          <div className='w-full flex-grow flex flex-row gap-4'>
+            <SelectedObjectFramePagination />
+            <SelectedObjectFrame />
+          </div>
+        </>
+        // <div className='w-full self-stretch flex flex-col justify-start gap-4 p-4'>
+        // </div>
       ) : (
-        <div className='w-full h-full flex flex-col justify-center items-center gap-2 px-8'>
+        <div className='w-full h-full flex flex-col justify-center items-center gap-2 px-4'>
           <div className='w-full flex flex-row justify-between gap-1'>
             <p className='font-medium'>{loadingText}</p>
             <p className='font-medium text-gray-400'>{loadingProgress.displayText}</p>

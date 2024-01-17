@@ -16,6 +16,7 @@ interface ObjectState {
   deepSORTOutput: DeepSORTOutput,
   selectedObjectId: number,
   shouldShowOnlyVehicles: boolean,
+  selectedFrame: number,
 }
 
 interface ObjectAction {
@@ -23,6 +24,7 @@ interface ObjectAction {
   setDeepSORTOutput: (deepSORTOutput: DeepSORTOutput) => void,
   setSelectedObjectId: (selectedObjectIndex: number) => void,
   setShouldShowOnlyVehicles: (shouldShowOnlyVehicles: boolean) => void,
+  setSelectedFrame: (selectedFrame: number) => void,
 }
 
 interface VideoState {
@@ -56,6 +58,7 @@ const defaultState: IdentifyVehiclesPanelState = {
   deepSORTOutput: [],
   selectedObjectId: 0,
   shouldShowOnlyVehicles: true,
+  selectedFrame: -1,
   duration: 0,
   isPaused: true,
   timePercentage: 0,
@@ -73,8 +76,9 @@ const useIdentifyVehiclesPanelStore = create<IdentifyVehiclesPanelStore>((set, g
     return get().deepSORTOutput.find((obj) => obj.id === get().selectedObjectId) ?? null;
   },
   setDeepSORTOutput: (deepSORTOutput: DeepSORTOutput) => set(() => ({ deepSORTOutput })),
-  setSelectedObjectId: (selectedObjectId: number) => set(() => ({ selectedObjectId })),
+  setSelectedObjectId: (selectedObjectId: number) => set(() => ({ selectedObjectId, selectedFrame: -1 })),
   setShouldShowOnlyVehicles: (shouldShowOnlyVehicles: boolean) => set(() => ({ shouldShowOnlyVehicles })),
+  setSelectedFrame: (selectedFrame: number) => set(() => ({ selectedFrame })),
 
   setDuration: (duration: number) => set(() => ({ duration })),
   playVideo: () => set(() => ({ isPaused: false })),
