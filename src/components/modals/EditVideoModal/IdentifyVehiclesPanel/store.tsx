@@ -14,23 +14,28 @@ interface CompletionAction {
 
 interface ObjectState {
   deepSORTOutput: DeepSORTOutput,
-  selectedObjectIndex: number,
+  selectedObjectId: number,
   shouldShowOnlyVehicles: boolean,
 }
 
 interface ObjectAction {
+  getSelectedObject: () => DeepSORTObject | null,
   setDeepSORTOutput: (deepSORTOutput: DeepSORTOutput) => void,
-  setSelectedObjectIndex: (selectedObjectIndex: number) => void,
+  setSelectedObjectId: (selectedObjectIndex: number) => void,
   setShouldShowOnlyVehicles: (shouldShowOnlyVehicles: boolean) => void,
 }
 
 interface VideoState {
+  duration: number;
   isPaused: boolean;
+  timePercentage: number;
 }
 
 interface VideoAction {
+  setDuration: (duration: number) => void,
   playVideo: () => void,
   pauseVideo: () => void,
+  setTimePercentage: (timeMarker: number) => void,
 }
 
 interface PanelAction {
@@ -49,24 +54,32 @@ const defaultState: IdentifyVehiclesPanelState = {
   },
   isLoadingDone: false,
   deepSORTOutput: [],
-  selectedObjectIndex: 0,
+  selectedObjectId: 0,
   shouldShowOnlyVehicles: true,
+  duration: 0,
   isPaused: true,
+  timePercentage: 0,
 }
 
-const useIdentifyVehiclesPanelStore = create<IdentifyVehiclesPanelStore>((set) => ({
+const useIdentifyVehiclesPanelStore = create<IdentifyVehiclesPanelStore>((set, get) => ({
   ...defaultState,
 
   setLoadingText: (loadingText: string) => set({ loadingText }),
   setLoadingProgress: (loadingProgress: Progress) => set({ loadingProgress }),
   setIsLoadingDone: (isLoadingDone: boolean) => set({ isLoadingDone }),
 
+  getSelectedObject: () => {
+    if (get().selectedObjectId === 0) return null;
+    return get().deepSORTOutput.find((obj) => obj.id === get().selectedObjectId) ?? null;
+  },
   setDeepSORTOutput: (deepSORTOutput: DeepSORTOutput) => set(() => ({ deepSORTOutput })),
-  setSelectedObjectIndex: (selectedObjectIndex: number) => set(() => ({ selectedObjectIndex })),
+  setSelectedObjectId: (selectedObjectId: number) => set(() => ({ selectedObjectId })),
   setShouldShowOnlyVehicles: (shouldShowOnlyVehicles: boolean) => set(() => ({ shouldShowOnlyVehicles })),
 
+  setDuration: (duration: number) => set(() => ({ duration })),
   playVideo: () => set(() => ({ isPaused: false })),
   pauseVideo: () => set(() => ({ isPaused: true })),
+  setTimePercentage: (timeMarker: number) => set(() => ({ timePercentage: timeMarker })),
   
   resetModelStates: () => set(() => defaultState),
 }));
