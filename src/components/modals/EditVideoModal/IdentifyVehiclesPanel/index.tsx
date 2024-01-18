@@ -7,7 +7,7 @@ import useIdentifyVehiclesPanelStore from './store';
 import DetectedObjects from './DetectedObjects';
 import VideoPlayer from './VideoPlayer';
 import SelectedObjectFramePagination from './SelectedObjectFramePagination';
-import SelectedObjectFrame from './SelectedObjectFrame';
+import SelectedFrameObject from './SelectedFrameObject';
 
 interface IdentifyVehiclesPanelProps {
   selectedTabIndex: number,
@@ -112,7 +112,7 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
 
           <div className='w-full flex-grow flex flex-row gap-4'>
             <SelectedObjectFramePagination />
-            <SelectedObjectFrame />
+            <SelectedFrameObject />
           </div>
         </>
         // <div className='w-full self-stretch flex flex-col justify-start gap-4 p-4'>

@@ -2,11 +2,7 @@ import { useShallow } from "zustand/react/shallow";
 import useIdentifyVehiclesPanelStore from "./store";
 import { getBoundingBoxColor } from "@/globals/utils";
 
-interface SelectedObjectFrameProps {
-  // Add any props you need for the component
-}
-
-const SelectedObjectFrame: React.FC<SelectedObjectFrameProps> = () => {
+const SelectedFrameObject: React.FC = () => {
   const [
     getSelectedObject,
     selectedFrame,
@@ -21,6 +17,30 @@ const SelectedObjectFrame: React.FC<SelectedObjectFrameProps> = () => {
   const selectedObject = getSelectedObject();
   const selectedFrameItem = selectedObject?.frames.find((frame) => frame.frame === selectedFrame);
 
+  const getCroppedImageStyle = () => {
+    if (!selectedFrameItem) return {};
+
+    const top = selectedFrameItem.yn * 100;
+    const right = 100 - (selectedFrameItem.xn * 100 + selectedFrameItem.wn * 100);
+    const bottom = 100 - (selectedFrameItem.yn * 100 + selectedFrameItem.hn * 100);
+    const left = selectedFrameItem.xn * 100;
+
+    const widthScale = 1 / selectedFrameItem.wn;
+    const heightScale = 1 / selectedFrameItem.hn;
+    const translateXValue = 50 - (selectedFrameItem.xn * 100 + selectedFrameItem.wn * 100 / 2);
+    const translateYValue = 50 - (selectedFrameItem.yn * 100 + selectedFrameItem.hn * 100 / 2);
+    
+    return {
+      clipPath: `inset(
+        ${top}%
+        ${right}%
+        ${bottom}%
+        ${left}%
+      )`,
+      transform: `scale(${Math.min(widthScale, heightScale)}) translate(${translateXValue}%, ${translateYValue}%)`
+    }
+  }
+
   return (
     // Add your JSX code here
     <div className="card min-w-[12rem] flex flex-col">
@@ -28,12 +48,19 @@ const SelectedObjectFrame: React.FC<SelectedObjectFrameProps> = () => {
         <h2>Frame Object</h2>
       </div>
 
-      <div className="w-full flex flex-col flex-grow p-2 justify-start items-center gap-2">
+      <div className="w-full flex flex-col flex-grow p-2 justify-start items-center gap-4">
         {selectedFrameItem ? (
           <>
-            <div className="flex flex-col items-center">
-              <div className="relative flex items-center justify-center h-20">
-                <img src={`fileHandler://tempFrame//${selectedFrame}`} className="object-contain max-w-full h-full"/>
+            <div className="flex flex-col items-center w-full">
+              <div className="relative flex items-center justify-center h-20 w-full ">
+                <div className="absolute overflow-hidden">
+                  <img 
+                    src={`fileHandler://tempFrame//${selectedFrame}`}
+                    className="h-20"
+                    style={ getCroppedImageStyle() }
+                  />
+                </div>
+                {/* <img src={`fileHandler://tempFrame//${selectedFrame}`} className="object-contain max-w-full h-full"/>
                 <div 
                   className="absolute border-[1px] animate-scale-up"
                   style={{
@@ -45,9 +72,9 @@ const SelectedObjectFrame: React.FC<SelectedObjectFrameProps> = () => {
                     height: `${selectedFrameItem.hn * 100}%`,
                     transformOrigin: 'top left'
                   }}
-                />
+                /> */}
               </div>
-              <p className="text-xs text-center">Frame {selectedFrame}</p>
+              {/* <p className="text-xs text-center">Frame {selectedFrame}</p> */}
             </div>
 
             <div className="grid grid-rows-2 grid-cols-2 gap-x-4 gap-y-2 text-sm">
@@ -68,4 +95,4 @@ const SelectedObjectFrame: React.FC<SelectedObjectFrameProps> = () => {
   );
 };
 
-export default SelectedObjectFrame;
+export default SelectedFrameObject;
