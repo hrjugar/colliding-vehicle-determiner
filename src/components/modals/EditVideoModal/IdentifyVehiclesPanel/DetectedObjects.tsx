@@ -36,7 +36,7 @@ const DetectedObjects: React.FC = () => {
   console.log(hiddenClassifications);
 
   return (
-    <div className='card flex-grow w-64'>
+    <div className='card w-64 flex-grow min-h-0 flex flex-col'>
       <div className='card-header flex flex-row justify-between items-center'>
         <h2>Objects</h2>
 
@@ -106,12 +106,8 @@ const DetectedObjects: React.FC = () => {
         </Popover>
       </div>
 
-      <div className='flex flex-col overflow-y-auto'>
+      <div className='flex-1 flex flex-col overflow-y-auto'>
         {unhiddenObjects.map((obj) => {
-          // if (shouldShowOnlyVehicles && obj.classification !== 'car' && obj.classification !== 'truck') {
-          //   return null;
-          // }
-          
           return (
             <div 
               key={`detected-object-${obj.id}`}

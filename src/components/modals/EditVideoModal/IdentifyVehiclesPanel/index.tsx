@@ -110,8 +110,8 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
     <Tab.Panel className="w-full h-full bg-white flex flex-col justify-start items-start overflow-y-auto gap-4 p-4">
       {isLoadingDone ? (
         <>
-          <div className='w-full flex flex-row gap-4'>
-            <div className='flex flex-col gap-4'>
+          <div className='w-full flex flex-row gap-4 max-h-[60vh]'>
+            <div className='flex flex-col gap-4 h-full'>
               <DetectedObjects />
               <IdentifyVehiclesModelHandler rerunModel={rerunModel} />
             </div>
