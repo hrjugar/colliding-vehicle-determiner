@@ -2,50 +2,115 @@ import { useShallow } from "zustand/react/shallow";
 import useIdentifyVehiclesPanelStore from "./store";
 import { capitalizeFirstLetter, getBoundingBoxColor } from "@/globals/utils";
 import { useRef } from "react";
+import { Popover } from "@headlessui/react";
 
 const DetectedObjects: React.FC = () => {
   const [
     deepSORTOutput,
     selectedObjectId,
     setSelectedObjectId,
-    shouldShowOnlyVehicles,
-    setShouldShowOnlyVehicles
+    hiddenClassifications,
+    getAllClassifications,
+    getUnhiddenObjects,
+    setClassificationVisibility,
+    hideAllClassifications,
+    unhideAllClassifications,
+    unhideOnlyVehicleClassification
   ] = useIdentifyVehiclesPanelStore(
     useShallow((state) => [
       state.deepSORTOutput,
       state.selectedObjectId,
       state.setSelectedObjectId,
-      state.shouldShowOnlyVehicles,
-      state.setShouldShowOnlyVehicles
+      state.shownClassifications,
+      state.getAllClassifications,
+      state.getShownObjects,
+      state.setClassificationVisibility,
+      state.hideAllClassifications,
+      state.showAllClassifications,
+      state.showOnlyVehicleClassification,
     ])
   )
-  
-  const objectListRef = useRef<HTMLDivElement>(null);
-  // useOutsideAlerter(objectListRef, () => {
-  //   setSelectedObjectId(-1);
-  // });
+
+  const unhiddenObjects = getUnhiddenObjects();
+  const allClassifications = getAllClassifications();
+  console.log(hiddenClassifications);
 
   return (
     <div className='card flex-grow w-64'>
       <div className='card-header flex flex-row justify-between items-center'>
         <h2>Objects</h2>
-        {/* <label className="relative inline-flex items-center cursor-pointer whitespace-nowrap select-none">
-            <input 
-              type="checkbox" 
-              className="sr-only peer" 
-              checked={shouldShowOnlyVehicles}
-              onChange={(e) => setShouldShowOnlyVehicles(e.target.checked)}
-            />
-            <div className="w-9 h-5 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-color-primary"></div>
-            <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Show only vehicles</span>
-        </label>     */}
+
+        <Popover className="relative flex justify-center items-center ">
+          <Popover.Button>
+            <svg 
+                width="64" 
+                height="64" 
+                viewBox="0 0 64 64" 
+                xmlns="http://www.w3.org/2000/svg" 
+                className="w-6 h-6 cursor-pointer rounded-full p-1 hover:bg-color-primary-active"
+                onClick={() => {}}
+              >
+                <path 
+                  d="M16 34.6667H48V29.3333H16M8 16V21.3333H56V16M26.6667 48H37.3333V42.6667H26.6667V48Z"
+                  className="fill-current"
+                />
+              </svg>        
+          </Popover.Button>
+
+          <Popover.Panel className="card absolute top-[calc(100%_+_4px)] z-10 text-sm flex flex-col">
+            <div className="flex flex-row justify-between gap-4 border-b-[1px] border-gray-300 px-4 py-2">
+              <h2>Filters</h2>
+              <Popover.Button>
+                <svg 
+                  width="64" 
+                  height="64" 
+                  viewBox="0 0 64 64"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="p-1 w-5 h-5 rounded-full bg-transparent hover:bg-color-primary-active"
+                >
+                  <path 
+                    d="M0 0 L64 64 M64 0 L0 64 Z"
+                    className="fill-current stroke-[6] stroke-color-primary group-hover/edit-modal-close-btn:stroke-black"
+                  />
+                </svg>
+              </Popover.Button>      
+            </div>
+            <div className="flex flex-col px-4 py-2 whitespace-nowrap gap-4">
+              <div className="flex flex-row gap-4">
+                <button onClick={unhideAllClassifications}>All</button>
+                <button onClick={unhideOnlyVehicleClassification}>Vehicles Only</button>
+                <button onClick={hideAllClassifications}>None</button>
+              </div>
+
+              <div className="flex flex-col">
+                {Array.from(allClassifications).map((classification) => (
+                  <div className="flex items-center gap-4 p-2 rounded hover:bg-gray-100" key={`classification-${classification}`}>
+                    <input 
+                      id={`obj-filter-${classification}`} 
+                      type="checkbox" 
+                      checked={hiddenClassifications.has(classification)}
+                      onChange={(e) => setClassificationVisibility(classification, e.target.checked)}
+                      className="w-4 h-4 text-color-primary accent-color-primary bg-gray-100 border-gray-300 rounded" 
+                    />
+                    <label 
+                      htmlFor={`obj-filter-${classification}`} 
+                      className="w-full ms-2 text-sm font-medium text-gray-900 rounded"
+                    >
+                      {classification}
+                    </label>
+                  </div>           
+                ))}
+              </div>
+            </div>
+          </Popover.Panel>
+        </Popover>
       </div>
 
-      <div className='flex flex-col' ref={objectListRef}>
-        {deepSORTOutput.map((obj) => {
-          if (shouldShowOnlyVehicles && obj.classification !== 'car' && obj.classification !== 'truck') {
-            return null;
-          }
+      <div className='flex flex-col'>
+        {unhiddenObjects.map((obj) => {
+          // if (shouldShowOnlyVehicles && obj.classification !== 'car' && obj.classification !== 'truck') {
+          //   return null;
+          // }
           
           return (
             <div 

@@ -93,21 +93,24 @@ button {
   /* background-color: rgb(243 244 246 / var(--tw-bg-opacity)); */
 }
 
-.card {
-  @apply bg-white rounded-sm shadow-around hover:shadow-around-dark transition-shadow;
+@layer components {
+  .card {
+    @apply bg-white rounded-sm shadow-around hover:shadow-around-dark transition-shadow;
+  }
+  
+  .card-header {
+    @apply w-full flex flex-row justify-between items-center border-b-[1px] border-gray-300 px-4 py-2
+  }
+  
+  .card-header h2 {
+    @apply font-semibold text-lg whitespace-nowrap;
+  }
+  
+  .card-header button {
+    @apply p-0 text-sm font-medium bg-transparent hover:font-semibold;
+  }
 }
 
-.card-header {
-  @apply w-full flex flex-row justify-between items-center border-b-[1px] border-gray-300 px-4 py-2
-}
-
-.card-header h2 {
-  @apply font-semibold text-lg whitespace-nowrap;
-}
-
-.card-header button {
-  @apply p-0 text-sm font-medium bg-transparent hover:font-semibold;
-}
 
 ::-webkit-scrollbar {
   width: 0.5rem;
