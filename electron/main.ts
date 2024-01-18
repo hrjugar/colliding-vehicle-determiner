@@ -174,7 +174,7 @@ app.whenReady().then(() => {
   ipcMain.on('killPythonProcess', () => killPythonProcess())
 
   ipcMain.handle('model:accidentDetection', (_, confidenceThreshold, iouThreshold) => runAccidentDetectionModel(confidenceThreshold, iouThreshold))
-  ipcMain.handle('model:deepSORT', () => runDeepSORTModel())
+  ipcMain.handle('model:deepSORT', (_, yoloModel) => runDeepSORTModel(yoloModel))
 
   ipcMain.handle('copyDeepSORTVideo', () => copyDeepSORTVideo())
   

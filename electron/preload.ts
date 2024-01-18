@@ -34,7 +34,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onRunAccidentDetectionModelProgress: (callback: Function) => ipcRenderer.on('model:accidentDetection:progress', (_, progress) => callback(progress)),
   removeRunAccidentDetectionModelProgressListener: () => ipcRenderer.removeAllListeners('model:accidentDetection:progress'),
 
-  runDeepSORTModel: () => ipcRenderer.invoke('model:deepSORT'),
+  runDeepSORTModel: (yoloModel: string) => ipcRenderer.invoke('model:deepSORT', yoloModel),
   onRunDeepSORTModelProgress: (callback: Function) => ipcRenderer.on('model:deepSORT:progress', (_, progress) => callback(progress)),
   removeRunDeepSORTModelProgressListener: () => ipcRenderer.removeAllListeners('model:deepSORT:progress'),
 

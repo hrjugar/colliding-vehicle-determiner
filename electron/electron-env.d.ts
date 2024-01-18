@@ -51,7 +51,7 @@ interface ElectronAPI {
   onRunAccidentDetectionModelProgress(callback: Function): void,
   removeRunAccidentDetectionModelProgressListener(): void,
 
-  runDeepSORTModel(): Promise<any[]>,
+  runDeepSORTModel(yoloModel: string): Promise<any[]>,
   onRunDeepSORTModelProgress(callback: Function): void,
   removeRunDeepSORTModelProgressListener(): void,
 

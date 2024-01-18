@@ -106,7 +106,7 @@ const DetectedObjects: React.FC = () => {
         </Popover>
       </div>
 
-      <div className='flex flex-col'>
+      <div className='flex flex-col overflow-y-auto'>
         {unhiddenObjects.map((obj) => {
           // if (shouldShowOnlyVehicles && obj.classification !== 'car' && obj.classification !== 'truck') {
           //   return null;

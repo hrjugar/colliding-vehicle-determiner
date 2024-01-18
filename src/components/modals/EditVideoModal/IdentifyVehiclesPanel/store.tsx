@@ -15,6 +15,7 @@ interface CompletionAction {
 }
 
 interface ObjectState {
+  selectedYOLOModel: YOLOModel,
   deepSORTOutput: DeepSORTOutput,
   selectedObjectId: number,
   selectedFrame: number,
@@ -25,6 +26,7 @@ interface ObjectAction {
   getSelectedObject: () => DeepSORTObject | null,
   getAllClassifications: () => Set<string>,
   getShownObjects: () => DeepSORTOutput,
+  setSelectedYOLOModel: (yoloModel: YOLOModel) => void,
   setDeepSORTOutput: (deepSORTOutput: DeepSORTOutput) => void,
   setSelectedObjectId: (selectedObjectIndex: number) => void,
   setSelectedFrame: (selectedFrame: number) => void,
@@ -48,7 +50,7 @@ interface VideoAction {
 }
 
 interface PanelAction {
-  resetModelStates: () => void,
+  resetModelStates: (excludeModel?: boolean) => void,
 }
 
 type IdentifyVehiclesPanelState = CompletionState & ObjectState & VideoState;
@@ -62,6 +64,7 @@ const defaultState: IdentifyVehiclesPanelState = {
     displayText: "",
   },
   isLoadingDone: false,
+  selectedYOLOModel: "yolov8l.pt",
   deepSORTOutput: [],
   selectedObjectId: 0,
   selectedFrame: -1,
@@ -91,6 +94,7 @@ const useIdentifyVehiclesPanelStore = create<IdentifyVehiclesPanelStore>((set, g
     const shownClassifications = get().shownClassifications;
     return get().deepSORTOutput.filter((obj) => shownClassifications.has(obj.classification));
   },
+  setSelectedYOLOModel: (yoloModel: YOLOModel) => set(() => ({ selectedYOLOModel: yoloModel })),
   setDeepSORTOutput: (deepSORTOutput: DeepSORTOutput) => set(() => ({ deepSORTOutput })),
   setSelectedObjectId: (selectedObjectId: number) => set(() => ({ selectedObjectId, selectedFrame: -1 })),
   setSelectedFrame: (selectedFrame: number) => set(() => ({ selectedFrame })),
@@ -115,7 +119,9 @@ const useIdentifyVehiclesPanelStore = create<IdentifyVehiclesPanelStore>((set, g
   pauseVideo: () => set(() => ({ isPaused: true })),
   setTimePercentage: (timeMarker: number) => set(() => ({ timePercentage: timeMarker })),
   
-  resetModelStates: () => set(() => defaultState),
+  resetModelStates: (excludeModel = false) => set({ ...defaultState, ...(excludeModel ? {
+    selectedYOLOModel: get().selectedYOLOModel,
+  } : {})}),
 }));
 
 export default useIdentifyVehiclesPanelStore;

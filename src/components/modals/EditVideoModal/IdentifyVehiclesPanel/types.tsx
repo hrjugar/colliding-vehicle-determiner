@@ -17,3 +17,5 @@ interface DeepSORTObject {
 }
 
 type DeepSORTOutput = DeepSORTObject[];
+
+type YOLOModel = "yolov8n.pt" | "yolov8s.pt" | "yolov8m.pt" | "yolov8l.pt" | "yolov8x.pt";

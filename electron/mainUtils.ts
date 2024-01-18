@@ -301,7 +301,7 @@ export function runAccidentDetectionModel(confidenceThreshold: number, iouThresh
   })
 }
 
-export function runDeepSORTModel() {
+export function runDeepSORTModel(yoloModel: string) {
   let scriptPath = path.join(
     app.getAppPath(),
     'python-scripts',
@@ -332,7 +332,7 @@ export function runDeepSORTModel() {
   }
   pythonProcess = spawn('python', [
     scriptPath,
-    "model=yolov8l.pt",
+    `model=${yoloModel}`,
     `source="${inputVideoPath}"`,
     `save_dir="${outputFolderPath}"`,
   ]);

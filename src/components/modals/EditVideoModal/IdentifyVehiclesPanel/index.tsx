@@ -8,6 +8,7 @@ import DetectedObjects from './DetectedObjects';
 import VideoPlayer from './VideoPlayer';
 import SelectedObjectFramePagination from './SelectedObjectFramePagination';
 import SelectedFrameObject from './SelectedFrameObject';
+import IdentifyVehiclesModelHandler from './IdentifyVehiclesModelHandler';
 
 interface IdentifyVehiclesPanelProps {
   selectedTabIndex: number,
@@ -31,10 +32,8 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
     setLoadingProgress,
     isLoadingDone,
     setIsLoadingDone,
+    selectedYOLOModel,
     setDeepSORTOutput,
-    isPaused,
-    playVideo,
-    pauseVideo,
     resetModelStates,
   ] = useIdentifyVehiclesPanelStore(
     useShallow((state) => [
@@ -44,10 +43,8 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
       state.setLoadingProgress,
       state.isLoadingDone,
       state.setIsLoadingDone,
+      state.selectedYOLOModel,
       state.setDeepSORTOutput,
-      state.isPaused,
-      state.playVideo,
-      state.pauseVideo,
       state.resetModelStates
     ])
   )
@@ -61,6 +58,7 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
       },
       onSuccess: (_) => {
         console.log("Finished copying video.");
+        setLoadingProgress({ percent: 100, displayText: "Loading Python script" });
         setIsAccidentDetectionModelChanged(false);
         setIsLoadingDone(true);
       }
@@ -68,7 +66,7 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
   )
 
   const deepSORTMutation = useMutation(
-    async () => await window.electronAPI.runDeepSORTModel(),
+    async () => await window.electronAPI.runDeepSORTModel(selectedYOLOModel),
     {
       onMutate: () => {
         setLoadingProgress({ percent: 0, displayText: "Loading Python script" });
@@ -76,11 +74,18 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
       },
       onSuccess: (data) => {
         console.log(`Python DeepSORT script exit code: ${data}`)
+        window.electronAPI.removeRunDeepSORTModelProgressListener();
         setDeepSORTOutput(data as DeepSORTOutput);
         copyVideoMutation.mutate();
       }
     }
   )
+
+  const rerunModel = () => {
+    resetModelStates(true);
+    window.electronAPI.onRunAccidentDetectionModelProgress((progress: Progress) => setLoadingProgress(progress));
+    deepSORTMutation.mutate();
+  }
   
   useEffect(() => {
     console.log("IN IdentifyVehiclesPanel");
@@ -106,7 +111,10 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
       {isLoadingDone ? (
         <>
           <div className='w-full flex flex-row gap-4'>
-            <DetectedObjects />
+            <div className='flex flex-col gap-4'>
+              <DetectedObjects />
+              <IdentifyVehiclesModelHandler rerunModel={rerunModel} />
+            </div>
             <VideoPlayer />
           </div>
 
