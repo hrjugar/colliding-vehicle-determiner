@@ -161,7 +161,7 @@ const DetectAccidentPanel: React.FC = () => {
       onMutate: () => {
         setLoadingProgress({ percent: 0, displayText: "0%" });
         setLoadingText("Trimming video...")
-        window.electronAPI.onRunAccidentDetectionModelProgress(handleOnRunAccidentDetectionModelProgress);
+        window.electronAPI.onTrimProgress(handleOnProgress);
       },
       onSuccess: (_) => {
         setLoadingProgress({ percent: 100, displayText: "100%" });
