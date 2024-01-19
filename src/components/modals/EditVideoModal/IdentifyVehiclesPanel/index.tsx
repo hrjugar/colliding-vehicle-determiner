@@ -49,6 +49,12 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
     ])
   )
 
+  const handleOnProgress = (progress: Progress) => {
+    if (progress) {
+      setLoadingProgress(progress)
+    }
+  };
+
   const copyVideoMutation = useMutation(
     async () => await window.electronAPI.copyDeepSORTVideo(),
     {
@@ -69,6 +75,7 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
     async () => await window.electronAPI.runDeepSORTModel(selectedYOLOModel),
     {
       onMutate: () => {
+        window.electronAPI.onRunDeepSORTModelProgress(handleOnProgress);
         setLoadingProgress({ percent: 0, displayText: "Loading Python script" });
         setLoadingText("Identifying vehicles...");
       },
@@ -83,7 +90,6 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
 
   const rerunModel = () => {
     resetModelStates(true);
-    window.electronAPI.onRunAccidentDetectionModelProgress((progress: Progress) => setLoadingProgress(progress));
     deepSORTMutation.mutate();
   }
   
@@ -93,10 +99,6 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
     if (selectedTabIndex === 2 && isAccidentDetectionModelChanged) {
       resetModelStates();
       deepSORTMutation.mutate();
-
-      window.electronAPI.onRunDeepSORTModelProgress((progress: Progress) => {
-        setLoadingProgress(progress);
-      })
     }
 
     return () => {
