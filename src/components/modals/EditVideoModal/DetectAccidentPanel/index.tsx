@@ -1,7 +1,6 @@
 import { Tab } from '@headlessui/react';
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useMutation } from 'react-query';
-import FramePagination from './FramePagination';
 import DetectAccidentModelHandler from './DetectAccidentModelHandler';
 import FrameDescription from './FrameDescription';
 import SelectedFrameImage from './SelectedFrameImage';
@@ -9,6 +8,7 @@ import useEditVideoModalStore from "../store";
 import { useShallow } from 'zustand/react/shallow';
 import { AccidentDetectionModelProgress } from './types';
 import useDetectAccidentPanelStore from './store';
+import DetectAccidentFramePagination from './DetectAccidentFramePagination';
 
 const DetectAccidentPanel: React.FC = () => {
   const [
@@ -287,7 +287,7 @@ const DetectAccidentPanel: React.FC = () => {
               </div>          
             </div>
 
-            <FramePagination />
+            <DetectAccidentFramePagination />
           </div>
         </div>
       ) : (

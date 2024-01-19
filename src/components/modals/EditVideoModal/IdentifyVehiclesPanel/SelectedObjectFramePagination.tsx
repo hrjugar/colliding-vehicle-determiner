@@ -6,10 +6,12 @@ import { FramePagination } from "@/components/FramePagination";
 const SelectedObjectFramePagination: React.FC = () => {
   const [
     getSelectedObject,
+    selectedFrame,
     setSelectedFrame,
   ] = useIdentifyVehiclesPanelStore(
     useShallow((state) => [
       state.getSelectedObject,
+      state.selectedFrame,
       state.setSelectedFrame,
       state.selectedObjectId,
     ])
@@ -19,9 +21,11 @@ const SelectedObjectFramePagination: React.FC = () => {
 
   return (
     <FramePagination 
+      selectedFrameIndex={selectedObject?.frames.findIndex((frame) => frame.frame === selectedFrame) ?? -1}
+      setSelectedFrameIndex={(selectedFrameIndex) => setSelectedFrame(selectedObject?.frames[selectedFrameIndex].frame ?? -1)}
+      frameList={selectedObject?.frames.map((frame) => frame.frame) || []}
+      isFrameFromIndex={false}
       imgSrcPrefix={`fileHandler://tempFrame//`}
-      frameList={selectedObject ? selectedObject.frames.map((frame) => frame.frame) : []}
-      selectFrameCallback={(selectedFrame) => setSelectedFrame(selectedFrame)}
       cardTitle={'Object Frames'}
       maxPageButtonsShown={3}
     />

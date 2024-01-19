@@ -3,25 +3,29 @@ import { ImageSizeState } from './types';
 import FramePaginationController from './FramePaginationController';
 
 export interface FramePaginationProps {
+  selectedFrameIndex: number,
+  setSelectedFrameIndex: (selectedFrameIndex: number) => void,
+  frameList: any[];
   imgSrcPrefix: string;
-  frameList: number[];
-  selectFrameCallback: (selectedFrame: number) => void;
+  isFrameFromIndex?: boolean;
+  renderFrameLabel?: (item: any) => JSX.Element | null;
   cardTitle?: string;
   maxPageButtonsShown?: number;
 }
 
 // TODO: Use this for DetectAccidentPanel too.
 export const FramePagination: React.FC<FramePaginationProps> = ({
-  imgSrcPrefix, 
+  selectedFrameIndex,
+  setSelectedFrameIndex,
   frameList,
-  selectFrameCallback,
+  imgSrcPrefix, 
+  isFrameFromIndex = true,
+  renderFrameLabel = null,
   cardTitle = 'Frames',
   maxPageButtonsShown = 5
 }) => {
   const frameCount = frameList.length;
   const [originalFrameSize, setOriginalFrameSize] = React.useState<ImageSizeState>({ width: 0, height: 0 });
-
-  const [selectedFrameIndex, setSelectedFrameIndex] = useState<number>(-1);
 
   const [rowFirstFrameIndex, setRowFirstFrameIndex] = useState<number>(0);
   const [maxFramesPerRow, setMaxFramesPerRow] = useState<number>(1);
@@ -41,7 +45,6 @@ export const FramePagination: React.FC<FramePaginationProps> = ({
   useEffect(() => {
     if (frameList.length === 0) return;
 
-    setSelectedFrameIndex(-1);
     setRowFirstFrameIndex(0);
     setMaxFramesPerRow(1);
 
@@ -54,7 +57,8 @@ export const FramePagination: React.FC<FramePaginationProps> = ({
         height: img.naturalHeight
       });
     };
-    img.src = `${imgSrcPrefix}${frameList[0]}`;
+    
+    img.src = `${imgSrcPrefix}${isFrameFromIndex ? '1' : frameList[0]}`;
   }, [frameList]);
 
   useEffect(() => {
@@ -111,7 +115,7 @@ export const FramePagination: React.FC<FramePaginationProps> = ({
             ) : (
               Array(currFramesPerRow).fill(null).map((_, index) => {
                 const currFrameIndex = rowFirstFrameIndex + index;
-                const currFrame = frameList[currFrameIndex];
+                const currFrame = isFrameFromIndex ? currFrameIndex + 1 : frameList[currFrameIndex];
                 // const currFramePrediction = frameList[currFrameIndex];
   
                 return (
@@ -123,16 +127,13 @@ export const FramePagination: React.FC<FramePaginationProps> = ({
                       <img 
                         className={`w-auto h-full grow-0 shrink-0 cursor-pointer`}
                         src={`${imgSrcPrefix}${currFrame}`}
-                        onClick={() => {
-                          selectFrameCallback(currFrame);
-                          setSelectedFrameIndex(currFrameIndex)
-                        }}
+                        onClick={() => setSelectedFrameIndex(currFrameIndex)}
                       />
     
                       <div className={`absolute h-20 inset-0 pointer-events-none transition-all duration-75 ${selectedFrameIndex === currFrameIndex ? 'bg-white/25 border-2 border-color-primary' : 'bg-transparent group-hover:bg-white/10'}`}/>
+                      {renderFrameLabel ? renderFrameLabel(frameList[currFrameIndex]) : null}
                     </div>
 
-                    
                     {/* {currFramePrediction ? (
                       <div className='absolute bottom-1 right-1 text-xs font-semibold py-1 px-2 h-6 rounded-full flex items-center justify-center bg-white'>
                         <p>{currFramePrediction.length} <span className='hidden group-hover:contents'>collision{currFramePrediction.length === 1 ? '' : 's'}</span></p>
