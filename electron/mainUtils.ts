@@ -171,8 +171,18 @@ export function getVideoFPS(videoPath: string) {
         return;
       }
 
-      const frameRate = metadata.streams[0].avg_frame_rate
+      const videoStream = metadata.streams.find(stream => stream.codec_type === 'video');
+      const frameRate = videoStream?.avg_frame_rate;
+      if (!frameRate) {
+        reject(new Error("Could not get frame rate of video."))
+        return;
+      }
+      
       const [numerator, denominator] = frameRate!.split('/')
+      console.log(`getVideoFPS: videoPath = ${videoPath}`)
+      console.log(`getVideoFPS: video path exists: ${fs.existsSync(videoPath)}`)
+      console.log(`getVideoFPS: frameRate = ${frameRate}`);
+
       resolve(parseInt(numerator) / parseInt(denominator))
     })
   })
@@ -211,6 +221,7 @@ export function trimVideo(event: Electron.IpcMainInvokeEvent, videoPath: string,
 export function extractFrames(event: Electron.IpcMainInvokeEvent) {
   const tempFolderPath = path.join(app.getPath('userData'), 'temp')
   const trimmedVideoPath = path.join(tempFolderPath, 'trimmed.mp4')
+  console.log(`extractFrames: trimmedVideoPath = ${trimmedVideoPath}`);
 
   const framesFolderPath = path.join(tempFolderPath, 'frames')
   if (fs.existsSync(framesFolderPath)) {
@@ -225,7 +236,12 @@ export function extractFrames(event: Electron.IpcMainInvokeEvent) {
         return;
       }
 
-      const frameRate = metadata.streams[0].avg_frame_rate
+      const videoStream = metadata.streams.find(stream => stream.codec_type === 'video');
+      const frameRate = videoStream?.avg_frame_rate;
+      if (!frameRate) {
+        reject(new Error("Could not get frame rate of video."))
+        return;
+      }
 
       ffmpeg(trimmedVideoPath)
         .outputOptions('-vf', `fps=${frameRate}`)

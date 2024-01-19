@@ -90,9 +90,7 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
   useEffect(() => {
     console.log("IN IdentifyVehiclesPanel");
     console.log(`isAccidentDetectionModelChanged: ${isAccidentDetectionModelChanged}`);
-    // TODO: change this later
-    // if (selectedTabIndex === 2 && isAccidentDetectionModelChanged) {
-    if (selectedTabIndex === 0) {
+    if (selectedTabIndex === 2 && isAccidentDetectionModelChanged) {
       resetModelStates();
       deepSORTMutation.mutate();
 

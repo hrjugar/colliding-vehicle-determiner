@@ -22,7 +22,7 @@ const TrimmingSliderFrames: React.FC = () => {
   );
 
   const getVideoFPSMutation = useMutation(
-    async (currentVideoPath: string) => await window.electronAPI.getVideoFPS(currentVideoPath),
+    async () => await window.electronAPI.getVideoFPS(videoPath),
     {
       onSuccess: (fps) => {
         setFps(fps);
@@ -34,7 +34,7 @@ const TrimmingSliderFrames: React.FC = () => {
 
   useEffect(() => {
     if (videoPath) {
-      getVideoFPSMutation.mutate(videoPath);
+      getVideoFPSMutation.mutate();
     }
   }, [videoPath])
 

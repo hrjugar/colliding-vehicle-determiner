@@ -114,14 +114,10 @@ const EditVideoModal: React.FC = () => {
                 <Tab.Panels className='bg-white w-full h-full overflow-hidden'>
                   {tabs.map((_, i) => {
                     if (i === 0) {
-                      return (
-                        <IdentifyVehiclesPanel 
-                          key={'edit-modal-tab-panel-2'}
-                          selectedTabIndex={selectedTabIndex}
-                        />                        
-                        // <TrimVideoPanel
-                        //   key={'edit-modal-tab-panel-0'}
-                        // />
+                      return (                    
+                        <TrimVideoPanel
+                          key={'edit-modal-tab-panel-0'}
+                        />
                       )
                     } else if (i === 1) {
                       return (
@@ -131,11 +127,10 @@ const EditVideoModal: React.FC = () => {
                       )
                     } else if (i === 2) {
                       return (
-                        // <IdentifyVehiclesPanel 
-                        //   key={'edit-modal-tab-panel-2'}
-                        //   selectedTabIndex={selectedTabIndex}
-                        // />
-                        <div key="random-key"></div>
+                        <IdentifyVehiclesPanel 
+                          key={'edit-modal-tab-panel-2'}
+                          selectedTabIndex={selectedTabIndex}
+                        />
                       )
                     }
                   })}
