@@ -17,7 +17,7 @@ export function NavLinkIcon({
       {({ isActive }) => {
         return (
           <div 
-            className={`group p-4 flex flex-col justify-center items-center ${isActive ? 'bg-white' : 'bg-transparent'}`}
+            className={`group p-4 flex flex-col justify-center items-center ${isActive ? 'bg-color-primary-active' : 'bg-transparent hover:bg-color-primary-active/10'}`}
           >
             <svg
               width="64" 
@@ -26,7 +26,7 @@ export function NavLinkIcon({
               xmlns="http://www.w3.org/2000/svg"
               className={`w-8 h-8 ${isActive ? 
                 'text-color-primary' : 
-                'text-color-primary-inactive group-hover:text-color-primary-active'
+                'text-color-primary-inactive '
               }`}
             >
               {shapesCoordinates.map((shapeCoordinates, index) => {
