@@ -96,18 +96,38 @@ const DetectAccidentPanel: React.FC = () => {
   const transitionAnimationFrameId = useRef<number | null>(null);
   const imageSideCardsDivRef = useRef<HTMLDivElement>(null);
 
+  const handleOnProgress = (progress: AccidentDetectionModelProgress) => {
+    if (progress) {
+      setLoadingProgress(progress)
+    }
+  };
+
+  const handleOnRunAccidentDetectionModelProgress = (progress: AccidentDetectionModelProgress) => {
+    if (progress) {
+      setLoadingProgress({
+        displayText: progress.displayText,
+        percent: progress.percent
+      })
+
+      if (progress.frame !== undefined) {
+        addFramePredictions(progress.frame)
+      }
+    }
+  };
+
   const detectAccidentsMutation = useMutation(
     async () => await window.electronAPI.runAccidentDetectionModel(confidenceThreshold, iouThreshold),
     {
       onMutate: () => {
         setLoadingProgress({ percent: 0, displayText: "Loading Python script" });
         setLoadingText("Detecting accidents...")
+        window.electronAPI.onRunAccidentDetectionModelProgress(handleOnRunAccidentDetectionModelProgress)
       },
       onSuccess: (data) => {
         console.log(`Python accident detection model script exit code: ${data}`)
+        window.electronAPI.removeRunAccidentDetectionModelProgressListener();
         
         setTimeout(() => {
-          window.electronAPI.removeRunAccidentDetectionModelProgressListener();
           setIsPredictionDone(true);
           setIsTrimmedPortionChanged(false);
           setIsAccidentDetectionModelChanged(true);
@@ -122,12 +142,13 @@ const DetectAccidentPanel: React.FC = () => {
       onMutate: () => {
         setLoadingProgress({ percent: 0, displayText: "0%" });
         setLoadingText("Extracting frames...")
+        window.electronAPI.onExtractFramesProgress(handleOnProgress)
       },
       onSuccess: (_) => {
         setLoadingProgress({ percent: 100, displayText: "100%" });
+        window.electronAPI.removeExtractFramesProgressListener();
 
         setTimeout(() => {
-          window.electronAPI.removeExtractFramesProgressListener();
           detectAccidentsMutation.mutate();
         }, 500)
       }
@@ -140,12 +161,13 @@ const DetectAccidentPanel: React.FC = () => {
       onMutate: () => {
         setLoadingProgress({ percent: 0, displayText: "0%" });
         setLoadingText("Trimming video...")
+        window.electronAPI.onRunAccidentDetectionModelProgress(handleOnRunAccidentDetectionModelProgress);
       },
       onSuccess: (_) => {
         setLoadingProgress({ percent: 100, displayText: "100%" });
+        window.electronAPI.removeTrimProgressListener();
 
         setTimeout(() => {
-          window.electronAPI.removeTrimProgressListener();
           extractFramesMutation.mutate();
         }, 300);
       }
@@ -200,29 +222,9 @@ const DetectAccidentPanel: React.FC = () => {
     setTabsDisabledState(false);
   }
 
-  const handleOnProgress = (progress: AccidentDetectionModelProgress) => {
-    if (progress) {
-      setLoadingProgress(progress)
-    }
-  };
-
-  const handleOnRunAccidentDetectionModelProgress = (progress: AccidentDetectionModelProgress) => {
-    if (progress) {
-      setLoadingProgress({
-        displayText: progress.displayText,
-        percent: progress.percent
-      })
-
-      if (progress.frame !== undefined) {
-        addFramePredictions(progress.frame)
-      }
-    }
-  };
-
   const rerunModel = () => {
     resetModelStates(true);
     setTabsDisabledState(true);
-    window.electronAPI.onRunAccidentDetectionModelProgress(handleOnRunAccidentDetectionModelProgress);
     detectAccidentsMutation.mutate();
   };
 
@@ -245,12 +247,7 @@ const DetectAccidentPanel: React.FC = () => {
     if (selectedTabIndex === 1 && isTrimmedPortionChanged) {
       resetModelStates();
       setTabsDisabledState(true);
-
       trimMutation.mutate();
-      
-      window.electronAPI.onTrimProgress(handleOnProgress)
-      window.electronAPI.onExtractFramesProgress(handleOnProgress)
-      window.electronAPI.onRunAccidentDetectionModelProgress(handleOnRunAccidentDetectionModelProgress)
     }
 
     return () => {

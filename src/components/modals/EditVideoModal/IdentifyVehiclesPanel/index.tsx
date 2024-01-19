@@ -16,10 +16,12 @@ interface IdentifyVehiclesPanelProps {
 
 const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedTabIndex }) => {
   const [
+    setTabsDisabledState,
     isAccidentDetectionModelChanged,
     setIsAccidentDetectionModelChanged
   ] = useEditVideoModalStore( 
     useShallow((state) => [
+      state.setTabsDisabledState,
       state.isAccidentDetectionModelChanged,
       state.setIsAccidentDetectionModelChanged
     ])
@@ -65,9 +67,13 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
       onSuccess: (_) => {
         console.log("Finished copying video.");
         setLoadingProgress({ percent: 100, displayText: "Loading Python script" });
-        setIsAccidentDetectionModelChanged(false);
-        setIsLoadingDone(true);
-      }
+
+        setTimeout(() => {
+          setIsAccidentDetectionModelChanged(false);
+          setIsLoadingDone(true);
+          setTabsDisabledState(false);
+        }, 300);
+      },
     }
   )
 
@@ -83,13 +89,17 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
         console.log(`Python DeepSORT script exit code: ${data}`)
         window.electronAPI.removeRunDeepSORTModelProgressListener();
         setDeepSORTOutput(data as DeepSORTOutput);
-        copyVideoMutation.mutate();
+
+        setTimeout(() => {
+          copyVideoMutation.mutate();
+        }, 300);
       }
     }
   )
 
   const rerunModel = () => {
     resetModelStates(true);
+    setTabsDisabledState(true);
     deepSORTMutation.mutate();
   }
   
@@ -98,6 +108,7 @@ const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedT
     console.log(`isAccidentDetectionModelChanged: ${isAccidentDetectionModelChanged}`);
     if (selectedTabIndex === 2 && isAccidentDetectionModelChanged) {
       resetModelStates();
+      setTabsDisabledState(true);
       deepSORTMutation.mutate();
     }
 
