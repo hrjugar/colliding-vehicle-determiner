@@ -2,6 +2,8 @@ import { createHashRouter } from "react-router-dom";
 import App from "../App";
 import VideosPage from "../pages/videos";
 import AnalysisPage from "../pages/analysis";
+import VideoPage from "@/pages/video";
+import RedirectToVideosPage from "@/components/RedirectToVideosPage";
 
 export const router = createHashRouter([
   {
@@ -9,20 +11,26 @@ export const router = createHashRouter([
     children: [
       {
         path: "/",
-        element: <VideosPage />,
-        handle: {
-          name: "Videos",
-        }
+        element: <RedirectToVideosPage />
       },
       {
-        path: "/videos/:id",
-        element: <div>Video Page</div>,
+        path: "videos",
         handle: {
           name: "Videos",
-        }
+        },
+        children: [
+          {
+            index: true,
+            element: <VideosPage />,
+          },
+          {
+            path: ":id",
+            element: <VideoPage />,
+          },
+        ]
       },
       {
-        path: "/analysis",
+        path: "analysis",
         element: <AnalysisPage />,
         handle: {
           name: "Analysis"

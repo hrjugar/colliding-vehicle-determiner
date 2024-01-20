@@ -4,16 +4,18 @@ import { BreadcrumbsHandle } from './types';
 
 const Breadcrumbs: React.FC = () => {
   const navigate = useNavigate();
-  const matches = useMatches() as UIMatch<unknown, BreadcrumbsHandle>[];
-  const currentMatch = matches[matches.length - 1];
-  console.log(currentMatch)
-  const videoId = currentMatch.params.id;
+  const matches = useMatches() as UIMatch<unknown, BreadcrumbsHandle | null>[];
+  const crumbName = matches.find((match) => match.handle?.name)!.handle!.name;
+  const videoId = matches[matches.length - 1].params.id;
+
+  console.log(`videoId: ${videoId}`);
+  console.log(`crumbName: ${crumbName}`);
 
   return (
     <div className='flex flex-col justify-start items-start h-20'>
-      <h2 className="text-2xl font-semibold">{currentMatch.handle.name}</h2>
-      {currentMatch.handle.name === "Videos" ? (
-        <div className='flex flex-row gap-2'>
+      <h2 className="text-2xl font-semibold">{crumbName}</h2>
+      {crumbName === "Videos" ? (
+        <div className='flex flex-row items-center gap-2'>
           <p 
             className={`${videoId ? 'cursor-pointer hover:font-medium' : ''}`} 
             onClick={() => {
