@@ -26,6 +26,7 @@ export const router = createHashRouter([
           {
             path: ":id",
             element: <VideoPage />,
+            loader: async ({ params }) => await window.electronAPI.selectVideo(parseInt(params.id!)),
           },
         ]
       },

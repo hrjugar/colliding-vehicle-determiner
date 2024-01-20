@@ -1,14 +1,16 @@
 import React from 'react';
 import { UIMatch, useMatches, useNavigate } from 'react-router-dom';
 import { BreadcrumbsHandle } from './types';
+import { getFileNameFromPath } from '@/globals/utils';
 
 const Breadcrumbs: React.FC = () => {
   const navigate = useNavigate();
-  const matches = useMatches() as UIMatch<unknown, BreadcrumbsHandle | null>[];
+  const matches = useMatches() as UIMatch<Video, BreadcrumbsHandle | null>[];
   const crumbName = matches.find((match) => match.handle?.name)!.handle!.name;
-  const videoId = matches[matches.length - 1].params.id;
 
-  console.log(`videoId: ${videoId}`);
+  const videoData = matches[matches.length - 1].data;
+
+  console.log(`videoData: ${videoData}`);
   console.log(`crumbName: ${crumbName}`);
 
   return (
@@ -17,16 +19,16 @@ const Breadcrumbs: React.FC = () => {
       {crumbName === "Videos" ? (
         <div className='flex flex-row items-center gap-2'>
           <p 
-            className={`${videoId ? 'cursor-pointer hover:font-medium' : ''}`} 
+            className={`${videoData ? 'cursor-pointer hover:font-medium' : ''}`} 
             onClick={() => {
-              if (videoId) {
+              if (videoData) {
                 navigate('/');
               }
             }}
           >
             Home
           </p>
-          {videoId ? (
+          {videoData ? (
             <>
               <svg 
                 width="64" 
@@ -40,7 +42,7 @@ const Breadcrumbs: React.FC = () => {
                   className="fill-current"
                 />
               </svg>
-              <p>{videoId}</p>
+              <p>{getFileNameFromPath(videoData.path)}</p>
             </>
           ): null}
         </div>

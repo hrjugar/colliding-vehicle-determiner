@@ -106,6 +106,11 @@ export function selectAllVideos(db: Database.Database) {
   return videos
 }
 
+export function selectVideo(db: Database.Database, id: number | bigint) {
+  const video = db.prepare('SELECT * FROM videos WHERE id = ?').get(id);
+  return video;
+}
+
 export function deleteVideo(db: Database.Database, id: number | bigint) {
   const video: any = db.prepare(`SELECT * FROM videos WHERE id = ?`).get(id);
   if (video) {

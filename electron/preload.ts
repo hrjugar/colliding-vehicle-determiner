@@ -11,6 +11,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   findNewVideo: () => ipcRenderer.invoke('findNewVideo'),
   insertVideo: (filePath: string) => ipcRenderer.invoke('dialog:insertVideo', filePath),
   selectAllVideos: () => ipcRenderer.invoke('selectAllVideos'),
+  selectVideo: (id: number | bigint) => ipcRenderer.invoke('selectVideo', id),
   getAppPath: () => ipcRenderer.invoke('getAppPath'),
   deleteVideo: (id: number | bigint) => ipcRenderer.invoke('deleteVideo', id),
   openVideoFolder: (filePath: string) => ipcRenderer.invoke('openVideoFolder', filePath),

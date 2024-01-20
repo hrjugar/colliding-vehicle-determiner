@@ -28,6 +28,7 @@ interface ElectronAPI {
   findNewVideo(): Promise<string| undefined>,
   insertVideo(filePath: string): Promise<number | bigint>,
   selectAllVideos(): Promise,
+  selectVideo(id: number | bigint): Promise,
   getAppPath(): Promise<string>,
   deleteVideo(id: number | bigint): Promise,
   openVideoFolder(filePath: string): Promise,

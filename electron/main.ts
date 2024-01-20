@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, net, protocol, shell } from 'electron'
 import path from 'node:path'
 import fs from 'node:fs'
 import { getSqlite3 } from './better-sqlite3'
-import { closeWindow, copyDeepSORTVideo, createThumbnailFromId, deleteVideo, extractFrames, findNewVideo, getVideoFPS, insertVideo, isFileExisting, killPythonProcess, maximizeWindow, minimizeWindow, openVideoFolder, renameVideo, runAccidentDetectionModel, runDeepSORTModel, selectAllVideos, THUMBNAIL_FILENAME, trimVideo, updateVideo } from './mainUtils'
+import { closeWindow, copyDeepSORTVideo, createThumbnailFromId, deleteVideo, extractFrames, findNewVideo, getVideoFPS, insertVideo, isFileExisting, killPythonProcess, maximizeWindow, minimizeWindow, openVideoFolder, renameVideo, runAccidentDetectionModel, runDeepSORTModel, selectAllVideos, selectVideo, THUMBNAIL_FILENAME, trimVideo, updateVideo } from './mainUtils'
 import Database from 'better-sqlite3'
 import { stopServer } from './server'
 import { initSocket } from './zeromq'
@@ -160,6 +160,7 @@ app.whenReady().then(() => {
   ipcMain.handle('findNewVideo', () => findNewVideo())
   ipcMain.handle('dialog:insertVideo', (_, filePath: string) => insertVideo(db, filePath))
   ipcMain.handle('selectAllVideos', () => selectAllVideos(db))
+  ipcMain.handle('selectVideo', (_, id) => selectVideo(db, id))
   ipcMain.handle('getAppPath', () => app.getPath('userData'))
   ipcMain.handle('deleteVideo', (_, id) => deleteVideo(db, id))
   ipcMain.handle('openVideoFolder', (_, filePath) => openVideoFolder(filePath))
