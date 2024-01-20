@@ -5,12 +5,14 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import VideoCardRenamer from "./VideoCardRenamer";
 import VideoCardPopover from "./VideoCardPopover";
+import { useNavigate } from "react-router-dom";
 
 interface VideoCardProps {
   video: Video,
 }
 
 const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const deleteMutation = useMutation(() => window.electronAPI.deleteVideo(video.id), {
     onSuccess: () => {
@@ -40,7 +42,8 @@ const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
     <div className="relative">
       <div 
         title={video.path}
-        className='group/video-card flex flex-col items-stretch p-2 mb-4 cursor-pointer bg-white rounded-sm  border-[2px] border-gray-300 hover:border-color-primary transition-all shadow-md hover:shadow-lg w-80 gap-1'
+        className='card group/video-card flex flex-col items-stretch p-2 mb-4 cursor-pointer  border-[2px] border-gray-300 hover:border-color-primary transition-all w-80 gap-1'
+        onClick={() => navigate(`/videos/${video.id}`)}
       >
         <img className="w-full h-48 bg-gray-400 opacity-90 group-hover/video-card:opacity-100 object-cover" src={`thumbnail://${video.id}`}/>
         <div className="flex flex-col items-start justify-start ">

@@ -94,6 +94,7 @@ export async function insertVideo(db: Database.Database, filePath: string) {
 
   const tempFolder = path.join(app.getPath('userData'), 'temp');
   await fsExtra.copy(tempFolder, videoDataFolder);
+  await fsExtra.emptyDir(tempFolder);
   
   await createThumbnail(filePath, statement.lastInsertRowid);
 

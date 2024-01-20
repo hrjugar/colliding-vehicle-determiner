@@ -7,7 +7,7 @@ const VideosPage: React.FC = () => {
   const { isLoading, isError, data: videos, error } = useQuery<Video[]>(QueryKey.Videos, window.electronAPI.selectAllVideos);
 
   return (
-    <div className='page gap-4'>
+    <div className='page'>
       <Breadcrumbs />
       
       {isLoading ? (
@@ -23,7 +23,7 @@ const VideosPage: React.FC = () => {
           <p>No videos found.</p>
         </div>
       ) : (
-        <div className='flex flex-row flex-wrap gap-4 overflow-y-auto px-4'>
+        <div className='flex flex-row flex-wrap gap-4 pr-6 overflow-y-auto'>
           {videos?.map((video) => {
             return (
               <VideoCard key={video.id} video={video} />

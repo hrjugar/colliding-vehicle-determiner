@@ -62,7 +62,7 @@ const VideoCardPopover: React.FC<VideoCardPopoverProps> = ({ video, setIsRenamin
                   <button 
                     type="button"
                     className="group/video-card-rename-btn rounded-sm hover:bg-color-primary px-4 py-2 flex flex-row items-center gap-4 text-sm border-b-[1px] border-gray-200"
-                    onClick={() => setIsRenaming(true)}
+                    onClick={(e) => { e.stopPropagation(); setIsRenaming(true); }}
                     title="Rename Video"
                   >
                     <svg 
@@ -83,7 +83,8 @@ const VideoCardPopover: React.FC<VideoCardPopoverProps> = ({ video, setIsRenamin
                   <button 
                     type="button"
                     className="group/video-card-folder-btn rounded-sm hover:bg-color-primary px-4 py-2 flex flex-row items-center gap-4 text-sm border-b-[1px] border-gray-200"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       window.electronAPI.openVideoFolder(video.path)
                       close();
                     }}
@@ -109,7 +110,8 @@ const VideoCardPopover: React.FC<VideoCardPopoverProps> = ({ video, setIsRenamin
                     className="group/video-card-delete-btn rounded-sm hover:bg-red-600 px-4 py-2 flex flex-row items-center gap-4 text-sm border-b-[1px] border-gray-200"
                     // onClick={() => deleteMutation.mutate(video.id)}
                     // onClick={() => openModal(ModalType.DeleteVideo, { video })}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       setDeleteModalIsOpen(true)
                       close()
                     }}

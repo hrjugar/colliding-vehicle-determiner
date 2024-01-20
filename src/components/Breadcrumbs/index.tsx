@@ -10,7 +10,7 @@ const Breadcrumbs: React.FC = () => {
   const videoId = currentMatch.params.id;
 
   return (
-    <div className='flex flex-col justify-start items-start h-[88px] '>
+    <div className='flex flex-col justify-start items-start h-20'>
       <h2 className="text-2xl font-semibold">{currentMatch.handle.name}</h2>
       {currentMatch.handle.name === "Videos" ? (
         <div className='flex flex-row gap-2'>

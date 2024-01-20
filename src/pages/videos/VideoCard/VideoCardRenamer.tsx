@@ -32,11 +32,15 @@ const VideoCardRenamer: React.FC<VideoCardRenamerProps> = ({ video, setIsRenamin
         className=" bg-white text-black w-full px-1 py-1" 
         defaultValue={getFileNameFromPath(video.path, true)}
         ref={renameInputRef}
+        onClick={(e) => e.stopPropagation()}
       />
       <button 
         type="button" 
         className="px-2 py-1 text-xs text-white border-r-[1px] border-gray-300 bg-red-500 hover:bg-red-600"
-        onClick={() => setIsRenaming(false)}
+        onClick={(e) => { 
+          e.stopPropagation(); 
+          setIsRenaming(false);
+        }}
       >
         <svg 
           width="64" 
@@ -54,7 +58,8 @@ const VideoCardRenamer: React.FC<VideoCardRenamerProps> = ({ video, setIsRenamin
       <button 
         type="button" 
         className="px-2 py-1 bg-blue-500 text-xs text-white hover:bg-blue-600"
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           renameMutation.mutate(renameInputRef.current?.value as string);
           setIsRenaming(false);
           toast(`Renamed ${getFileNameFromPath(video.path, true)} to ${renameInputRef.current?.value as string}`, {
