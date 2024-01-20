@@ -10,17 +10,15 @@ import SelectedObjectFramePagination from './SelectedObjectFramePagination';
 import SelectedFrameObject from './SelectedFrameObject';
 import IdentifyVehiclesModelHandler from './IdentifyVehiclesModelHandler';
 
-interface IdentifyVehiclesPanelProps {
-  selectedTabIndex: number,
-}
-
-const IdentifyVehiclesPanel: React.FC<IdentifyVehiclesPanelProps> = ({ selectedTabIndex }) => {
+const IdentifyVehiclesPanel: React.FC = () => {
   const [
+    selectedTabIndex,
     setTabsDisabledState,
     isAccidentDetectionModelChanged,
     setIsAccidentDetectionModelChanged
   ] = useEditVideoModalStore( 
     useShallow((state) => [
+      state.selectedTabIndex,
       state.setTabsDisabledState,
       state.isAccidentDetectionModelChanged,
       state.setIsAccidentDetectionModelChanged

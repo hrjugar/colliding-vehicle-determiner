@@ -5,6 +5,7 @@ import DetectAccidentPanel from "./DetectAccidentPanel";
 import IdentifyVehiclesPanel from "./IdentifyVehiclesPanel";
 import useEditVideoModalStore from "./store";
 import { useShallow } from "zustand/react/shallow";
+import EndPanel from "./EndPanel";
 
 const tabs = [
   {
@@ -15,6 +16,9 @@ const tabs = [
   },
   {
     title: 'Identify Vehicles'
+  },
+  {
+    title: 'End Process'
   }
 ]
 
@@ -76,7 +80,7 @@ const EditVideoModal: React.FC = () => {
                           disabled={isTabDisabled}
                           className={`z-[2] p-0`}
                         >
-                          {({ selected }) => (
+                          {i === tabs.length - 1 ? null : ({ selected }) => (
                             <div 
                               className={`group flex-grow flex flex-row items-center gap-2 text-sm ${isTabDisabled ? 'opacity-25 pointer-events-none' : ''}`}
                             >
@@ -112,28 +116,10 @@ const EditVideoModal: React.FC = () => {
                 </div>
                 
                 <Tab.Panels className='bg-white w-full h-full overflow-hidden'>
-                  {tabs.map((_, i) => {
-                    if (i === 0) {
-                      return (                    
-                        <TrimVideoPanel
-                          key={'edit-modal-tab-panel-0'}
-                        />
-                      )
-                    } else if (i === 1) {
-                      return (
-                        <DetectAccidentPanel 
-                          key={'edit-modal-tab-panel-1'} 
-                        />
-                      )
-                    } else if (i === 2) {
-                      return (
-                        <IdentifyVehiclesPanel 
-                          key={'edit-modal-tab-panel-2'}
-                          selectedTabIndex={selectedTabIndex}
-                        />
-                      )
-                    }
-                  })}
+                  <TrimVideoPanel />
+                  <DetectAccidentPanel />
+                  <IdentifyVehiclesPanel />
+                  <EndPanel />
                 </Tab.Panels>
 
                 <div className="flex flex-row justify-end gap-8 pr-6 py-1 border-[1px] border-gray-300">
@@ -154,10 +140,10 @@ const EditVideoModal: React.FC = () => {
                       Previous
                     </button>
                   )}
-                  {selectedTabIndex === tabs.length - 1 ? (
+                  {selectedTabIndex >= tabs.length - 2 ? (
                     <button
                       className="bg-transparent px-0 py-2 text-color-primary disabled:text-gray-300"
-                      onClick={closeModal}
+                      onClick={() => selectTab(tabs.length - 1)}
                       disabled={areTabsDisabled}
                     >
                       Finish
@@ -165,7 +151,7 @@ const EditVideoModal: React.FC = () => {
                   ) : (
                     <button 
                       className="bg-transparent px-0 py-2 text-color-primary disabled:text-gray-300"
-                      disabled={selectedTabIndex === tabs.length - 1 || areTabsDisabled}
+                      disabled={areTabsDisabled}
                       onClick={() => selectTab(selectedTabIndex + 1)}
                     >
                       Next
