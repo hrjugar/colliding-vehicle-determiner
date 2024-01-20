@@ -16,7 +16,7 @@ export const router = createHashRouter([
       },
       {
         path: "/videos/:id",
-        element: <div></div>,
+        element: <div>Video Page</div>,
         handle: {
           name: "Videos",
         }

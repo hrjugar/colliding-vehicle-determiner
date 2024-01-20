@@ -5,6 +5,7 @@ import ffmpeg from "fluent-ffmpeg"
 import fs from "node:fs"
 import { spawn, ChildProcessWithoutNullStreams } from "node:child_process"
 const zmq: typeof import("zeromq") = require("zeromq");
+import fsExtra from "fs-extra";
 
 export const THUMBNAIL_FILENAME = "thumbnail.png"
 let pythonProcess: ChildProcessWithoutNullStreams;
@@ -27,7 +28,12 @@ export function closeWindow(window: BrowserWindow) {
 }
 
 export function getVideoDataFolder(id: number | bigint) {
-  return path.join(app.getPath('userData'), id.toString());
+  const videosFolder = path.join(app.getPath('userData'), 'videos');
+  if (!fs.existsSync(videosFolder)) {
+    fs.mkdirSync(videosFolder);
+  }
+
+  return path.join(videosFolder, id.toString());
 }
 
 export function isFileExisting(filePath: string) {
@@ -81,21 +87,17 @@ export async function createThumbnailFromId(db: Database.Database, id: number | 
   }
 }
 
-export async function insertVideo(db: Database.Database) {
-  const { canceled, filePaths } = await dialog.showOpenDialog({
-    filters: [
-      { name: 'MP4 Files', extensions: ['mp4'] }
-    ]
-  })
-  
-  if (!canceled) {
-    const filePath = filePaths[0]
-    const statement = db.prepare('INSERT INTO videos (path) VALUES (?)').run(filePath)
-    fs.mkdirSync(getVideoDataFolder(statement.lastInsertRowid))
-    await createThumbnail(filePath, statement.lastInsertRowid)
-  }
+export async function insertVideo(db: Database.Database, filePath: string) {
+  const statement = db.prepare('INSERT INTO videos (path) VALUES (?)').run(filePath);
+  const videoDataFolder = getVideoDataFolder(statement.lastInsertRowid);
+  fs.mkdirSync(videoDataFolder);
 
-  return !canceled
+  const tempFolder = path.join(app.getPath('userData'), 'temp');
+  await fsExtra.copy(tempFolder, videoDataFolder);
+  
+  await createThumbnail(filePath, statement.lastInsertRowid);
+
+  return statement.lastInsertRowid;
 }
 
 export function selectAllVideos(db: Database.Database) {

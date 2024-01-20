@@ -26,7 +26,7 @@ interface ElectronAPI {
   maximizeWindow(): void,
   closeWindow(): void,
   findNewVideo(): Promise<string| undefined>,
-  insertVideo(): Promise<boolean>,
+  insertVideo(filePath: string): Promise<number | bigint>,
   selectAllVideos(): Promise,
   getAppPath(): Promise<string>,
   deleteVideo(id: number | bigint): Promise,

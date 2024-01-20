@@ -122,7 +122,8 @@ app.whenReady().then(() => {
     console.log(`thumbnail: request url = ${request.url}`)
     const id = request.url.replace('thumbnail://', '')
     console.log(`thumbnail: userdata path = ${app.getPath('userData')}`)
-    const src = path.join(app.getPath('userData'), path.sep, id, path.sep, THUMBNAIL_FILENAME)
+    const src = path.join(app.getPath('userData'), 'videos', id, THUMBNAIL_FILENAME)
+    // const src = path.join(app.getPath('userData'), path.sep, id, path.sep, THUMBNAIL_FILENAME)
 
     console.log(`thumbnail: id is ${id}`)
     console.log("thumbnail: acquired src")
@@ -157,7 +158,7 @@ app.whenReady().then(() => {
   })
 
   ipcMain.handle('findNewVideo', () => findNewVideo())
-  ipcMain.handle('dialog:insertVideo', () => insertVideo(db))
+  ipcMain.handle('dialog:insertVideo', (_, filePath: string) => insertVideo(db, filePath))
   ipcMain.handle('selectAllVideos', () => selectAllVideos(db))
   ipcMain.handle('getAppPath', () => app.getPath('userData'))
   ipcMain.handle('deleteVideo', (_, id) => deleteVideo(db, id))

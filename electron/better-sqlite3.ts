@@ -16,8 +16,7 @@ export function getSqlite3(filename = path.join(app.getPath('userData'), 'appdb.
       CREATE TABLE IF NOT EXISTS 
         videos (
           id INTEGER PRIMARY KEY AUTOINCREMENT, 
-          path TEXT NOT NULL,
-          is_analyzed INTEGER DEFAULT 0
+          path TEXT NOT NULL
         )
     `)
     .run()

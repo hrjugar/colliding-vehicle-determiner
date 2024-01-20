@@ -16,7 +16,7 @@ interface EndPanelAction {
 type EndPanelStore = EndPanelState & EndPanelAction;
 
 const defaultState: EndPanelState = {
-  loadingText: 'Organizing data...',
+  loadingText: '',
   loadingProgress: { percent: 0, displayText: '' },
   isLoadingDone: false,
 }
