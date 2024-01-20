@@ -9,12 +9,25 @@ export const router = createHashRouter([
     children: [
       {
         path: "/",
-        element: <VideosPage />
+        element: <VideosPage />,
+        handle: {
+          name: "Videos",
+        }
+      },
+      {
+        path: "/videos/:id",
+        element: <div></div>,
+        handle: {
+          name: "Videos",
+        }
       },
       {
         path: "/analysis",
-        element: <AnalysisPage />
-      }
+        element: <AnalysisPage />,
+        handle: {
+          name: "Analysis"
+        }
+      },
     ]
   }
 ])

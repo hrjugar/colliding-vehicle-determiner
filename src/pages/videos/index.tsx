@@ -1,22 +1,22 @@
 import { useQuery } from "react-query";
 import VideoCard from "./VideoCard";
-import { useRef } from "react";
 import { QueryKey } from "@/globals/enums";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 const VideosPage: React.FC = () => {
   const { isLoading, isError, data: videos, error } = useQuery<Video[]>(QueryKey.Videos, window.electronAPI.selectAllVideos);
 
-  const deleteDialogRef = useRef<HTMLDialogElement>(null);
-
   return (
     <div className='page gap-4'>
+      <Breadcrumbs />
+      
       {isLoading ? (
         <div className="w-full h-full flex flex-col justify-center items-center">
           <p>Loading...</p>
         </div>
       ) : isError ? (
         <div className="w-full h-full flex flex-col justify-center items-center">
-          <p>Error: {(error as any).message}</p>
+          <p>Error: {(error as Error).message}</p>
         </div>        
       ) : videos?.length === 0 ? (
         <div className="w-full h-full flex flex-col justify-center items-center">

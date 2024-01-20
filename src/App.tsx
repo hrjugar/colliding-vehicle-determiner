@@ -4,18 +4,16 @@ import { Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import WindowButtonGroup from './components/WindowButtonGroup';
+import Breadcrumbs from './components/Breadcrumbs';
 
 const queryClient = new QueryClient();
 
 function App() {
-  const test = (window as any).testExpose;
-
   return (
     <QueryClientProvider client={queryClient}>
       <Navbar />
       <WindowButtonGroup />
       <main className='w-full min-h-screen bg-white'>
-        <p>{test}</p>
         <Outlet />
       </main>
       <ToastContainer 
