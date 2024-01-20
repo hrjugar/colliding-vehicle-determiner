@@ -23,7 +23,7 @@ const VideosPage: React.FC = () => {
           <p>No videos found.</p>
         </div>
       ) : (
-        <div className='flex flex-row flex-wrap gap-4 pr-6 overflow-y-auto'>
+        <div className='flex flex-row flex-wrap gap-4 pr-6 w-full h-full overflow-y-auto'>
           {videos?.map((video) => {
             return (
               <VideoCard key={video.id} video={video} />
