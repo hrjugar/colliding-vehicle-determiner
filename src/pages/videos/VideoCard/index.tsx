@@ -37,7 +37,6 @@ const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
   
   const [ isRenaming, setIsRenaming ] = useState<boolean>(false);
 
-  console.log(`thumbnail: thumbnail://${video.id}`)
   return (
     <div className="relative">
       <div 
@@ -45,7 +44,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
         className='card group/video-card flex flex-col items-stretch p-2 mb-4 cursor-pointer  border-[2px] border-gray-300 hover:border-color-primary transition-all w-80 gap-1'
         onClick={() => navigate(`${video.id}`)}
       >
-        <img className="w-full h-48 bg-gray-400 opacity-90 group-hover/video-card:opacity-100 object-cover" src={`thumbnail://${video.id}`}/>
+        <img className="w-full h-48 bg-gray-400 opacity-90 group-hover/video-card:opacity-100 object-cover" src={`filehandler://thumbnail//${video.id}`}/>
         <div className="flex flex-col items-start justify-start ">
           {isRenaming ? (
             <VideoCardRenamer video={video} setIsRenaming={setIsRenaming}/>

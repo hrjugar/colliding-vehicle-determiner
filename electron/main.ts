@@ -118,29 +118,29 @@ app.on('activate', () => {
 })
 
 app.whenReady().then(() => {
-  protocol.handle('thumbnail', async (request) => {
-    console.log(`thumbnail: request url = ${request.url}`)
-    const id = request.url.replace('thumbnail://', '')
-    console.log(`thumbnail: userdata path = ${app.getPath('userData')}`)
-    const src = path.join(app.getPath('userData'), 'videos', id, THUMBNAIL_FILENAME)
-    // const src = path.join(app.getPath('userData'), path.sep, id, path.sep, THUMBNAIL_FILENAME)
+  // protocol.handle('thumbnail', async (request) => {
+  //   console.log(`thumbnail: request url = ${request.url}`)
+  //   const id = request.url.replace('thumbnail://', '')
+  //   console.log(`thumbnail: userdata path = ${app.getPath('userData')}`)
+  //   const src = path.join(app.getPath('userData'), 'videos', id, THUMBNAIL_FILENAME)
+  //   // const src = path.join(app.getPath('userData'), path.sep, id, path.sep, THUMBNAIL_FILENAME)
 
-    console.log(`thumbnail: id is ${id}`)
-    console.log("thumbnail: acquired src")
+  //   console.log(`thumbnail: id is ${id}`)
+  //   console.log("thumbnail: acquired src")
 
-    if (fs.existsSync(src)) {
-      console.log("thumbnail: file exists")
-      return net.fetch(src)
-    }
+  //   if (fs.existsSync(src)) {
+  //     console.log("thumbnail: file exists")
+  //     return net.fetch(src)
+  //   }
 
-    console.log("thumbnail: file does not exist")
+  //   console.log("thumbnail: file does not exist")
 
-    await createThumbnailFromId(db, parseInt(id))
-    console.log("thumbnail: created thumbnail")
+  //   await createThumbnailFromId(db, parseInt(id))
+  //   console.log("thumbnail: created thumbnail")
 
-    console.log(`thumbnail: src exists: ${fs.existsSync(src)}`)
-    return net.fetch(src);
-  })
+  //   console.log(`thumbnail: src exists: ${fs.existsSync(src)}`)
+  //   return net.fetch(src);
+  // })
 
   protocol.handle('filehandler', async (request) => {
     console.log('file handler: request url = ' + request.url);
@@ -151,7 +151,14 @@ app.whenReady().then(() => {
       case "tempFrame":
       default:
         src = path.join(app.getPath('userData'), 'temp', 'frames', `${handlerValue}.png`)
-        break;
+        return net.fetch(src);
+      case "thumbnail":
+        const id = handlerValue;
+        src = path.join(app.getPath('userData'), 'videos', id, THUMBNAIL_FILENAME)
+
+        if (!fs.existsSync(src)) {
+          await createThumbnailFromId(db, parseInt(id))
+        }
     }
 
     return net.fetch(src);
