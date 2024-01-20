@@ -9,6 +9,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { AccidentDetectionModelProgress } from './types';
 import useDetectAccidentPanelStore from './store';
 import DetectAccidentFramePagination from './DetectAccidentFramePagination';
+import LoadingProgress from '@/components/LoadingProgress';
 
 const DetectAccidentPanel: React.FC = () => {
   const [
@@ -291,16 +292,12 @@ const DetectAccidentPanel: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className='w-full h-full flex flex-col justify-center items-center gap-2 px-8'>
-          <div className='w-full flex flex-row justify-between gap-1'>
-            <p className='font-medium'>{loadingText}</p>
-            <p className='font-medium text-gray-400'>{loadingProgress.displayText}</p>
-          </div>
-          
-          <div className="w-full bg-gray-300 rounded-full">
-            <div className="bg-color-primary rounded-full h-2 transition-width duration-300" style={{ width: `${loadingProgress.percent}%` }}></div>
-          </div>
-        </div>    
+        <div className='p-4 w-full h-full flex justify-center items-center'>
+          <LoadingProgress 
+            loadingText={loadingText}
+            loadingProgress={loadingProgress}
+          /> 
+        </div>
       )}
     </Tab.Panel>
   );

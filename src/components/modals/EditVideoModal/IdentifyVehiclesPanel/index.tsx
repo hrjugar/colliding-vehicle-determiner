@@ -9,6 +9,7 @@ import VideoPlayer from './VideoPlayer';
 import SelectedObjectFramePagination from './SelectedObjectFramePagination';
 import SelectedFrameObject from './SelectedFrameObject';
 import IdentifyVehiclesModelHandler from './IdentifyVehiclesModelHandler';
+import LoadingProgress from '@/components/LoadingProgress';
 
 const IdentifyVehiclesPanel: React.FC = () => {
   const [
@@ -135,16 +136,10 @@ const IdentifyVehiclesPanel: React.FC = () => {
         // <div className='w-full self-stretch flex flex-col justify-start gap-4 p-4'>
         // </div>
       ) : (
-        <div className='w-full h-full flex flex-col justify-center items-center gap-2 px-4'>
-          <div className='w-full flex flex-row justify-between gap-1'>
-            <p className='font-medium'>{loadingText}</p>
-            <p className='font-medium text-gray-400'>{loadingProgress.displayText}</p>
-          </div>
-          
-          <div className="w-full bg-gray-300 rounded-full">
-            <div className="bg-color-primary rounded-full h-2 transition-width duration-300" style={{ width: `${loadingProgress.percent}%` }}></div>
-          </div>
-        </div>    
+        <LoadingProgress 
+          loadingText={loadingText}
+          loadingProgress={loadingProgress}
+        />
       )}
     </Tab.Panel>
   );
