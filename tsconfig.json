@@ -23,7 +23,7 @@
     /* absolute imports */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["src/renderer/*"],
     }
   },
   "include": ["src", "electron"],
