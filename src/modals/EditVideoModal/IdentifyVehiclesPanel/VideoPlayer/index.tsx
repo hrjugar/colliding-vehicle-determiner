@@ -63,7 +63,7 @@ const VideoPlayer: React.FC = () => {
     if (selectedFrame === -1) return;
 
     if (videoRef.current) {
-      const frameTime = selectedFrame / fps;
+      const frameTime = (selectedFrame - 0.999) / fps;
       videoRef.current.currentTime = frameTime;
     }
   }, [selectedFrame]);

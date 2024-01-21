@@ -71,7 +71,7 @@ function createWindow() {
     // win?.webContents.send('main-process-message', (new Date).toLocaleString())
     initSocket(win!);
     db = getSqlite3()
-    win?.webContents.send('sqlite3', db);
+    // win?.webContents.send('sqlite3', db);
   })
 
 
