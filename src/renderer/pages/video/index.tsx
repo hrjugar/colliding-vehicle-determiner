@@ -1,13 +1,29 @@
-import Breadcrumbs from "@renderer/components/Breadcrumbs";
-import { useMatch, useMatches } from "react-router-dom";
+import { getFileNameFromPath } from "@renderer/globals/utils";
+import PageHeader from "@renderer/components/PageHeader";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
 const VideoPage: React.FC = () => {
-  const match = useMatch("/video/:id");
-  console.log(match);
+  const navigate = useNavigate();
+  const video = useLoaderData() as Video;
 
   return (
     <div className="page">
-      <Breadcrumbs />
+      <PageHeader 
+        title="Videos"
+        breadcrumbs={[
+          (
+            <p
+              className="cursor-pointer hover:font-medium" 
+              onClick={() => navigate("..")}
+            >
+              Home
+            </p>
+          ),
+          (
+            <p>{getFileNameFromPath(video.path)}</p>
+          )
+        ]}
+      />
     </div>
   );
 };

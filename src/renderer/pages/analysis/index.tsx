@@ -1,9 +1,9 @@
-import Breadcrumbs from "@renderer/components/Breadcrumbs";
+import PageHeader from "@renderer/components/PageHeader";
 
 const AnalysisPage: React.FC = () => {
   return (
     <div className="page gap-4">
-      <Breadcrumbs />
+      <PageHeader title="Analysis"/>
     </div>
   );
 };

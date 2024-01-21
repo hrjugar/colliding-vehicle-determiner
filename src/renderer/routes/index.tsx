@@ -15,9 +15,6 @@ export const router = createHashRouter([
       },
       {
         path: "videos",
-        handle: {
-          name: "Videos",
-        },
         children: [
           {
             index: true,
@@ -33,9 +30,6 @@ export const router = createHashRouter([
       {
         path: "analysis",
         element: <AnalysisPage />,
-        handle: {
-          name: "Analysis"
-        }
       },
     ]
   }

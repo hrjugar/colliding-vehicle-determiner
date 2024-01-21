@@ -1,14 +1,19 @@
 import { useQuery } from "react-query";
 import VideoCard from "./VideoCard";
 import { QueryKey } from "@renderer/globals/enums";
-import Breadcrumbs from "@renderer/components/Breadcrumbs";
+import PageHeader from "@renderer/components/PageHeader";
 
 const VideosPage: React.FC = () => {
   const { isLoading, isError, data: videos, error } = useQuery<Video[]>(QueryKey.Videos, window.electronAPI.selectAllVideos);
 
   return (
     <div className='page'>
-      <Breadcrumbs />
+      <PageHeader 
+        title="Videos" 
+        breadcrumbs={[
+          <p>Home</p>
+        ]}
+      />
       
       {isLoading ? (
         <div className="w-full h-full flex flex-col justify-center items-center">
