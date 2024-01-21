@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import useIdentifyVehiclesPanelStore from '../store';
 import { useShallow } from 'zustand/react/shallow';
-import { convertSecondsToMinutes } from '@/globals/utils';
+import { convertSecondsToMinutes } from '@renderer/globals/utils';
 import SeekBar from './SeekBar';
 import useEditVideoModalStore from '../../store';
 

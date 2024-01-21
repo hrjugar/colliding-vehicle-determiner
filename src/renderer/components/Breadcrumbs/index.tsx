@@ -1,7 +1,7 @@
 import React from 'react';
 import { UIMatch, useMatches, useNavigate } from 'react-router-dom';
 import { BreadcrumbsHandle } from './types';
-import { getFileNameFromPath } from '@/globals/utils';
+import { getFileNameFromPath } from '@renderer/globals/utils';
 
 const Breadcrumbs: React.FC = () => {
   const navigate = useNavigate();

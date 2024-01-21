@@ -1,6 +1,6 @@
 import { useShallow } from "zustand/react/shallow";
 import useIdentifyVehiclesPanelStore from "../store";
-import { convertSecondsToMinutes, getBoundingBoxColor } from "@/globals/utils";
+import { convertSecondsToMinutes, getBoundingBoxColor } from "@renderer/globals/utils";
 import { useEffect, useRef } from "react";
 import useEditVideoModalStore from "../../store";
 

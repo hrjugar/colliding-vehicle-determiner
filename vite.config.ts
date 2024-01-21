@@ -22,8 +22,20 @@ export default defineConfig({
     alias: [
       {
         find: '@',
+        replacement: path.resolve(__dirname, 'src'),
+      },
+      {
+        find: '@renderer',
         replacement: path.resolve(__dirname, 'src/renderer')
       },
+      {
+        find: '@main',
+        replacement: path.resolve(__dirname, 'src/main')
+      },
+      {
+        find: '@shared',
+        replacement: path.resolve(__dirname, 'src/shared')
+      }
     ]
   },
   plugins: [

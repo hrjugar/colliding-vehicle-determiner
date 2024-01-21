@@ -9,7 +9,7 @@ import VideoPlayer from './VideoPlayer';
 import SelectedObjectFramePagination from './SelectedObjectFramePagination';
 import SelectedFrameObject from './SelectedFrameObject';
 import IdentifyVehiclesModelHandler from './IdentifyVehiclesModelHandler';
-import LoadingProgress from '@/components/LoadingProgress';
+import LoadingProgress from '@renderer/components/LoadingProgress';
 
 const IdentifyVehiclesPanel: React.FC = () => {
   const [

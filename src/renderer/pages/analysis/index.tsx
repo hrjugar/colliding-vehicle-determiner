@@ -1,4 +1,4 @@
-import Breadcrumbs from "@/components/Breadcrumbs";
+import Breadcrumbs from "@renderer/components/Breadcrumbs";
 
 const AnalysisPage: React.FC = () => {
   return (

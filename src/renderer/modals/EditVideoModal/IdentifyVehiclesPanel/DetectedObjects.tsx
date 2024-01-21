@@ -1,6 +1,6 @@
 import { useShallow } from "zustand/react/shallow";
 import useIdentifyVehiclesPanelStore from "./store";
-import { capitalizeFirstLetter, getBoundingBoxColor } from "@/globals/utils";
+import { capitalizeFirstLetter, getBoundingBoxColor } from "@renderer/globals/utils";
 import { useRef } from "react";
 import { Popover } from "@headlessui/react";
 

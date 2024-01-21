@@ -1,6 +1,6 @@
 
 import { useEffect, useReducer } from 'react';
-import { getBoundingBoxColor } from '@/globals/utils';
+import { getBoundingBoxColor } from '@renderer/globals/utils';
 import useDetectAccidentPanelStore from '../../store';
 import { useShallow } from 'zustand/react/shallow';
 import useFrameDetectionsStore from './store';

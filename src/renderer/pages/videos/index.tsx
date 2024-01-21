@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import VideoCard from "./VideoCard";
-import { QueryKey } from "@/globals/enums";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import { QueryKey } from "@renderer/globals/enums";
+import Breadcrumbs from "@renderer/components/Breadcrumbs";
 
 const VideosPage: React.FC = () => {
   const { isLoading, isError, data: videos, error } = useQuery<Video[]>(QueryKey.Videos, window.electronAPI.selectAllVideos);

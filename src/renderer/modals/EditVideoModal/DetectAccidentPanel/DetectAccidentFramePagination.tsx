@@ -1,5 +1,5 @@
 import { useShallow } from "zustand/react/shallow";
-import { FramePagination } from "@/components/FramePagination";
+import { FramePagination } from "@renderer/components/FramePagination";
 import useDetectAccidentPanelStore from "./store";
 import { FramePredictions } from "./types";
 

@@ -9,7 +9,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { AccidentDetectionModelProgress } from './types';
 import useDetectAccidentPanelStore from './store';
 import DetectAccidentFramePagination from './DetectAccidentFramePagination';
-import LoadingProgress from '@/components/LoadingProgress';
+import LoadingProgress from '@renderer/components/LoadingProgress';
 
 const DetectAccidentPanel: React.FC = () => {
   const [

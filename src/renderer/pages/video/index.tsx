@@ -1,4 +1,4 @@
-import Breadcrumbs from "@/components/Breadcrumbs";
+import Breadcrumbs from "@renderer/components/Breadcrumbs";
 import { useMatch, useMatches } from "react-router-dom";
 
 const VideoPage: React.FC = () => {

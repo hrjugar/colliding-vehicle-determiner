@@ -2,7 +2,7 @@ import { useShallow } from "zustand/react/shallow";
 import useEditVideoModalStore from "../store";
 import { useEffect, useState } from "react";
 import useEndPanelStore from "./store";
-import LoadingProgress from "@/components/LoadingProgress";
+import LoadingProgress from "@renderer/components/LoadingProgress";
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";

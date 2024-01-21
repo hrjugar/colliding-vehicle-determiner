@@ -1,9 +1,9 @@
 import { useRef } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { QueryKey } from "@/globals/enums";
-import { getFileNameFromPath } from "@/globals/utils";
+import { QueryKey } from "@renderer/globals/enums";
+import { getFileNameFromPath } from "@renderer/globals/utils";
 import { toast } from "react-toastify";
-import { useOutsideAlerter } from "@/globals/hooks";
+import { useOutsideAlerter } from "@renderer/globals/hooks";
 
 interface VideoCardRenamerProps {
   video: Video;

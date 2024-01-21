@@ -1,4 +1,4 @@
-import { convertSecondsAndMillisecondsToString } from '@/globals/utils';
+import { convertSecondsAndMillisecondsToString } from '@renderer/globals/utils';
 import useEditVideoModalStore from "../../store";
 
 const TrimmingSliderTicks: React.FC = () => {

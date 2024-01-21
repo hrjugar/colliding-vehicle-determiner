@@ -1,6 +1,6 @@
 import { useShallow } from 'zustand/react/shallow';
 import useDetectAccidentPanelStore from '../store';
-import { getBoundingBoxColor } from '@/globals/utils';
+import { getBoundingBoxColor } from '@renderer/globals/utils';
 import { useEffect, useRef, useState } from 'react';
 
 interface SelectedFrameImageProps {

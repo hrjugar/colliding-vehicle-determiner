@@ -4,7 +4,7 @@ import TrimTimeInput from "./TrimTimeInput";
 import VideoTrimmingSlider from "./VideoTrimmingSlider";
 import useEditVideoModalStore from "../store";
 import { useShallow } from "zustand/react/shallow";
-import { convertSecondsAndMillisecondsToString } from "@/globals/utils";
+import { convertSecondsAndMillisecondsToString } from "@renderer/globals/utils";
 
 const TrimVideoPanel: React.FC = () => {
   const [

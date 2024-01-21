@@ -1,7 +1,7 @@
 
 import { useMutation } from "react-query";
-import EditVideoModal from '@/modals/EditVideoModal';
-import useEditVideoModalStore from "@/modals/EditVideoModal/store";
+import EditVideoModal from '@renderer/modals/EditVideoModal';
+import useEditVideoModalStore from "@renderer/modals/EditVideoModal/store";
 
 const InsertVideoButton: React.FC = () => {
   const openModal = useEditVideoModalStore((state) => state.openModal);

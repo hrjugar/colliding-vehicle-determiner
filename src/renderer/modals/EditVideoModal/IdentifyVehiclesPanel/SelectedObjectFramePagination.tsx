@@ -1,7 +1,7 @@
 import { useShallow } from "zustand/react/shallow";
 import useIdentifyVehiclesPanelStore from "./store";
 import { useRef, useState } from "react";
-import { FramePagination } from "@/components/FramePagination";
+import { FramePagination } from "@renderer/components/FramePagination";
 
 const SelectedObjectFramePagination: React.FC = () => {
   const [

@@ -1,6 +1,6 @@
 import { useShallow } from "zustand/react/shallow";
 import useIdentifyVehiclesPanelStore from "./store";
-import { getBoundingBoxColor } from "@/globals/utils";
+import { getBoundingBoxColor } from "@renderer/globals/utils";
 
 const SelectedFrameObject: React.FC = () => {
   const [
