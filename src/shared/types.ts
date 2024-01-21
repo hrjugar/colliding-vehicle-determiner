@@ -1,3 +1,8 @@
+interface Video {
+  id: number | bigint;
+  path: string;
+}
+
 interface DeepSORTFrame {
   frame: number,
   x: number,

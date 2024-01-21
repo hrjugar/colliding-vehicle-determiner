@@ -27,12 +27,12 @@ interface ElectronAPI {
   closeWindow(): void,
   findNewVideo(): Promise<string| undefined>,
   insertVideo(filePath: string): Promise<number | bigint>,
-  selectAllVideos(): Promise,
-  selectVideo(id: number | bigint): Promise,
+  selectAllVideos(): Promise<Video[]>,
+  selectVideo(id: number | bigint): Promise<Video>,
   getAppPath(): Promise<string>,
-  deleteVideo(id: number | bigint): Promise,
-  openVideoFolder(filePath: string): Promise,
-  renameVideo(id: number | bigint, oldFilePath: string, newFileName: string): Promise,
+  deleteVideo(id: number | bigint): Promise<void>,
+  openVideoFolder(filePath: string): Promise<void>,
+  renameVideo(id: number | bigint, oldFilePath: string, newFileName: string): Promise<void>,
   isFileExisting(filePath: string): Promise<boolean>,
   updateVideo(id: number | bigint): Promise<string>,
 
@@ -48,11 +48,11 @@ interface ElectronAPI {
 
   killPythonProcess(): void,
 
-  runAccidentDetectionModel(confidenceThreshold: number, iouThreshold: number): Promise,
+  runAccidentDetectionModel(confidenceThreshold: number, iouThreshold: number): Promise<number | null>,
   onRunAccidentDetectionModelProgress(callback: Function): void,
   removeRunAccidentDetectionModelProgressListener(): void,
 
-  runDeepSORTModel(yoloModel: string): Promise<any[]>,
+  runDeepSORTModel(yoloModel: string): Promise<DeepSORTOutput>,
   onRunDeepSORTModelProgress(callback: Function): void,
   removeRunDeepSORTModelProgressListener(): void,
 
