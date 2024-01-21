@@ -7,7 +7,7 @@ interface SeekBarProps {
   fps: number;
   timePercentage: number;
   setTimePercentage: (timePercentage: number) => void;
-  markSeekBarAreas?: (duration: number, fps: number) => React.ReactNode;
+  markSeekBarAreas?: () => React.ReactNode;
 }
 
 const SeekBar: React.FC<SeekBarProps> = ({
@@ -78,7 +78,7 @@ const SeekBar: React.FC<SeekBarProps> = ({
       className='relative bg-gray-200 w-full h-2 rounded-full flex flex-row items-center'
       onClick={handleSliderClick}
     >
-      {markSeekBarAreas ? markSeekBarAreas(duration, fps) : null}
+      {markSeekBarAreas ? markSeekBarAreas() : null}
 
       <div 
         className='absolute h-2 rounded-full bg-color-primary-active/50'

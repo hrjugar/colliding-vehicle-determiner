@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import SeekBar from "./SeekBar";
 
 interface VideoPlayerProps {
@@ -11,7 +11,10 @@ interface VideoPlayerProps {
   timePercentage: number;
   setTimePercentage: (timePercentage: number) => void;
   hasSeekbar: boolean;
+  markSeekbarAreas?: () => React.ReactNode;
   fps: number;
+  dependency?: any;
+  dependencyFunction?: (videoRef: React.RefObject<HTMLVideoElement>) => void;
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
@@ -24,7 +27,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   timePercentage,
   setTimePercentage,
   hasSeekbar,
+  markSeekbarAreas,
   fps,
+  dependency = null,
+  dependencyFunction = () => {}
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -58,6 +64,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       setDuration(videoRef.current.duration);
     }
   };
+
+  useEffect(() => {
+    dependencyFunction(videoRef);
+  }, [dependency]);
 
   return (
     <div className="card w-full h-full flex flex-col">
@@ -132,6 +142,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           timePercentage={timePercentage}
           setTimePercentage={setTimePercentage}
           fps={fps}
+          markSeekBarAreas={markSeekbarAreas}
         />
       ): null}
     </div>

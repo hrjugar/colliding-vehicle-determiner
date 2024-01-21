@@ -5,11 +5,11 @@ import useEditVideoModalStore from '../store';
 import { useShallow } from 'zustand/react/shallow';
 import useIdentifyVehiclesPanelStore from './store';
 import DetectedObjects from './DetectedObjects';
-import VideoPlayer from './VideoPlayer';
 import SelectedObjectFramePagination from './SelectedObjectFramePagination';
 import SelectedFrameObject from './SelectedFrameObject';
 import IdentifyVehiclesModelHandler from './IdentifyVehiclesModelHandler';
 import LoadingProgress from '@renderer/components/LoadingProgress';
+import IdentifyVehiclesVideoPlayer from './IdentifyVehiclesVideoPlayer';
 
 const IdentifyVehiclesPanel: React.FC = () => {
   const [
@@ -125,7 +125,7 @@ const IdentifyVehiclesPanel: React.FC = () => {
               <DetectedObjects />
               <IdentifyVehiclesModelHandler rerunModel={rerunModel} />
             </div>
-            <VideoPlayer />
+            <IdentifyVehiclesVideoPlayer />
           </div>
 
           <div className='w-full flex-grow flex flex-row gap-4'>
