@@ -1,7 +1,7 @@
 import { Popover } from "@headlessui/react"
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import DeleteVideoModal from "../../../components/modals/DeleteVideoModal";
+import DeleteVideoModal from "@/modals/DeleteVideoModal";
 
 interface VideoCardPopoverProps {
   video: Video,
