@@ -112,27 +112,27 @@ const FrameSection: React.FC = () => {
                 <div className="bg-black overflow-hidden">
                   <img 
                     src={`filehandler://frame//${video.id}//${video.accidentFrame}`}
-                    className="h-[16vh] group-hover:h-[calc(16vh_+_38px)] w-full object-contain transition-all"
+                    className={`${hoveredArea === "accident" ? "h-[calc(16vh_+_38px)]" : "h-[16vh]"} w-full object-contain transition-all`}
                     style={ getCroppedImageStyle(video.accidentArea!) }
                   />
                 </div>
-                <div className="card-header h-[38px] justify-start gap-2 group-hover:gap-0 group-hover:h-0 group-hover:p-0 transition-all">
-                  <div className="w-3 h-3 group-hover:w-0 group-hover:h-0 border-2 group-hover:border-0 border-dashed border-red-400 bg-red-400/25 transition-all"/>
-                  <p className="font-semibold text-sm group-hover:text-[0px] flex flex-row">Accident Area</p>
+                <div className={`card-header ${hoveredArea === "accident" ? "h-0 gap-0 p-0" : "h-[38px] gap-2"} justify-start transition-all`}>
+                  <div className={`${hoveredArea === "accident" ? "w-0 h-0 border-0" : "w-3 h-3 border-2"} border-dashed border-red-400 bg-red-400/25 transition-all`}/>
+                  <p className={`font-semibold ${hoveredArea === "accident" ? "text-[0px]" : "text-sm"} flex flex-row`}>Accident Area</p>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-0 group-hover:gap-2 text-left text-[0px] group-hover:text-sm font-semibold transition-all">
-                <div className="flex flex-row items-center p-0 group-hover:px-4 group-hover:py-2 border-b-2 border-gray-300 gap-0 group-hover:gap-2">
-                  <div className="group-hover:w-3 group-hover:h-3 border-0 group-hover:border-2 border-dashed border-red-400 bg-red-400/25 transition-all"/>
+              <div className={`flex flex-col ${hoveredArea === "accident" ? "gap-2 text-sm" : "gap-0 text-[0px]"} text-left font-semibold transition-all`}>
+                <div className={`flex flex-row items-center ${hoveredArea === "accident" ? "px-4 py-2 gap-2" : "p-0 gap-0"} border-b-2 border-gray-300`}>
+                  <div className={`${hoveredArea === "accident" ? "w-3 h-3 border-2" : "border-0"} border-dashed border-red-400 bg-red-400/25 transition-all`}/>
                   <p className="whitespace-nowrap text-left">Accident Area</p>
                 </div>
 
-                <div className="p-0 group-hover:px-4 group-hover:py-2 grid grid-rows-2 grid-cols-2 gap-0 group-hover:gap-x-4 group-hover:gap-y-2">
-                  <p className="flex flex-row items-center gap-0 group-hover:gap-2"><span className="text-gray-400">X</span> <span className="font-medium">{Math.round(video.accidentArea!.x)}</span></p>
-                  <p className="flex flex-row items-center gap-0 group-hover:gap-2"><span className="text-gray-400">Y</span> <span className="font-medium">{Math.round(video.accidentArea!.y)}</span></p>
-                  <p className="place-self-start flex flex-row items-center gap-0 group-hover:gap-2"><span className="text-gray-400">W</span> <span className="font-medium">{Math.round(video.accidentArea!.w)}</span></p>
-                  <p className="place-self-start flex flex-row items-center gap-0 group-hover:gap-2"><span className="text-gray-400">H</span> <span className="font-medium">{Math.round(video.accidentArea!.h)}</span></p>
+                <div className={`${hoveredArea === "accident" ? "px-4 py-2 gap-x-4 gap-y-2" : "p-0 gap-0"} grid grid-rows-2 grid-cols-2`}>
+                  <p className={`flex flex-row items-center ${hoveredArea === "accident" ? "gap-2" : "gap-0"}`}><span className="text-gray-400">X</span> <span className="font-medium">{Math.round(video.accidentArea!.x)}</span></p>
+                  <p className={`flex flex-row items-center ${hoveredArea === "accident" ? "gap-2" : "gap-0"}`}><span className="text-gray-400">Y</span> <span className="font-medium">{Math.round(video.accidentArea!.y)}</span></p>
+                  <p className={`place-self-start flex flex-row items-center ${hoveredArea === "accident" ? "gap-2" : "gap-0"}`}><span className="text-gray-400">W</span> <span className="font-medium">{Math.round(video.accidentArea!.w)}</span></p>
+                  <p className={`place-self-start flex flex-row items-center ${hoveredArea === "accident" ? "gap-2" : "gap-0"}`}><span className="text-gray-400">H</span> <span className="font-medium">{Math.round(video.accidentArea!.h)}</span></p>
                 </div>
               </div>
             </div>
