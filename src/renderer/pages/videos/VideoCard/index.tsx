@@ -8,7 +8,7 @@ import VideoCardPopover from "./VideoCardPopover";
 import { useNavigate } from "react-router-dom";
 
 interface VideoCardProps {
-  video: Video,
+  video: VideoData,
 }
 
 const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {

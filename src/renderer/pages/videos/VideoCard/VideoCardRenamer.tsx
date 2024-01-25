@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { useOutsideAlerter } from "@renderer/globals/hooks";
 
 interface VideoCardRenamerProps {
-  video: Video;
+  video: VideoData;
   setIsRenaming: React.Dispatch<React.SetStateAction<boolean>>;
 }
 

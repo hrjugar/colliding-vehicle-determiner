@@ -6,7 +6,7 @@ import { Dialog } from '@headlessui/react';
 import { useState } from 'react';
 
 interface DeleteVideoModalProps {
-  video: Video,
+  video: VideoData,
   isOpen: boolean,
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }

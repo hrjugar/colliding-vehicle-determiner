@@ -2,10 +2,13 @@ import { getFileNameFromPath } from "@renderer/globals/utils";
 import PageHeader from "@renderer/components/PageHeader";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import VideoPlayerSection from "./VideoPlayerSection";
+import FrameSection from "./FrameSection";
 
 const VideoPage: React.FC = () => {
   const navigate = useNavigate();
-  const video = useLoaderData() as Video;
+  const video = useLoaderData() as VideoData;
+
+  console.log(video);
 
   return (
     <div className="page pr-6">
@@ -25,6 +28,8 @@ const VideoPage: React.FC = () => {
           )
         ]}
       />
+
+      <FrameSection />
 
       <VideoPlayerSection 
         id={video.id}

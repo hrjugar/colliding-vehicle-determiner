@@ -4,7 +4,7 @@ import { QueryKey } from "@renderer/globals/enums";
 import PageHeader from "@renderer/components/PageHeader";
 
 const VideosPage: React.FC = () => {
-  const { isLoading, isError, data: videos, error } = useQuery<Video[]>(QueryKey.Videos, window.electronAPI.selectAllVideos);
+  const { isLoading, isError, data: videos, error } = useQuery<VideoData[]>(QueryKey.Videos, window.electronAPI.selectAllVideos);
 
   return (
     <div className='page'>

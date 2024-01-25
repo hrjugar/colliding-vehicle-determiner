@@ -87,8 +87,108 @@ export async function createThumbnailFromId(db: Database.Database, id: number | 
   }
 }
 
-export async function insertVideo(db: Database.Database, filePath: string) {
-  const statement = db.prepare('INSERT INTO videos (path) VALUES (?)').run(filePath);
+export async function insertVideo(db: Database.Database, video: VideoData) {
+  const statement = db.prepare(`INSERT INTO videos (
+    path,
+    fps,
+    trimStart,
+    trimEnd,
+    accidentModelConfidenceThreshold,
+    accidentModelIOUThreshold,
+    deepSORTModel,
+    accidentFrame,
+    accidentAreaX,
+    accidentAreaY,
+    accidentAreaW,
+    accidentAreaH,
+    accidentAreaXN,
+    accidentAreaYN,
+    accidentAreaWN,
+    accidentAreaHN,
+    accidentFrameVehicleOneX,
+    accidentFrameVehicleOneY,
+    accidentFrameVehicleOneW,
+    accidentFrameVehicleOneH,
+    accidentFrameVehicleOneXN,
+    accidentFrameVehicleOneYN,
+    accidentFrameVehicleOneWN,
+    accidentFrameVehicleOneHN,
+    accidentFrameVehicleTwoX,
+    accidentFrameVehicleTwoY,
+    accidentFrameVehicleTwoW,
+    accidentFrameVehicleTwoH,
+    accidentFrameVehicleTwoXN,
+    accidentFrameVehicleTwoYN,
+    accidentFrameVehicleTwoWN,
+    accidentFrameVehicleTwoHN
+  ) 
+  VALUES (
+    @path,
+    @fps,
+    @trimStart,
+    @trimEnd,
+    @accidentModelConfidenceThreshold,
+    @accidentModelIOUThreshold,
+    @deepSORTModel,
+    @accidentFrame,
+    @accidentAreaX,
+    @accidentAreaY,
+    @accidentAreaW,
+    @accidentAreaH,
+    @accidentAreaXN,
+    @accidentAreaYN,
+    @accidentAreaWN,
+    @accidentAreaHN,
+    @accidentFrameVehicleOneX,
+    @accidentFrameVehicleOneY,
+    @accidentFrameVehicleOneW,
+    @accidentFrameVehicleOneH,
+    @accidentFrameVehicleOneXN,
+    @accidentFrameVehicleOneYN,
+    @accidentFrameVehicleOneWN,
+    @accidentFrameVehicleOneHN,
+    @accidentFrameVehicleTwoX,
+    @accidentFrameVehicleTwoY,
+    @accidentFrameVehicleTwoW,
+    @accidentFrameVehicleTwoH,
+    @accidentFrameVehicleTwoXN,
+    @accidentFrameVehicleTwoYN,
+    @accidentFrameVehicleTwoWN,
+    @accidentFrameVehicleTwoHN
+  )`).run({
+    path: video.path,
+    fps: video.fps,
+    trimStart: video.trimStart,
+    trimEnd: video.trimEnd,
+    accidentModelConfidenceThreshold: video.accidentModelConfidenceThreshold,
+    accidentModelIOUThreshold: video.accidentModelIOUThreshold,
+    deepSORTModel: video.deepSORTModel,
+    accidentFrame: video.accidentFrame,
+    accidentAreaX: video.accidentArea?.x,
+    accidentAreaY: video.accidentArea?.y,
+    accidentAreaW: video.accidentArea?.w,
+    accidentAreaH: video.accidentArea?.h,
+    accidentAreaXN: video.accidentArea?.xn,
+    accidentAreaYN: video.accidentArea?.yn,
+    accidentAreaWN: video.accidentArea?.wn,
+    accidentAreaHN: video.accidentArea?.hn,
+    accidentFrameVehicleOneX: video.accidentFrameVehicleOne?.x,
+    accidentFrameVehicleOneY: video.accidentFrameVehicleOne?.y,
+    accidentFrameVehicleOneW: video.accidentFrameVehicleOne?.w,
+    accidentFrameVehicleOneH: video.accidentFrameVehicleOne?.h,
+    accidentFrameVehicleOneXN: video.accidentFrameVehicleOne?.xn,
+    accidentFrameVehicleOneYN: video.accidentFrameVehicleOne?.yn,
+    accidentFrameVehicleOneWN: video.accidentFrameVehicleOne?.wn,
+    accidentFrameVehicleOneHN: video.accidentFrameVehicleOne?.hn,
+    accidentFrameVehicleTwoX: video.accidentFrameVehicleTwo?.x,
+    accidentFrameVehicleTwoY: video.accidentFrameVehicleTwo?.y,
+    accidentFrameVehicleTwoW: video.accidentFrameVehicleTwo?.w,
+    accidentFrameVehicleTwoH: video.accidentFrameVehicleTwo?.h,
+    accidentFrameVehicleTwoXN: video.accidentFrameVehicleTwo?.xn,
+    accidentFrameVehicleTwoYN: video.accidentFrameVehicleTwo?.yn,
+    accidentFrameVehicleTwoWN: video.accidentFrameVehicleTwo?.wn,
+    accidentFrameVehicleTwoHN: video.accidentFrameVehicleTwo?.hn,
+  });
   const videoDataFolder = getVideoDataFolder(statement.lastInsertRowid);
   fs.mkdirSync(videoDataFolder);
 
@@ -96,7 +196,7 @@ export async function insertVideo(db: Database.Database, filePath: string) {
   await fsExtra.copy(tempFolder, videoDataFolder);
   await fsExtra.emptyDir(tempFolder);
   
-  await createThumbnail(filePath, statement.lastInsertRowid);
+  await createThumbnail(video.path, statement.lastInsertRowid);
 
   return statement.lastInsertRowid;
 }

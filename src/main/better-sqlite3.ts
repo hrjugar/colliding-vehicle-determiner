@@ -16,7 +16,38 @@ export function getSqlite3(filename = path.join(app.getPath('userData'), 'appdb.
       CREATE TABLE IF NOT EXISTS 
         videos (
           id INTEGER PRIMARY KEY AUTOINCREMENT, 
-          path TEXT NOT NULL
+          path TEXT NOT NULL,
+          fps REAL NOT NULL,
+          trimStart REAL NOT NULL,
+          trimEnd REAL NOT NULL,
+          accidentModelConfidenceThreshold REAL NOT NULL,
+          accidentModelIOUThreshold REAL NOT NULL,
+          deepSORTModel TEXT NOT NULL,
+          accidentFrame INTEGER,
+          accidentAreaX REAL,
+          accidentAreaY REAL,
+          accidentAreaW REAL,
+          accidentAreaH REAL,
+          accidentAreaXN REAL,
+          accidentAreaYN REAL,
+          accidentAreaWN REAL,
+          accidentAreaHN REAL,
+          accidentFrameVehicleOneX REAL,
+          accidentFrameVehicleOneY REAL,
+          accidentFrameVehicleOneW REAL,
+          accidentFrameVehicleOneH REAL,
+          accidentFrameVehicleOneXN REAL,
+          accidentFrameVehicleOneYN REAL,
+          accidentFrameVehicleOneWN REAL,
+          accidentFrameVehicleOneHN REAL,
+          accidentFrameVehicleTwoX REAL,
+          accidentFrameVehicleTwoY REAL,
+          accidentFrameVehicleTwoW REAL,
+          accidentFrameVehicleTwoH REAL,
+          accidentFrameVehicleTwoXN REAL,
+          accidentFrameVehicleTwoYN REAL,
+          accidentFrameVehicleTwoWN REAL,
+          accidentFrameVehicleTwoHN REAL
         )
     `)
     .run()

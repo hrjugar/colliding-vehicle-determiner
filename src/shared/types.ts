@@ -1,6 +1,30 @@
-interface Video {
-  id: number | bigint;
+interface VideoDataInput {
+  fps: number;
   path: string;
+  trimStart: number;
+  trimEnd: number;
+  accidentModelConfidenceThreshold: number;
+  accidentModelIOUThreshold: number;
+  deepSORTModel: YOLOModel;
+  accidentFrame?: number;
+  accidentArea?: BoundingBox;
+  accidentFrameVehicleOne?: BoundingBox;
+  accidentFrameVehicleTwo?: BoundingBox;
+}
+
+interface VideoData extends VideoDataInput {
+  id: number | bigint;
+}
+
+interface BoundingBox {
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  xn: number,
+  yn: number,
+  wn: number,
+  hn: number,
 }
 
 interface DeepSORTFrame {

@@ -16,13 +16,15 @@ const IdentifyVehiclesPanel: React.FC = () => {
     selectedTabIndex,
     setTabsDisabledState,
     isAccidentDetectionModelChanged,
-    setIsAccidentDetectionModelChanged
+    setIsAccidentDetectionModelChanged,
+    setFinalDeepSORTModel,
   ] = useEditVideoModalStore( 
     useShallow((state) => [
       state.selectedTabIndex,
       state.setTabsDisabledState,
       state.isAccidentDetectionModelChanged,
-      state.setIsAccidentDetectionModelChanged
+      state.setIsAccidentDetectionModelChanged,
+      state.setFinalDeepSORTModel,
     ])
   )
 
@@ -88,6 +90,7 @@ const IdentifyVehiclesPanel: React.FC = () => {
         console.log(`Python DeepSORT script exit code: ${data}`)
         window.electronAPI.removeRunDeepSORTModelProgressListener();
         setDeepSORTOutput(data as DeepSORTOutput);
+        setFinalDeepSORTModel(selectedYOLOModel);
 
         setTimeout(() => {
           copyVideoMutation.mutate();

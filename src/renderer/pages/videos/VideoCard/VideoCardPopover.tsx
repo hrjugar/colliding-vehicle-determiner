@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import DeleteVideoModal from "@renderer/modals/DeleteVideoModal";
 
 interface VideoCardPopoverProps {
-  video: Video,
+  video: VideoData,
   setIsRenaming: React.Dispatch<React.SetStateAction<boolean>>;
 }
 

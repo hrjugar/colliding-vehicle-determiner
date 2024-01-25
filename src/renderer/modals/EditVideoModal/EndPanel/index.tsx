@@ -13,12 +13,30 @@ const EndPanel: React.FC = () => {
     selectedTabIndex,
     closeModal,
     setTabsDisabledState,
+    fps,
+    sliderMarkers,
+    finalAccidentModelConfidenceThreshold,
+    finalAccidentModelIOUThreshold,
+    finalDeepSORTModel,
+    finalAccidentFrame,
+    finalAccidentArea,
+    finalAccidentFrameVehicleOne,
+    finalAccidentFrameVehicleTwo
   ] = useEditVideoModalStore(
     useShallow((state) => [
       state.videoPath,
       state.selectedTabIndex,
       state.closeModal,
       state.setTabsDisabledState,
+      state.fps,
+      state.sliderMarkers,
+      state.finalAccidentModelConfidenceThreshold,
+      state.finalAccidentModelIOUThreshold,
+      state.finalDeepSORTModel,
+      state.finalAccidentFrame,
+      state.finalAccidentArea,
+      state.finalAccidentFrameVehicleOne,
+      state.finalAccidentFrameVehicleTwo,
     ])
   )
 
@@ -43,7 +61,19 @@ const EndPanel: React.FC = () => {
   const navigate = useNavigate();
 
   const insertVideoMutation = useMutation(
-    async () => await window.electronAPI.insertVideo(videoPath),
+    async () => await window.electronAPI.insertVideo({
+      path: videoPath,
+      trimStart: sliderMarkers.start,
+      trimEnd: sliderMarkers.end,
+      fps,
+      accidentModelConfidenceThreshold: finalAccidentModelConfidenceThreshold,
+      accidentModelIOUThreshold: finalAccidentModelIOUThreshold,
+      deepSORTModel: finalDeepSORTModel,
+      accidentFrame: finalAccidentFrame,
+      accidentArea: finalAccidentArea,
+      accidentFrameVehicleOne: finalAccidentFrameVehicleOne,
+      accidentFrameVehicleTwo: finalAccidentFrameVehicleTwo
+    }),
     {
       onMutate: () => {
         setTabsDisabledState(true);

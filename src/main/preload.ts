@@ -9,7 +9,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   maximizeWindow: () => ipcRenderer.send('titleBar:maximizeWindow'),
   closeWindow: () => ipcRenderer.send('titleBar:closeWindow'),
   findNewVideo: () => ipcRenderer.invoke('findNewVideo'),
-  insertVideo: (filePath: string) => ipcRenderer.invoke('dialog:insertVideo', filePath),
+  insertVideo: (video: VideoData) => ipcRenderer.invoke('dialog:insertVideo', video),
   selectAllVideos: () => ipcRenderer.invoke('selectAllVideos'),
   selectVideo: (id: number | bigint) => ipcRenderer.invoke('selectVideo', id),
   getAppPath: () => ipcRenderer.invoke('getAppPath'),

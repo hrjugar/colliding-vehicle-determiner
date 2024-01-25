@@ -20,7 +20,13 @@ const DetectAccidentPanel: React.FC = () => {
     setIsAccidentDetectionModelChanged,
     selectedTabIndex,
     isTrimmedPortionChanged,
-    setIsTrimmedPortionChanged
+    setIsTrimmedPortionChanged,
+    setFinalAccidentModelConfidenceThreshold,
+    setFinalAccidentModelIOUThreshold,
+    setFinalAccidentFrame,
+    setFinalAccidentArea,
+    setFinalAccidentFrameVehicleOne,
+    setFinalAccidentFrameVehicleTwo,
   ] = useEditVideoModalStore(
     useShallow((state) => [
       state.videoPath,
@@ -30,7 +36,13 @@ const DetectAccidentPanel: React.FC = () => {
       state.setIsAccidentDetectionModelChanged,
       state.selectedTabIndex,
       state.isTrimmedPortionChanged,
-      state.setIsTrimmedPortionChanged
+      state.setIsTrimmedPortionChanged,
+      state.setFinalAccidentModelConfidenceThreshold,
+      state.setFinalAccidentModelIOUThreshold,
+      state.setFinalAccidentFrame,
+      state.setFinalAccidentArea,
+      state.setFinalAccidentFrameVehicleOne,
+      state.setFinalAccidentFrameVehicleTwo,
     ])
   );
 
@@ -129,6 +141,9 @@ const DetectAccidentPanel: React.FC = () => {
         window.electronAPI.removeRunAccidentDetectionModelProgressListener();
         
         setTimeout(() => {
+          setFinalAccidentModelConfidenceThreshold(confidenceThreshold);
+          setFinalAccidentModelIOUThreshold(iouThreshold);
+
           setIsPredictionDone(true);
           setIsTrimmedPortionChanged(false);
           setIsAccidentDetectionModelChanged(true);
@@ -196,6 +211,17 @@ const DetectAccidentPanel: React.FC = () => {
 
     if (bestPredictionIndex !== -1) {
       setBestPredictionBoxIndexes({ frameIndex: bestFrameIndex, boxIndex: bestPredictionIndex });
+      setFinalAccidentFrame(bestFrameIndex + 1);
+      setFinalAccidentArea({
+        x: allPredictions[bestFrameIndex][bestPredictionIndex].x,
+        y: allPredictions[bestFrameIndex][bestPredictionIndex].y,
+        w: allPredictions[bestFrameIndex][bestPredictionIndex].w,
+        h: allPredictions[bestFrameIndex][bestPredictionIndex].h,
+        xn: allPredictions[bestFrameIndex][bestPredictionIndex].xn,
+        yn: allPredictions[bestFrameIndex][bestPredictionIndex].yn,
+        wn: allPredictions[bestFrameIndex][bestPredictionIndex].wn,
+        hn: allPredictions[bestFrameIndex][bestPredictionIndex].hn,
+      });
 
       const startFrameIndex = selectedFrameIndex;
       const endFrameIndex = bestFrameIndex;
@@ -217,8 +243,13 @@ const DetectAccidentPanel: React.FC = () => {
       };
 
       animate();
+    } else {
+      setFinalAccidentFrame(undefined);
+      setFinalAccidentArea(undefined);
+      setFinalAccidentFrameVehicleOne(undefined);
+      setFinalAccidentFrameVehicleTwo(undefined);
     }
-           
+
     setIsLoadingDone(true);
     setTabsDisabledState(false);
   }

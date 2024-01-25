@@ -165,7 +165,7 @@ app.whenReady().then(() => {
   })
 
   ipcMain.handle('findNewVideo', () => findNewVideo())
-  ipcMain.handle('dialog:insertVideo', (_, filePath: string) => insertVideo(db, filePath))
+  ipcMain.handle('dialog:insertVideo', (_, video: VideoData) => insertVideo(db, video))
   ipcMain.handle('selectAllVideos', () => selectAllVideos(db))
   ipcMain.handle('selectVideo', (_, id) => selectVideo(db, id))
   ipcMain.handle('getAppPath', () => app.getPath('userData'))
