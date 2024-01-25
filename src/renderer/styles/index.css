@@ -73,11 +73,16 @@ button {
 }
 
 #window-button-group {
-  z-index: 9999 !important;
+  /* z-index: 9998 !important; */
 }
 
-#window-dragger {
+.draggable {
   -webkit-app-region: drag;
+}
+
+.no-drag {
+  z-index: 1;
+  -webkit-app-region: no-drag;
 }
 
 .page {

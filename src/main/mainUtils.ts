@@ -10,6 +10,80 @@ import fsExtra from "fs-extra";
 export const THUMBNAIL_FILENAME = "thumbnail.png"
 let pythonProcess: ChildProcessWithoutNullStreams;
 
+function convertDatabaseVideoData(video: DatabaseVideoData): VideoData {
+  return {
+    id: video.id,
+    path: video.path,
+    fps: video.fps,
+    trimStart: video.trimStart,
+    trimEnd: video.trimEnd,
+    accidentModelConfidenceThreshold: video.accidentModelConfidenceThreshold,
+    accidentModelIOUThreshold: video.accidentModelIOUThreshold,
+    deepSORTModel: video.deepSORTModel,
+    accidentFrame: video.accidentFrame,
+    accidentArea: 
+    (
+      video.accidentAreaX !== undefined && video.accidentAreaX !== null && 
+      video.accidentAreaY !== undefined && video.accidentAreaY !== null && 
+      video.accidentAreaW !== undefined && video.accidentAreaW !== null && 
+      video.accidentAreaH !== undefined && video.accidentAreaH !== null &&
+      video.accidentAreaXN !== undefined && video.accidentAreaXN !== null &&
+      video.accidentAreaYN !== undefined && video.accidentAreaYN !== null &&
+      video.accidentAreaWN !== undefined && video.accidentAreaWN !== null &&
+      video.accidentAreaHN !== undefined && video.accidentAreaHN !== null 
+    ) ? {
+          x: video.accidentAreaX,
+          y: video.accidentAreaY,
+          w: video.accidentAreaW,
+          h: video.accidentAreaH,
+          xn: video.accidentAreaXN,
+          yn: video.accidentAreaYN,
+          wn: video.accidentAreaWN,
+          hn: video.accidentAreaHN,
+    } : undefined,
+    accidentFrameVehicleOne: 
+    (
+      video.accidentFrameVehicleOneX !== undefined && video.accidentFrameVehicleOneX !== null && 
+      video.accidentFrameVehicleOneY !== undefined && video.accidentFrameVehicleOneY !== null && 
+      video.accidentFrameVehicleOneW !== undefined && video.accidentFrameVehicleOneW !== null && 
+      video.accidentFrameVehicleOneH !== undefined && video.accidentFrameVehicleOneH !== null &&
+      video.accidentFrameVehicleOneXN !== undefined && video.accidentFrameVehicleOneXN !== null &&
+      video.accidentFrameVehicleOneYN !== undefined && video.accidentFrameVehicleOneYN !== null &&
+      video.accidentFrameVehicleOneWN !== undefined && video.accidentFrameVehicleOneWN !== null &&
+      video.accidentFrameVehicleOneHN !== undefined && video.accidentFrameVehicleOneHN !== null 
+    ) ? {
+          x: video.accidentFrameVehicleOneX,
+          y: video.accidentFrameVehicleOneY,
+          w: video.accidentFrameVehicleOneW,
+          h: video.accidentFrameVehicleOneH,
+          xn: video.accidentFrameVehicleOneXN,
+          yn: video.accidentFrameVehicleOneYN,
+          wn: video.accidentFrameVehicleOneWN,
+          hn: video.accidentFrameVehicleOneHN,
+    } : undefined,
+    accidentFrameVehicleTwo: 
+    (
+      video.accidentFrameVehicleTwoX !== undefined && video.accidentFrameVehicleTwoX !== null && 
+      video.accidentFrameVehicleTwoY !== undefined && video.accidentFrameVehicleTwoY !== null && 
+      video.accidentFrameVehicleTwoW !== undefined && video.accidentFrameVehicleTwoW !== null && 
+      video.accidentFrameVehicleTwoH !== undefined && video.accidentFrameVehicleTwoH !== null &&
+      video.accidentFrameVehicleTwoXN !== undefined && video.accidentFrameVehicleTwoXN !== null &&
+      video.accidentFrameVehicleTwoYN !== undefined && video.accidentFrameVehicleTwoYN !== null &&
+      video.accidentFrameVehicleTwoWN !== undefined && video.accidentFrameVehicleTwoWN !== null &&
+      video.accidentFrameVehicleTwoHN !== undefined && video.accidentFrameVehicleTwoHN !== null 
+    ) ? {
+          x: video.accidentFrameVehicleTwoX,
+          y: video.accidentFrameVehicleTwoY,
+          w: video.accidentFrameVehicleTwoW,
+          h: video.accidentFrameVehicleTwoH,
+          xn: video.accidentFrameVehicleTwoXN,
+          yn: video.accidentFrameVehicleTwoYN,
+          wn: video.accidentFrameVehicleTwoWN,
+          hn: video.accidentFrameVehicleTwoHN,
+    } : undefined,
+  }
+}
+
 export function minimizeWindow(window: BrowserWindow) {
   window.minimize()
 }
@@ -202,13 +276,14 @@ export async function insertVideo(db: Database.Database, video: VideoData) {
 }
 
 export function selectAllVideos(db: Database.Database) {
-  const videos = db.prepare('SELECT * FROM videos').all()
+  const dbVideos = db.prepare('SELECT * FROM videos').all() as DatabaseVideoData[]
+  const videos: VideoData[] = dbVideos.map((dbVideo) => convertDatabaseVideoData(dbVideo))
   return videos
 }
 
 export function selectVideo(db: Database.Database, id: number | bigint) {
-  const video = db.prepare('SELECT * FROM videos WHERE id = ?').get(id);
-  return video;
+  const video = db.prepare('SELECT * FROM videos WHERE id = ?').get(id) as DatabaseVideoData;
+  return convertDatabaseVideoData(video);
 }
 
 export function deleteVideo(db: Database.Database, id: number | bigint) {

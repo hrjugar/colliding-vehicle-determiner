@@ -16,6 +16,42 @@ interface VideoData extends VideoDataInput {
   id: number | bigint;
 }
 
+interface DatabaseVideoData {
+  id: number | bigint;
+  path: string;
+  fps: number;
+  trimStart: number;
+  trimEnd: number;
+  accidentModelConfidenceThreshold: number;
+  accidentModelIOUThreshold: number;
+  deepSORTModel: YOLOModel;
+  accidentFrame?: number;
+  accidentAreaX?: number;
+  accidentAreaY?: number;
+  accidentAreaW?: number;
+  accidentAreaH?: number;
+  accidentAreaXN?: number;
+  accidentAreaYN?: number;
+  accidentAreaWN?: number;
+  accidentAreaHN?: number;
+  accidentFrameVehicleOneX?: number;
+  accidentFrameVehicleOneY?: number;
+  accidentFrameVehicleOneW?: number;
+  accidentFrameVehicleOneH?: number;
+  accidentFrameVehicleOneXN?: number;
+  accidentFrameVehicleOneYN?: number;
+  accidentFrameVehicleOneWN?: number;
+  accidentFrameVehicleOneHN?: number;
+  accidentFrameVehicleTwoX?: number;
+  accidentFrameVehicleTwoY?: number;
+  accidentFrameVehicleTwoW?: number;
+  accidentFrameVehicleTwoH?: number;
+  accidentFrameVehicleTwoXN?: number;
+  accidentFrameVehicleTwoYN?: number;
+  accidentFrameVehicleTwoWN?: number;
+  accidentFrameVehicleTwoHN?: number;
+}
+
 interface BoundingBox {
   x: number,
   y: number,

@@ -144,21 +144,29 @@ app.whenReady().then(() => {
 
   protocol.handle('filehandler', async (request) => {
     console.log('file handler: request url = ' + request.url);
-    const [_, handlerType, handlerValue] = request.url.split('//');
+    const url = request.url.split('//');
+    const handlerType = url[1];
+    const handlerValues = url.slice(2);
 
     let src;
     switch (handlerType) {
       case "tempFrame":
       default:
-        src = path.join(app.getPath('userData'), 'temp', 'frames', `${handlerValue}.png`)
-        return net.fetch(src);
+        src = path.join(app.getPath('userData'), 'temp', 'frames', `${handlerValues[0]}.png`)
+        break;
       case "thumbnail":
-        const id = handlerValue;
+        const id = handlerValues[0];
         src = path.join(app.getPath('userData'), 'videos', id, THUMBNAIL_FILENAME)
 
         if (!fs.existsSync(src)) {
           await createThumbnailFromId(db, parseInt(id))
         }
+        
+        break;
+      case "frame":
+        const [videoId, frame] = handlerValues;
+        src = path.join(app.getPath('userData'), 'videos', videoId, 'frames', `${frame}.png`)
+        break;
     }
 
     return net.fetch(src);
