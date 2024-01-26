@@ -32,17 +32,18 @@ function convertDatabaseVideoData(video: DatabaseVideoData): VideoData {
       video.accidentAreaWN !== undefined && video.accidentAreaWN !== null &&
       video.accidentAreaHN !== undefined && video.accidentAreaHN !== null 
     ) ? {
-          x: video.accidentAreaX,
-          y: video.accidentAreaY,
-          w: video.accidentAreaW,
-          h: video.accidentAreaH,
-          xn: video.accidentAreaXN,
-          yn: video.accidentAreaYN,
-          wn: video.accidentAreaWN,
-          hn: video.accidentAreaHN,
+        x: video.accidentAreaX,
+        y: video.accidentAreaY,
+        w: video.accidentAreaW,
+        h: video.accidentAreaH,
+        xn: video.accidentAreaXN,
+        yn: video.accidentAreaYN,
+        wn: video.accidentAreaWN,
+        hn: video.accidentAreaHN,
     } : undefined,
     accidentFrameVehicleOne: 
     (
+      video.accidentFrameVehicleOneId !== undefined && video.accidentFrameVehicleOneId !== null &&
       video.accidentFrameVehicleOneX !== undefined && video.accidentFrameVehicleOneX !== null && 
       video.accidentFrameVehicleOneY !== undefined && video.accidentFrameVehicleOneY !== null && 
       video.accidentFrameVehicleOneW !== undefined && video.accidentFrameVehicleOneW !== null && 
@@ -52,17 +53,19 @@ function convertDatabaseVideoData(video: DatabaseVideoData): VideoData {
       video.accidentFrameVehicleOneWN !== undefined && video.accidentFrameVehicleOneWN !== null &&
       video.accidentFrameVehicleOneHN !== undefined && video.accidentFrameVehicleOneHN !== null 
     ) ? {
-          x: video.accidentFrameVehicleOneX,
-          y: video.accidentFrameVehicleOneY,
-          w: video.accidentFrameVehicleOneW,
-          h: video.accidentFrameVehicleOneH,
-          xn: video.accidentFrameVehicleOneXN,
-          yn: video.accidentFrameVehicleOneYN,
-          wn: video.accidentFrameVehicleOneWN,
-          hn: video.accidentFrameVehicleOneHN,
+        id: video.accidentFrameVehicleOneId,
+        x: video.accidentFrameVehicleOneX,
+        y: video.accidentFrameVehicleOneY,
+        w: video.accidentFrameVehicleOneW,
+        h: video.accidentFrameVehicleOneH,
+        xn: video.accidentFrameVehicleOneXN,
+        yn: video.accidentFrameVehicleOneYN,
+        wn: video.accidentFrameVehicleOneWN,
+        hn: video.accidentFrameVehicleOneHN,
     } : undefined,
     accidentFrameVehicleTwo: 
     (
+      video.accidentFrameVehicleTwoId !== undefined && video.accidentFrameVehicleTwoId !== null &&
       video.accidentFrameVehicleTwoX !== undefined && video.accidentFrameVehicleTwoX !== null && 
       video.accidentFrameVehicleTwoY !== undefined && video.accidentFrameVehicleTwoY !== null && 
       video.accidentFrameVehicleTwoW !== undefined && video.accidentFrameVehicleTwoW !== null && 
@@ -72,14 +75,15 @@ function convertDatabaseVideoData(video: DatabaseVideoData): VideoData {
       video.accidentFrameVehicleTwoWN !== undefined && video.accidentFrameVehicleTwoWN !== null &&
       video.accidentFrameVehicleTwoHN !== undefined && video.accidentFrameVehicleTwoHN !== null 
     ) ? {
-          x: video.accidentFrameVehicleTwoX,
-          y: video.accidentFrameVehicleTwoY,
-          w: video.accidentFrameVehicleTwoW,
-          h: video.accidentFrameVehicleTwoH,
-          xn: video.accidentFrameVehicleTwoXN,
-          yn: video.accidentFrameVehicleTwoYN,
-          wn: video.accidentFrameVehicleTwoWN,
-          hn: video.accidentFrameVehicleTwoHN,
+        id: video.accidentFrameVehicleTwoId,
+        x: video.accidentFrameVehicleTwoX,
+        y: video.accidentFrameVehicleTwoY,
+        w: video.accidentFrameVehicleTwoW,
+        h: video.accidentFrameVehicleTwoH,
+        xn: video.accidentFrameVehicleTwoXN,
+        yn: video.accidentFrameVehicleTwoYN,
+        wn: video.accidentFrameVehicleTwoWN,
+        hn: video.accidentFrameVehicleTwoHN,
     } : undefined,
   }
 }
@@ -179,6 +183,7 @@ export async function insertVideo(db: Database.Database, video: VideoData) {
     accidentAreaYN,
     accidentAreaWN,
     accidentAreaHN,
+    accidentFrameVehicleOneId,
     accidentFrameVehicleOneX,
     accidentFrameVehicleOneY,
     accidentFrameVehicleOneW,
@@ -187,6 +192,7 @@ export async function insertVideo(db: Database.Database, video: VideoData) {
     accidentFrameVehicleOneYN,
     accidentFrameVehicleOneWN,
     accidentFrameVehicleOneHN,
+    accidentFrameVehicleTwoId,
     accidentFrameVehicleTwoX,
     accidentFrameVehicleTwoY,
     accidentFrameVehicleTwoW,
@@ -213,6 +219,7 @@ export async function insertVideo(db: Database.Database, video: VideoData) {
     @accidentAreaYN,
     @accidentAreaWN,
     @accidentAreaHN,
+    @accidentFrameVehicleOneId,
     @accidentFrameVehicleOneX,
     @accidentFrameVehicleOneY,
     @accidentFrameVehicleOneW,
@@ -221,6 +228,7 @@ export async function insertVideo(db: Database.Database, video: VideoData) {
     @accidentFrameVehicleOneYN,
     @accidentFrameVehicleOneWN,
     @accidentFrameVehicleOneHN,
+    @accidentFrameVehicleTwoId,
     @accidentFrameVehicleTwoX,
     @accidentFrameVehicleTwoY,
     @accidentFrameVehicleTwoW,
@@ -246,6 +254,7 @@ export async function insertVideo(db: Database.Database, video: VideoData) {
     accidentAreaYN: video.accidentArea?.yn,
     accidentAreaWN: video.accidentArea?.wn,
     accidentAreaHN: video.accidentArea?.hn,
+    accidentFrameVehicleOneId: video.accidentFrameVehicleOne?.id,
     accidentFrameVehicleOneX: video.accidentFrameVehicleOne?.x,
     accidentFrameVehicleOneY: video.accidentFrameVehicleOne?.y,
     accidentFrameVehicleOneW: video.accidentFrameVehicleOne?.w,
@@ -254,6 +263,7 @@ export async function insertVideo(db: Database.Database, video: VideoData) {
     accidentFrameVehicleOneYN: video.accidentFrameVehicleOne?.yn,
     accidentFrameVehicleOneWN: video.accidentFrameVehicleOne?.wn,
     accidentFrameVehicleOneHN: video.accidentFrameVehicleOne?.hn,
+    accidentFrameVehicleTwoId: video.accidentFrameVehicleTwo?.id,
     accidentFrameVehicleTwoX: video.accidentFrameVehicleTwo?.x,
     accidentFrameVehicleTwoY: video.accidentFrameVehicleTwo?.y,
     accidentFrameVehicleTwoW: video.accidentFrameVehicleTwo?.w,

@@ -3,8 +3,19 @@ import useIdentifyVehiclesPanelStore from "./store";
 import { capitalizeFirstLetter, getBoundingBoxColor } from "@renderer/globals/utils";
 import { useRef } from "react";
 import { Popover } from "@headlessui/react";
+import useEditVideoModalStore from "../store";
 
 const DetectedObjects: React.FC = () => {
+  const [
+    finalAccidentFrameVehicleOne,
+    finalAccidentFrameVehicleTwo,
+  ] = useEditVideoModalStore(
+    useShallow((state) => [
+      state.finalAccidentFrameVehicleOne,
+      state.finalAccidentFrameVehicleTwo,
+    ])
+  )
+
   const [
     deepSORTOutput,
     selectedObjectId,
@@ -119,7 +130,21 @@ const DetectedObjects: React.FC = () => {
                 style={{ backgroundColor: getBoundingBoxColor(obj.id) }} 
               />
               <p className="font-medium">{capitalizeFirstLetter(obj.classification)}</p>
-              <span className='text-xs text-gray-500'>{obj.id}</span>              
+              <span className='text-xs text-gray-500'>{obj.id}</span>
+              {obj.id === finalAccidentFrameVehicleOne?.id || obj.id === finalAccidentFrameVehicleTwo?.id ? (
+                <svg 
+                width="64" 
+                height="64" 
+                viewBox="0 0 64 64" 
+                xmlns="http://www.w3.org/2000/svg"
+                className='w-4 h-4 text-yellow-500'
+              >
+                <path 
+                  d="M32 46.0534L48.48 56L44.1066 37.2534L58.6666 24.64L39.4933 22.9867L32 5.33337L24.5066 22.9867L5.33331 24.64L19.8666 37.2534L15.52 56L32 46.0534Z"
+                  className='fill-current'
+                />
+              </svg>                
+              ) : null}              
             </div>
           );
         })}

@@ -1,6 +1,5 @@
 import { create } from "zustand";
-
-const vehicleClassifications = ['car', 'truck', 'bus', 'motorcycle'];
+import { vehicleClassifications } from "./constants";
 
 interface CompletionState {
   loadingText: string;

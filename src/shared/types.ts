@@ -8,8 +8,8 @@ interface VideoDataInput {
   deepSORTModel: YOLOModel;
   accidentFrame?: number;
   accidentArea?: BoundingBox;
-  accidentFrameVehicleOne?: BoundingBox;
-  accidentFrameVehicleTwo?: BoundingBox;
+  accidentFrameVehicleOne?: BoundingBoxWithId;
+  accidentFrameVehicleTwo?: BoundingBoxWithId;
 }
 
 interface VideoData extends VideoDataInput {
@@ -34,6 +34,7 @@ interface DatabaseVideoData {
   accidentAreaYN?: number;
   accidentAreaWN?: number;
   accidentAreaHN?: number;
+  accidentFrameVehicleOneId?: number;
   accidentFrameVehicleOneX?: number;
   accidentFrameVehicleOneY?: number;
   accidentFrameVehicleOneW?: number;
@@ -42,6 +43,7 @@ interface DatabaseVideoData {
   accidentFrameVehicleOneYN?: number;
   accidentFrameVehicleOneWN?: number;
   accidentFrameVehicleOneHN?: number;
+  accidentFrameVehicleTwoId?: number;
   accidentFrameVehicleTwoX?: number;
   accidentFrameVehicleTwoY?: number;
   accidentFrameVehicleTwoW?: number;
@@ -61,6 +63,10 @@ interface BoundingBox {
   yn: number,
   wn: number,
   hn: number,
+}
+
+interface BoundingBoxWithId extends BoundingBox {
+  id: number | bigint;
 }
 
 interface DeepSORTFrame {

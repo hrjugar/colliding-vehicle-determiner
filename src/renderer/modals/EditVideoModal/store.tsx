@@ -57,8 +57,8 @@ interface ModelState {
   finalDeepSORTModel: YOLOModel;
   finalAccidentFrame?: number;
   finalAccidentArea?: BoundingBox;
-  finalAccidentFrameVehicleOne?: BoundingBox;
-  finalAccidentFrameVehicleTwo?: BoundingBox;
+  finalAccidentFrameVehicleOne?: BoundingBoxWithId;
+  finalAccidentFrameVehicleTwo?: BoundingBoxWithId;
 }
 
 interface ModelAction {
@@ -67,8 +67,8 @@ interface ModelAction {
   setFinalDeepSORTModel: (finalDeepSORTModel: YOLOModel) => void;
   setFinalAccidentFrame: (finalAccidentFrame?: number) => void;
   setFinalAccidentArea: (finalAccidentArea?: BoundingBox) => void;
-  setFinalAccidentFrameVehicleOne: (finalAccidentFrameVehicleOne?: BoundingBox) => void;
-  setFinalAccidentFrameVehicleTwo: (finalAccidentFrameVehicleTwo?: BoundingBox) => void;
+  setFinalAccidentFrameVehicleOne: (finalAccidentFrameVehicleOne?: BoundingBoxWithId) => void;
+  setFinalAccidentFrameVehicleTwo: (finalAccidentFrameVehicleTwo?: BoundingBoxWithId) => void;
 }
 
 type EditVideoModalState = ModalState & ChangeState & SliderState & VideoMetadataState & ModelState;
@@ -133,7 +133,7 @@ const useEditVideoModalStore = create<EditVideoModalStore>((set) => ({
   setFinalDeepSORTModel: (finalDeepSORTModel: YOLOModel) => set({ finalDeepSORTModel }),
   setFinalAccidentFrame: (finalAccidentFrame?: number) => set({ finalAccidentFrame }),
   setFinalAccidentArea: (finalAccidentArea?: BoundingBox) => set({ finalAccidentArea }),
-  setFinalAccidentFrameVehicleOne: (finalAccidentFrameVehicleOne?: BoundingBox) => set({ finalAccidentFrameVehicleOne }),
-  setFinalAccidentFrameVehicleTwo: (finalAccidentFrameVehicleTwo?: BoundingBox) => set({ finalAccidentFrameVehicleTwo }),
+  setFinalAccidentFrameVehicleOne: (finalAccidentFrameVehicleOne?: BoundingBoxWithId) => set({ finalAccidentFrameVehicleOne }),
+  setFinalAccidentFrameVehicleTwo: (finalAccidentFrameVehicleTwo?: BoundingBoxWithId) => set({ finalAccidentFrameVehicleTwo }),
 }));
 export default useEditVideoModalStore;

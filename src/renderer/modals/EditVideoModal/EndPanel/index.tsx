@@ -61,19 +61,7 @@ const EndPanel: React.FC = () => {
   const navigate = useNavigate();
 
   const insertVideoMutation = useMutation(
-    async () => await window.electronAPI.insertVideo({
-      path: videoPath,
-      trimStart: sliderMarkers.start,
-      trimEnd: sliderMarkers.end,
-      fps,
-      accidentModelConfidenceThreshold: finalAccidentModelConfidenceThreshold,
-      accidentModelIOUThreshold: finalAccidentModelIOUThreshold,
-      deepSORTModel: finalDeepSORTModel,
-      accidentFrame: finalAccidentFrame,
-      accidentArea: finalAccidentArea,
-      accidentFrameVehicleOne: finalAccidentFrameVehicleOne,
-      accidentFrameVehicleTwo: finalAccidentFrameVehicleTwo
-    }),
+    async (videoDataInput: VideoDataInput) => await window.electronAPI.insertVideo(videoDataInput),
     {
       onMutate: () => {
         setTabsDisabledState(true);
@@ -107,7 +95,19 @@ const EndPanel: React.FC = () => {
   useEffect(() => {
     if (selectedTabIndex === 3) {
       resetStates();
-      insertVideoMutation.mutate();
+      insertVideoMutation.mutate({
+        path: videoPath,
+        trimStart: sliderMarkers.start,
+        trimEnd: sliderMarkers.end,
+        fps,
+        accidentModelConfidenceThreshold: finalAccidentModelConfidenceThreshold,
+        accidentModelIOUThreshold: finalAccidentModelIOUThreshold,
+        deepSORTModel: finalDeepSORTModel,
+        accidentFrame: finalAccidentFrame,
+        accidentArea: finalAccidentArea,
+        accidentFrameVehicleOne: finalAccidentFrameVehicleOne,
+        accidentFrameVehicleTwo: finalAccidentFrameVehicleTwo
+      });
     }
   }, [selectedTabIndex]);
   

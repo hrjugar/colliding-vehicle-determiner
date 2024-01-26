@@ -10,6 +10,8 @@ import SelectedFrameObject from './SelectedFrameObject';
 import IdentifyVehiclesModelHandler from './IdentifyVehiclesModelHandler';
 import LoadingProgress from '@renderer/components/LoadingProgress';
 import IdentifyVehiclesVideoPlayer from './IdentifyVehiclesVideoPlayer';
+import { vehicleClassifications } from './constants';
+import { getInvolvedVehicles } from './utils';
 
 const IdentifyVehiclesPanel: React.FC = () => {
   const [
@@ -18,6 +20,10 @@ const IdentifyVehiclesPanel: React.FC = () => {
     isAccidentDetectionModelChanged,
     setIsAccidentDetectionModelChanged,
     setFinalDeepSORTModel,
+    finalAccidentFrame,
+    finalAccidentArea,
+    setFinalAccidentFrameVehicleOne,
+    setFinalAccidentFrameVehicleTwo
   ] = useEditVideoModalStore( 
     useShallow((state) => [
       state.selectedTabIndex,
@@ -25,6 +31,10 @@ const IdentifyVehiclesPanel: React.FC = () => {
       state.isAccidentDetectionModelChanged,
       state.setIsAccidentDetectionModelChanged,
       state.setFinalDeepSORTModel,
+      state.finalAccidentFrame,
+      state.finalAccidentArea,
+      state.setFinalAccidentFrameVehicleOne,
+      state.setFinalAccidentFrameVehicleTwo
     ])
   )
 
@@ -36,6 +46,7 @@ const IdentifyVehiclesPanel: React.FC = () => {
     isLoadingDone,
     setIsLoadingDone,
     selectedYOLOModel,
+    deepSORTOutput,
     setDeepSORTOutput,
     resetModelStates,
   ] = useIdentifyVehiclesPanelStore(
@@ -47,6 +58,7 @@ const IdentifyVehiclesPanel: React.FC = () => {
       state.isLoadingDone,
       state.setIsLoadingDone,
       state.selectedYOLOModel,
+      state.deepSORTOutput,
       state.setDeepSORTOutput,
       state.resetModelStates
     ])
@@ -89,7 +101,7 @@ const IdentifyVehiclesPanel: React.FC = () => {
       onSuccess: (data) => {
         console.log(`Python DeepSORT script exit code: ${data}`)
         window.electronAPI.removeRunDeepSORTModelProgressListener();
-        setDeepSORTOutput(data as DeepSORTOutput);
+        setDeepSORTOutput(data);
         setFinalDeepSORTModel(selectedYOLOModel);
 
         setTimeout(() => {
@@ -104,6 +116,14 @@ const IdentifyVehiclesPanel: React.FC = () => {
     setTabsDisabledState(true);
     deepSORTMutation.mutate();
   }
+
+  useEffect(() => {
+    if (deepSORTOutput.length === 0) return;
+    
+    const [predictedVehicleOne, predictedVehicleTwo] = getInvolvedVehicles(deepSORTOutput, finalAccidentFrame, finalAccidentArea);
+    setFinalAccidentFrameVehicleOne(predictedVehicleOne);
+    setFinalAccidentFrameVehicleTwo(predictedVehicleTwo);
+  }, [deepSORTOutput]);
   
   useEffect(() => {
     console.log("IN IdentifyVehiclesPanel");
