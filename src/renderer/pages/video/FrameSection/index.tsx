@@ -4,6 +4,37 @@ import AreaCard from "./AreaCard";
 import { AreaType } from "./types";
 import AreaFrameBoundingBox from "./AreaFrameBoundingBox";
 
+const getFrameDarkenerStyle = (video: VideoData, hoveredArea: AreaType | null): React.CSSProperties => {
+  if (hoveredArea === null) return {};
+
+  let videoArea: BoundingBox | BoundingBoxWithId | undefined;
+  switch (hoveredArea) {
+    case AreaType.Accident:
+      videoArea = video.accidentArea;
+      break;
+    case AreaType.VehicleOne:
+      videoArea = video.accidentFrameVehicleOne;
+      break;
+    case AreaType.VehicleTwo:
+      videoArea = video.accidentFrameVehicleTwo;
+      break;
+  }
+
+  let left = videoArea!.xn * 100 - videoArea!.wn * 50;
+  let top = videoArea!.yn * 100 - videoArea!.hn * 50;
+  
+  let right = videoArea!.xn * 100 + videoArea!.wn * 50;
+  let bottom = videoArea!.yn * 100 + videoArea!.hn * 50;
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    width: `${right - left}%`,
+    height: `${bottom - top}%`,
+    boxShadow: `0 0 0 calc(100vw + 100vh) rgba(0, 0, 0, 0.75)`,
+  }
+};
+
 const FrameSection: React.FC = () => {
   const video = useLoaderData() as VideoData;
 
@@ -37,7 +68,7 @@ const FrameSection: React.FC = () => {
   }, [imageRef])
 
   return (
-    <section className="w-full h-[80vh] flex flex-col bg-purple-400">
+    <section className="w-full h-[80vh] flex flex-col">
       {video.accidentFrame ? (
         <div className="flex flex-col w-full flex-grow gap-2">
           <div className="relative card w-full flex-grow bg-black flex justify-center items-center h-[50vh]">
@@ -50,8 +81,13 @@ const FrameSection: React.FC = () => {
 
             <div
               ref={boundingBoxAreaRef}
-              className="absolute"
+              className="absolute overflow-hidden"
             >
+              <div 
+                className="absolute" 
+                style={ getFrameDarkenerStyle(video, hoveredArea) }
+              />
+
               {video.accidentArea ? (
                 <>
                   <AreaFrameBoundingBox 
