@@ -20,15 +20,15 @@ const SelectedFrameObject: React.FC = () => {
   const getCroppedImageStyle = () => {
     if (!selectedFrameItem) return {};
 
-    const top = selectedFrameItem.yn * 100;
-    const right = 100 - (selectedFrameItem.xn * 100 + selectedFrameItem.wn * 100);
-    const bottom = 100 - (selectedFrameItem.yn * 100 + selectedFrameItem.hn * 100);
-    const left = selectedFrameItem.xn * 100;
+    const top = selectedFrameItem.yn * 100 - selectedFrameItem.hn * 50;
+    const right = 100 - (selectedFrameItem.xn * 100 + selectedFrameItem.wn * 50);
+    const bottom = 100 - (selectedFrameItem.yn * 100 + selectedFrameItem.hn * 50);
+    const left = selectedFrameItem.xn * 100 - selectedFrameItem.wn * 50;
 
     const widthScale = 1 / selectedFrameItem.wn;
     const heightScale = 1 / selectedFrameItem.hn;
-    const translateXValue = 50 - (selectedFrameItem.xn * 100 + selectedFrameItem.wn * 100 / 2);
-    const translateYValue = 50 - (selectedFrameItem.yn * 100 + selectedFrameItem.hn * 100 / 2);
+    const translateXValue = 50 - (selectedFrameItem.xn * 100);
+    const translateYValue = 50 - (selectedFrameItem.yn * 100);
     
     return {
       clipPath: `inset(
@@ -53,7 +53,7 @@ const SelectedFrameObject: React.FC = () => {
           <>
             <div className="flex flex-col items-center w-full">
               <div className="relative flex items-center justify-center h-20 w-full ">
-                <div className="absolute overflow-hidden">
+                <div className="absolute bg-purple-400 overflow-hidden">
                   <img 
                     src={`fileHandler://tempFrame//${selectedFrame}`}
                     className="h-20"

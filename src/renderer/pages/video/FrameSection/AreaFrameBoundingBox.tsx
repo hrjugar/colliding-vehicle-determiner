@@ -19,21 +19,21 @@ const AreaFrameBoundingBox: React.FC<AreaFrameBoundingBoxProps> = ({
   switch (boxAreaType) {
     case AreaType.Accident:
       videoArea = video.accidentArea!;
-      boxClasses = `border-dashed border-red-400 ${currentHoveredArea === boxAreaType ? 'bg-red-400/50' : 'bg-red-400/5'}`;
+      boxClasses = `border-dashed border-red-400 ${currentHoveredArea === boxAreaType ? 'bg-red-400/25' : 'bg-red-400/5'}`;
       break;
     case AreaType.VehicleOne:
       videoArea = video.accidentFrameVehicleOne!;
-      boxClasses = `border-green-400 ${currentHoveredArea === boxAreaType ? 'bg-green-400/50' : 'bg-green-400/5'}`;
+      boxClasses = `border-green-400 ${currentHoveredArea === boxAreaType ? 'bg-green-400/25' : 'bg-green-400/5'}`;
       break;
     case AreaType.VehicleTwo:
       videoArea = video.accidentFrameVehicleTwo!;
-      boxClasses = `border-blue-400 ${currentHoveredArea === boxAreaType ? 'bg-blue-400/50' : 'bg-blue-400/5'}`;
+      boxClasses = `border-blue-400 ${currentHoveredArea === boxAreaType ? 'bg-blue-400/25' : 'bg-blue-400/5'}`;
       break;
   }
   
   return (
     <div
-      className={`absolute border-2 transition-colors ${boxClasses}`}
+      className={`absolute transition-all border-2 ${boxClasses} ${currentHoveredArea === boxAreaType ? 'z-[1] opacity-100' : 'opacity-75'}`}
       onMouseOver={(e) => {e.stopPropagation(); setHoveredArea(boxAreaType); }}
       onMouseLeave={() => {
         if (currentHoveredArea === boxAreaType) {
