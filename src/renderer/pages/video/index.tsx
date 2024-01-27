@@ -4,7 +4,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import VideoPlayerSection from "./VideoPlayerSection";
 import FrameSection from "./OverallPanel/FrameSection";
 import { Tab } from "@headlessui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import OverallPanel from "./OverallPanel";
 import VideoPanel from "./VideoPanel";
 import useVideoPageStore from "./store";
@@ -19,13 +19,18 @@ const VideoPage: React.FC = () => {
   const [
     selectedTabIndex,
     setSelectedTabIndex,
+    resetStates,
   ] = useVideoPageStore(
-    useShallow((state) => [
+    (state) => [
       state.selectedTabIndex,
       state.setSelectedTabIndex,
       state.resetStates
-    ])
+    ]
   )
+
+  useEffect(() => {
+    resetStates();
+  }, []);
 
   return (
     <div className="page flex flex-col gap-4">
