@@ -80,7 +80,7 @@ const AreaCard: React.FC<AreaCardProps> = ({
         </div>
         <div className={`card-header border-0 ${currentHoveredArea === cardAreaType ? "h-0 gap-0 p-0" : "h-[38px] gap-2"} justify-start transition-all`}>
           <div className={`${currentHoveredArea === cardAreaType ? "w-0 h-0 border-0" : "w-3 h-3 border-2"} ${boxClasses} transition-all`}/>
-          <p className={`font-semibold ${currentHoveredArea === cardAreaType ? "text-[0px]" : "text-sm"} flex flex-row`}>{areaName}</p>
+          <p className={`whitespace-nowrap text-left font-semibold ${currentHoveredArea === cardAreaType ? "text-[0px]" : "text-sm"} flex flex-row`}>{areaName}</p>
         </div>
       </div>
 

@@ -33,7 +33,7 @@ const AreaFrameBoundingBox: React.FC<AreaFrameBoundingBoxProps> = ({
   
   return (
     <div
-      className={`absolute transition-all border-2 ${boxClasses} ${currentHoveredArea === boxAreaType ? 'z-[1] opacity-100' : currentHoveredArea === null ? 'opacity-75' : 'opacity-0'}`}
+      className={`absolute transition-all border-2 ${boxClasses} ${currentHoveredArea === boxAreaType ? 'z-[1] opacity-100' : currentHoveredArea === null ? '' : 'opacity-0'}`}
       onMouseOver={(e) => {e.stopPropagation(); setHoveredArea(boxAreaType); }}
       onMouseLeave={() => {
         if (currentHoveredArea === boxAreaType) {

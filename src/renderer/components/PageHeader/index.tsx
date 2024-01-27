@@ -10,7 +10,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
   breadcrumbs
 }) => {
   return (
-    <div className='flex flex-col justify-start items-start h-20'>
+    <div className='flex flex-col justify-start items-start h-16'>
       <h2 className="text-2xl font-semibold">{title}</h2>
       <div className='flex flex-row items-center gap-2'>
         {breadcrumbs?.map((crumb, i) => (

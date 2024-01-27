@@ -29,7 +29,7 @@ const FrameDescription: React.FC = () => {
 
       <div className='flex flex-row w-full justify-center items-center text-sm p-1 border-t-[1px] border-gray-300 mt-auto'>
         <button 
-          className={`group bg-transparent`}
+          className="group bg-transparent px-4 py-2"
           disabled={isPrevButtonDisabled}
           onClick={() => setSelectedFrameIndex(selectedFrameIndex - 1)}
         >
@@ -50,7 +50,7 @@ const FrameDescription: React.FC = () => {
         <p className='text-gray-500'>{selectedFrameIndex + 1}/{frameCount}</p>
 
         <button 
-          className={`group bg-transparent`}
+          className="group bg-transparent px-4 py-2"
           onClick={() => setSelectedFrameIndex(selectedFrameIndex + 1)}
           disabled={isNextButtonDisabled}
         >

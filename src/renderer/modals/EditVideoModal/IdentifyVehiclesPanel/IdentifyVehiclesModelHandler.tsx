@@ -28,7 +28,7 @@ const IdentifyVehiclesModelHandler: React.FC<IdentifyVehiclesModelHandlerProps> 
 
       <div className="relative">
         <Menu>
-          <Menu.Button className='bg-white hover:bg-gray-100 transition-colors rounded-sm text-sm w-full flex flex-row justify-between items-center'>
+          <Menu.Button className='bg-white hover:bg-gray-100 transition-colors rounded-sm text-sm w-full flex flex-row justify-between items-center px-4 py-2'>
             <span>{selectedYOLOModel}</span>
             <svg 
             width="64" 

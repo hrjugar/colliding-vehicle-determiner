@@ -2,7 +2,7 @@ import PageHeader from "@renderer/components/PageHeader";
 
 const AnalysisPage: React.FC = () => {
   return (
-    <div className="page gap-4">
+    <div className="page gap-4 pl-6">
       <PageHeader title="Analysis"/>
     </div>
   );

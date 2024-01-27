@@ -2,19 +2,36 @@ import { getFileNameFromPath } from "@renderer/globals/utils";
 import PageHeader from "@renderer/components/PageHeader";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import VideoPlayerSection from "./VideoPlayerSection";
-import FrameSection from "./FrameSection";
+import FrameSection from "./OverallPanel/FrameSection";
+import { Tab } from "@headlessui/react";
+import React from "react";
+import OverallPanel from "./OverallPanel";
+import VideoPanel from "./VideoPanel";
+import useVideoPageStore from "./store";
+import { useShallow } from "zustand/react/shallow";
+
+const tabs = ["Overall", "Video", "Accident Detection", "Vehicle Identification"]
 
 const VideoPage: React.FC = () => {
   const navigate = useNavigate();
   const video = useLoaderData() as VideoData;
-
-  console.log(video);
+  
+  const [
+    selectedTabIndex,
+    setSelectedTabIndex,
+  ] = useVideoPageStore(
+    useShallow((state) => [
+      state.selectedTabIndex,
+      state.setSelectedTabIndex,
+      state.resetStates
+    ])
+  )
 
   return (
-    <div className="page flex flex-col gap-6">
-      <div className="no-drag flex flex-col items-start">
+    <div className="page flex flex-col gap-4">
+      <div className="no-drag flex flex-col items-start px-6 gap-1">
         <div 
-          className="group px-3 py-1.5 -translate-x-2 rounded-full group flex flex-row items-center gap-2 cursor-pointer transition-colors hover:bg-gray-300"
+          className="group text-sm flex flex-row items-center gap-2 cursor-pointer"
           onClick={() => navigate("..")}
         >
             <svg 
@@ -22,30 +39,41 @@ const VideoPage: React.FC = () => {
               height="64" 
               viewBox="0 0 64 64" 
               xmlns="http://www.w3.org/2000/svg" 
-              className="w-4 h-4 cursor-pointer"
+              className="w-2.5 h-2.5 cursor-pointer"
             >
               <path 
-                d="M53.3333 29.3333V34.6667H21.3333L36 49.3333L32.2133 53.12L11.0933 32L32.2133 10.88L36 14.6667L21.3333 29.3333H53.3333Z"
-                className="fill-current"
+                d="M48 0 L16 32 L48 64"
+                className="fill-none stroke-color-primary stroke-[8] group-hover:stroke-[12] transition-all"
               />
             </svg>
-            <p>Back</p>
+            <p className="group-hover:font-medium">Back</p>
         </div>
         <h1 className="text-2xl font-medium">Results - {getFileNameFromPath(video.path)}</h1>
       </div>
 
-      <div className="w-full overflow-y-auto pr-6 grid gap-8">
-        <FrameSection />
-        <section className="bg-yellow-400 h-[80vh]">
+      <Tab.Group as={`div`} className={`flex flex-col w-full flex-grow overflow-y-auto`} selectedIndex={selectedTabIndex} onChange={setSelectedTabIndex}>
+        <Tab.List className="bg-red flex flex-row items-center border-b-[1px] border-gray-300 w-full justify-start gap-4 px-4">
+          {tabs.map((tab) => {
+            return (
+              <Tab 
+                key={`tab-${tab}`}
+                as={React.Fragment}
+              >
+                {({ selected }) => (
+                  <button className={`px-2 pb-2 bg-transparent border-b-2 ${selected ? 'border-color-primary font-semibold text-color-primary' : 'border-transparent hover:border-gray-400'}`}>
+                    {tab}
+                  </button>
+                )}
+              </Tab>
+            )
+          })}
+        </Tab.List>
 
-        </section>
-
-        {/* <VideoPlayerSection 
-          id={video.id}
-          // fps={video.fps}
-          fps={30}
-        /> */}
-      </div>
+        <Tab.Panels className={`w-full flex-grow px-4 pt-4 overflow-y-auto bg-slate-100`}>
+          <OverallPanel />
+          <VideoPanel />
+        </Tab.Panels>
+      </Tab.Group>
     </div>
   );
 };

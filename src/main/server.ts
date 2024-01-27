@@ -19,7 +19,8 @@ app.get('/video', (req, res) => {
         filePath = path.join(electronApp.getPath('userData'), 'temp', 'deepsort-output.mp4');
         console.log(filePath);
       } else if (req.query.id) {
-        filePath = path.join(electronApp.getPath('userData'), 'videos', req.query.id as string, 'trimmed.mp4');
+        let fileName = req.query.pred ? 'deepsort-output.mp4' : 'trimmed.mp4';
+        filePath = path.join(electronApp.getPath('userData'), 'videos', req.query.id as string, fileName);
         console.log(filePath);
       }
 

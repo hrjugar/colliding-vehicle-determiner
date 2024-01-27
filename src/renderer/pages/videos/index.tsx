@@ -7,12 +7,9 @@ const VideosPage: React.FC = () => {
   const { isLoading, isError, data: videos, error } = useQuery<VideoData[]>(QueryKey.Videos, window.electronAPI.selectAllVideos);
 
   return (
-    <div className='page'>
+    <div className='page pl-6'>
       <PageHeader 
-        title="Videos" 
-        breadcrumbs={[
-          <p>Home</p>
-        ]}
+        title="Videos"
       />
       
       {isLoading ? (
