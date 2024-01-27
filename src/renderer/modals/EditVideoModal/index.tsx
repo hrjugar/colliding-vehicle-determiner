@@ -45,7 +45,7 @@ const EditVideoModal: React.FC = () => {
       as={Fragment}
     >
       <Dialog onClose={closeModal}>
-        <div className="fixed inset-0 w-screen h-full flex flex-col items-center justify-end">
+        <div className="fixed inset-0 w-screen h-full flex flex-col items-center justify-end z-[1]">
           <Transition.Child
             as={Fragment}
             enter="transition-opacity duration-300"

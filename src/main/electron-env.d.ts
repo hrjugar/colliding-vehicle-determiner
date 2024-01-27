@@ -57,6 +57,9 @@ interface ElectronAPI {
   removeRunDeepSORTModelProgressListener(): void,
 
   copyDeepSORTVideo(): Promise<void>,
+
+  getAccidentDetectionModelResults(id: number | bigint): Promise<BoundingBoxWithConfidence[][]>,
+  getDeepSORTModelResults(id: number | bigint): Promise<DeepSORTOutput>,
 }
 
 // Used in Renderer process, expose in `preload.ts`

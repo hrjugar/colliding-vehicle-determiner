@@ -10,7 +10,7 @@ export interface PredictionBox {
   confidence: number;
 }
 
-export type FramePredictions = PredictionBox[];
+export type FramePredictions = BoundingBoxWithConfidence[];
 
 export interface AccidentDetectionModelProgress extends Progress {
   frame?: FramePredictions;

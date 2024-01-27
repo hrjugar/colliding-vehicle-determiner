@@ -1,23 +1,28 @@
-import { useShallow } from 'zustand/react/shallow';
-import useDetectAccidentPanelStore from '../store';
-import { getBoundingBoxColor } from '@renderer/globals/utils';
-import { useEffect, useRef, useState } from 'react';
+import { useLoaderData } from "react-router-dom";
+import useAccidentDetectionPanelStore from "./store";
+import { useShallow } from "zustand/react/shallow";
+import { useEffect, useRef, useState } from "react";
+import { getBoundingBoxColor } from "@/renderer/globals/utils";
 
 interface SelectedFrameImageProps {
   imageSideCardsDivRef: React.RefObject<HTMLDivElement>;
 }
 
-const SelectedFrameImage: React.FC<SelectedFrameImageProps> = ({ imageSideCardsDivRef }) => {
+const SelectedFrameImage: React.FC<SelectedFrameImageProps> = ({
+  imageSideCardsDivRef
+}) => {
+  const video = useLoaderData() as VideoData;
+
   const [
+    isLoadingDone,
     selectedFrameIndex,
     getSelectedFramePredictions,
-    isFrameTransitionDone,
     hiddenPredictionBoxIndexes,
-  ] = useDetectAccidentPanelStore(
+  ] = useAccidentDetectionPanelStore(
     useShallow((state) => [
+      state.isLoadingDone,
       state.selectedFrameIndex,
       state.getSelectedFramePredictions,
-      state.isFrameTransitionDone,
       state.hiddenPredictionBoxIndexes,
     ])
   )
@@ -36,6 +41,17 @@ const SelectedFrameImage: React.FC<SelectedFrameImageProps> = ({ imageSideCardsD
     }
   }
 
+  const updateBoundingBoxAreaSize = () => {
+    if (imageRef.current && boundingBoxAreaRef.current) {
+      const aspectRatio = imageRef.current.naturalWidth / imageRef.current.naturalHeight;
+      const areaWidth = imageRef.current.offsetWidth;
+      const areaHeight = areaWidth / aspectRatio;
+
+      boundingBoxAreaRef.current.style.width = `${areaWidth}px`;
+      boundingBoxAreaRef.current.style.height = `${areaHeight}px`;
+    }
+  }
+
   useEffect(() => {
     updateHeight();
     const resizeObserver = new ResizeObserver(() => updateHeight());
@@ -50,17 +66,6 @@ const SelectedFrameImage: React.FC<SelectedFrameImageProps> = ({ imageSideCardsD
       }
     }
   }, [imageSideCardsDivRef]);
-
-  const updateBoundingBoxAreaSize = () => {
-    if (imageRef.current && boundingBoxAreaRef.current) {
-      const aspectRatio = imageRef.current.naturalWidth / imageRef.current.naturalHeight;
-      const areaWidth = imageRef.current.offsetWidth;
-      const areaHeight = areaWidth / aspectRatio;
-
-      boundingBoxAreaRef.current.style.width = `${areaWidth}px`;
-      boundingBoxAreaRef.current.style.height = `${areaHeight}px`;
-    }
-  }
 
   useEffect(() => {
     updateBoundingBoxAreaSize();
@@ -83,7 +88,7 @@ const SelectedFrameImage: React.FC<SelectedFrameImageProps> = ({ imageSideCardsD
     >
       <div className='relative flex justify-center items-center h-full '>
         <img
-          src={`fileHandler://tempFrame//${selectedFrameIndex + 1}`}
+          src={`fileHandler://frame//${video.id}//${selectedFrameIndex + 1}`}
           className='object-contain h-full'
           ref={imageRef}
           onLoad={updateBoundingBoxAreaSize}
@@ -102,7 +107,7 @@ const SelectedFrameImage: React.FC<SelectedFrameImageProps> = ({ imageSideCardsD
               return (
                 <div 
                   key={`prediction-${selectedFrameIndex}-${index}`}
-                  className={`absolute border-2 border-primary ${isFrameTransitionDone ? 'animate-scale-up' : ''}`}
+                  className={`absolute border-2 border-primary ${isLoadingDone ? 'animate-scale-up' : ''}`}
                   style={{
                     borderColor: getBoundingBoxColor(index),
                     left: `${(item.xn - item.wn / 2) * 100}%`,
@@ -120,7 +125,7 @@ const SelectedFrameImage: React.FC<SelectedFrameImageProps> = ({ imageSideCardsD
         
       </div>
     </div>
-  );
+  )
 };
 
 export default SelectedFrameImage;

@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, net, protocol, shell } from 'electron'
 import path from 'node:path'
 import fs from 'node:fs'
 import { getSqlite3 } from './better-sqlite3'
-import { closeWindow, copyDeepSORTVideo, createThumbnailFromId, deleteVideo, extractFrames, findNewVideo, getVideoFPS, insertVideo, isFileExisting, killPythonProcess, maximizeWindow, minimizeWindow, openVideoFolder, renameVideo, runAccidentDetectionModel, runDeepSORTModel, selectAllVideos, selectVideo, THUMBNAIL_FILENAME, trimVideo, updateVideo } from './mainUtils'
+import { closeWindow, copyDeepSORTVideo, createThumbnailFromId, deleteVideo, extractFrames, findNewVideo, getAccidentDetectionModelResults, getDeepSORTModelResults, getVideoFPS, insertVideo, isFileExisting, killPythonProcess, maximizeWindow, minimizeWindow, openVideoFolder, renameVideo, runAccidentDetectionModel, runDeepSORTModel, selectAllVideos, selectVideo, THUMBNAIL_FILENAME, trimVideo, updateVideo } from './mainUtils'
 import Database from 'better-sqlite3'
 import { stopServer } from './server'
 import { initSocket } from './zeromq'
@@ -166,6 +166,7 @@ app.whenReady().then(() => {
       case "frame":
         const [videoId, frame] = handlerValues;
         src = path.join(app.getPath('userData'), 'videos', videoId, 'frames', `${frame}.png`)
+        console.log(`src = ${src}`)
         break;
     }
 
@@ -195,5 +196,8 @@ app.whenReady().then(() => {
 
   ipcMain.handle('copyDeepSORTVideo', () => copyDeepSORTVideo())
   
+  ipcMain.handle('getAccidentDetectionModelResults', (_, id) => getAccidentDetectionModelResults(db, id))
+  ipcMain.handle('getDeepSORTModelResults', (_, id) => getDeepSORTModelResults(db, id))
+
   createWindow()
 })

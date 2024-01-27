@@ -69,16 +69,12 @@ interface BoundingBoxWithId extends BoundingBox {
   id: number | bigint;
 }
 
-interface DeepSORTFrame {
+interface BoundingBoxWithConfidence extends BoundingBox {
+  confidence: number;
+}
+
+interface DeepSORTFrame extends BoundingBox {
   frame: number,
-  x: number,
-  y: number,
-  w: number,
-  h: number,
-  xn: number,
-  yn: number,
-  wn: number,
-  hn: number,
 }
 
 interface DeepSORTObject {

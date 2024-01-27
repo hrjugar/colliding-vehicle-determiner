@@ -591,3 +591,19 @@ export function copyDeepSORTVideo() {
     .run();
   });
 }
+
+export function getAccidentDetectionModelResults(db: Database.Database, id: number | bigint) {
+  const video: any = db.prepare(`SELECT * FROM videos WHERE id = ?`).get(id);
+  if (video) {
+    const accidentDetectionModelResults = fs.readFileSync(path.join(app.getPath('userData'), 'videos', id.toString(), 'accident-detection-output.json'), "utf-8");
+    return JSON.parse(accidentDetectionModelResults);
+  }
+}
+
+export function getDeepSORTModelResults(db: Database.Database, id: number | bigint) {
+  const video: any = db.prepare(`SELECT * FROM videos WHERE id = ?`).get(id);
+  if (video) {
+    const deepSORTModelResults = fs.readFileSync(path.join(app.getPath('userData'), 'videos', id.toString(), 'deepsort-output.json'), "utf-8");
+    return JSON.parse(deepSORTModelResults);
+  }
+}

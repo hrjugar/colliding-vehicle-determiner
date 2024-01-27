@@ -9,6 +9,7 @@ import OverallPanel from "./OverallPanel";
 import VideoPanel from "./VideoPanel";
 import useVideoPageStore from "./store";
 import { useShallow } from "zustand/react/shallow";
+import AccidentDetectionPanel from "./AccidentDetectionPanel";
 
 const tabs = ["Overall", "Video", "Accident Detection", "Vehicle Identification"]
 
@@ -74,9 +75,10 @@ const VideoPage: React.FC = () => {
           })}
         </Tab.List>
 
-        <Tab.Panels className={`w-full flex-grow px-4 pt-4 overflow-y-auto bg-slate-100`}>
+        <Tab.Panels className={`w-full flex-grow p-4 overflow-y-auto bg-slate-100`}>
           <OverallPanel />
           <VideoPanel />
+          <AccidentDetectionPanel />
         </Tab.Panels>
       </Tab.Group>
     </div>

@@ -40,6 +40,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   removeRunDeepSORTModelProgressListener: () => ipcRenderer.removeAllListeners('model:deepSORT:progress'),
 
   copyDeepSORTVideo: () => ipcRenderer.invoke('copyDeepSORTVideo'),
+
+  getAccidentDetectionModelResults: (id: number | bigint) => ipcRenderer.invoke('getAccidentDetectionModelResults', id),
+  getDeepSORTModelResults: (id: number | bigint) => ipcRenderer.invoke('getDeepSORTModelResults', id),
 })
 
 // `exposeInMainWorld` can't detect attributes and methods of `prototype`, manually patching it.
