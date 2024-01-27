@@ -10,6 +10,7 @@ import VideoPanel from "./VideoPanel";
 import useVideoPageStore from "./store";
 import { useShallow } from "zustand/react/shallow";
 import AccidentDetectionPanel from "./AccidentDetectionPanel";
+import VehicleIdentificationPanel from "./VehicleIdentificationPanel";
 
 const tabs = ["Overall", "Video", "Accident Detection", "Vehicle Identification"]
 
@@ -79,6 +80,7 @@ const VideoPage: React.FC = () => {
           <OverallPanel />
           <VideoPanel />
           <AccidentDetectionPanel />
+          <VehicleIdentificationPanel />
         </Tab.Panels>
       </Tab.Group>
     </div>
