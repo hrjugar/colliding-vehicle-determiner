@@ -57,6 +57,8 @@ interface ModelState {
   finalDeepSORTModel: YOLOModel;
   finalAccidentFrame?: number;
   finalAccidentArea?: BoundingBox;
+  bestAccidentFrameVehicleOne?: BoundingBoxWithId;
+  bestAccidentFrameVehicleTwo?: BoundingBoxWithId;
   finalAccidentFrameVehicleOne?: BoundingBoxWithId;
   finalAccidentFrameVehicleTwo?: BoundingBoxWithId;
 }
@@ -67,6 +69,8 @@ interface ModelAction {
   setFinalDeepSORTModel: (finalDeepSORTModel: YOLOModel) => void;
   setFinalAccidentFrame: (finalAccidentFrame?: number) => void;
   setFinalAccidentArea: (finalAccidentArea?: BoundingBox) => void;
+  setBestAccidentFrameVehicleOne: (bestAccidentFrameVehicleOne?: BoundingBoxWithId) => void;
+  setBestAccidentFrameVehicleTwo: (bestAccidentFrameVehicleTwo?: BoundingBoxWithId) => void;
   setFinalAccidentFrameVehicleOne: (finalAccidentFrameVehicleOne?: BoundingBoxWithId) => void;
   setFinalAccidentFrameVehicleTwo: (finalAccidentFrameVehicleTwo?: BoundingBoxWithId) => void;
 }
@@ -95,6 +99,8 @@ const defaultState: EditVideoModalState = {
   finalDeepSORTModel: 'yolov8l.pt',
   finalAccidentFrame: undefined,
   finalAccidentArea: undefined,
+  bestAccidentFrameVehicleOne: undefined,
+  bestAccidentFrameVehicleTwo: undefined,
   finalAccidentFrameVehicleOne: undefined,
   finalAccidentFrameVehicleTwo: undefined,
 };
@@ -133,6 +139,8 @@ const useEditVideoModalStore = create<EditVideoModalStore>((set) => ({
   setFinalDeepSORTModel: (finalDeepSORTModel: YOLOModel) => set({ finalDeepSORTModel }),
   setFinalAccidentFrame: (finalAccidentFrame?: number) => set({ finalAccidentFrame }),
   setFinalAccidentArea: (finalAccidentArea?: BoundingBox) => set({ finalAccidentArea }),
+  setBestAccidentFrameVehicleOne: (bestAccidentFrameVehicleOne?: BoundingBoxWithId) => set({ bestAccidentFrameVehicleOne, finalAccidentFrameVehicleOne: bestAccidentFrameVehicleOne }),
+  setBestAccidentFrameVehicleTwo: (bestAccidentFrameVehicleTwo?: BoundingBoxWithId) => set({ bestAccidentFrameVehicleTwo, finalAccidentFrameVehicleTwo: bestAccidentFrameVehicleTwo }),
   setFinalAccidentFrameVehicleOne: (finalAccidentFrameVehicleOne?: BoundingBoxWithId) => set({ finalAccidentFrameVehicleOne }),
   setFinalAccidentFrameVehicleTwo: (finalAccidentFrameVehicleTwo?: BoundingBoxWithId) => set({ finalAccidentFrameVehicleTwo }),
 }));

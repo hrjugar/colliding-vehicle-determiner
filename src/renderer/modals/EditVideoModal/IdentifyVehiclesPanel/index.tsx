@@ -22,8 +22,8 @@ const IdentifyVehiclesPanel: React.FC = () => {
     setFinalDeepSORTModel,
     finalAccidentFrame,
     finalAccidentArea,
-    setFinalAccidentFrameVehicleOne,
-    setFinalAccidentFrameVehicleTwo
+    setBestAccidentFrameVehicleOne,
+    setBestAccidentFrameVehicleTwo
   ] = useEditVideoModalStore( 
     useShallow((state) => [
       state.selectedTabIndex,
@@ -33,8 +33,8 @@ const IdentifyVehiclesPanel: React.FC = () => {
       state.setFinalDeepSORTModel,
       state.finalAccidentFrame,
       state.finalAccidentArea,
-      state.setFinalAccidentFrameVehicleOne,
-      state.setFinalAccidentFrameVehicleTwo
+      state.setBestAccidentFrameVehicleOne,
+      state.setBestAccidentFrameVehicleTwo,
     ])
   )
 
@@ -48,6 +48,8 @@ const IdentifyVehiclesPanel: React.FC = () => {
     selectedYOLOModel,
     deepSORTOutput,
     setDeepSORTOutput,
+    getSelectedObject,
+    setSelectedFrame,
     resetModelStates,
   ] = useIdentifyVehiclesPanelStore(
     useShallow((state) => [
@@ -60,9 +62,14 @@ const IdentifyVehiclesPanel: React.FC = () => {
       state.selectedYOLOModel,
       state.deepSORTOutput,
       state.setDeepSORTOutput,
-      state.resetModelStates
+      state.getSelectedObject,
+      state.setSelectedFrame,
+      state.resetModelStates,
+      state.selectedObjectId,
     ])
   )
+  
+  const selectedObject = getSelectedObject();
 
   const handleOnProgress = (progress: Progress) => {
     if (progress) {
@@ -121,8 +128,8 @@ const IdentifyVehiclesPanel: React.FC = () => {
     if (deepSORTOutput.length === 0) return;
     
     const [predictedVehicleOne, predictedVehicleTwo] = getInvolvedVehicles(deepSORTOutput, finalAccidentFrame, finalAccidentArea);
-    setFinalAccidentFrameVehicleOne(predictedVehicleOne);
-    setFinalAccidentFrameVehicleTwo(predictedVehicleTwo);
+    setBestAccidentFrameVehicleOne(predictedVehicleOne);
+    setBestAccidentFrameVehicleTwo(predictedVehicleTwo);
   }, [deepSORTOutput]);
   
   useEffect(() => {
@@ -143,6 +150,15 @@ const IdentifyVehiclesPanel: React.FC = () => {
     <Tab.Panel className="w-full h-full bg-white flex flex-col justify-start items-start overflow-y-auto gap-4 p-4">
       {isLoadingDone ? (
         <>
+          <button 
+            disabled={!isLoadingDone || !selectedObject || !finalAccidentFrame || !selectedObject.frames.some((frame) => frame.frame === finalAccidentFrame)}
+            className='disabled:pointer-events-none disabled:opacity-50 ml-auto hover:font-semibold'
+            onClick={() => {
+              if (finalAccidentFrame && selectedObject) {
+                setSelectedFrame(finalAccidentFrame);
+              }
+            }}
+          >Select accident frame</button>
           <div className='w-full flex flex-row gap-4 max-h-[60vh]'>
             <div className='flex flex-col gap-4 h-full'>
               <DetectedObjects />

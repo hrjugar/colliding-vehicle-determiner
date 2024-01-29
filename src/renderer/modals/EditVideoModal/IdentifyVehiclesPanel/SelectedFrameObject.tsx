@@ -53,7 +53,7 @@ const SelectedFrameObject: React.FC = () => {
           <>
             <div className="flex flex-col items-center w-full">
               <div className="relative flex items-center justify-center h-20 w-full ">
-                <div className="absolute bg-purple-400 overflow-hidden">
+                <div className="absolute overflow-hidden">
                   <img 
                     src={`fileHandler://tempFrame//${selectedFrame}`}
                     className="h-20"
