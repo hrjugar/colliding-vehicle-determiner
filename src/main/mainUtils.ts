@@ -511,6 +511,14 @@ export function runAccidentDetectionModel(confidenceThreshold: number, iouThresh
 }
 
 export function runDeepSORTModel(yoloModel: string) {
+  let venvPythonPath = path.join(
+    app.getAppPath(),
+    'python-scripts',
+    'yolov8-deepsort',
+    'venv',
+    'Scripts',
+    'python'
+  )
   let scriptPath = path.join(
     app.getAppPath(),
     'python-scripts',
@@ -531,6 +539,7 @@ export function runDeepSORTModel(yoloModel: string) {
     'temp'
   );
 
+  console.log(`runDeepSORTModel: venvPythonPath = ${venvPythonPath}`);
   console.log(`runDeepSORTModel: scriptPath = ${scriptPath}`);
   console.log(`runDeepSORTModel: inputVideoPath = ${inputVideoPath}`);
   console.log(`runDeepSORTModel: outputFolderPath = ${outputFolderPath}`);
@@ -539,7 +548,7 @@ export function runDeepSORTModel(yoloModel: string) {
   if (pythonProcess) {
     pythonProcess.kill();
   }
-  pythonProcess = spawn('python', [
+  pythonProcess = spawn(venvPythonPath, [
     scriptPath,
     `model=${yoloModel}`,
     `source="${inputVideoPath}"`,
@@ -552,6 +561,11 @@ export function runDeepSORTModel(yoloModel: string) {
       console.log(err)
       reject(err);
     })
+
+    pythonProcess.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+      console.log(`PYTHON ERROR: data`);
+    });
   
     pythonProcess.on('exit', (code) => {
       console.log(`Python exited with code ${code}`);
