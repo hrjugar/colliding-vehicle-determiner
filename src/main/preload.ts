@@ -43,6 +43,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   getAccidentDetectionModelResults: (id: number | bigint) => ipcRenderer.invoke('getAccidentDetectionModelResults', id),
   getDeepSORTModelResults: (id: number | bigint) => ipcRenderer.invoke('getDeepSORTModelResults', id),
+
+  runGRUModel: (gruInput: (number | null)[][]) => ipcRenderer.invoke('model:GRU', gruInput),
+  onRunGRUModelProgress: (callback: Function) => ipcRenderer.on('model:GRU:progress', (_, progress) => callback(progress)),
+  removeRunGRUModelProgressListener: () => ipcRenderer.removeAllListeners('model:GRU:progress'),
 })
 
 // `exposeInMainWorld` can't detect attributes and methods of `prototype`, manually patching it.

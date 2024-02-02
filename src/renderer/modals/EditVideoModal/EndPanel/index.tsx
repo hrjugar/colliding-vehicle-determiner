@@ -18,10 +18,17 @@ const EndPanel: React.FC = () => {
     finalAccidentModelConfidenceThreshold,
     finalAccidentModelIOUThreshold,
     finalDeepSORTModel,
+    finalDeepSORTOutput,
     finalAccidentFrame,
     finalAccidentArea,
     finalAccidentFrameVehicleOne,
-    finalAccidentFrameVehicleTwo
+    finalAccidentFrameVehicleTwo,
+    setFinalAccidentFrameVehicleOne,
+    setFinalAccidentFrameVehicleTwo,
+    finalAccidentFrameVehicleOneProbability,
+    finalAccidentFrameVehicleTwoProbability,
+    setFinalAccidentFrameVehicleOneProbability,
+    setFinalAccidentFrameVehicleTwoProbability
   ] = useEditVideoModalStore(
     useShallow((state) => [
       state.videoPath,
@@ -33,10 +40,17 @@ const EndPanel: React.FC = () => {
       state.finalAccidentModelConfidenceThreshold,
       state.finalAccidentModelIOUThreshold,
       state.finalDeepSORTModel,
+      state.finalDeepSORTOutput,
       state.finalAccidentFrame,
       state.finalAccidentArea,
       state.finalAccidentFrameVehicleOne,
       state.finalAccidentFrameVehicleTwo,
+      state.setFinalAccidentFrameVehicleOne,
+      state.setFinalAccidentFrameVehicleTwo,
+      state.finalAccidentFrameVehicleOneProbability,
+      state.finalAccidentFrameVehicleTwoProbability,
+      state.setFinalAccidentFrameVehicleOneProbability,
+      state.setFinalAccidentFrameVehicleTwoProbability
     ])
   )
 
@@ -46,6 +60,8 @@ const EndPanel: React.FC = () => {
     loadingProgress,
     setLoadingProgress,
     setIsLoadingDone,
+    isPredictionDone,
+    setIsPredictionDone,
     resetStates,
   ] = useEndPanelStore(
     useShallow((state) => [
@@ -54,6 +70,8 @@ const EndPanel: React.FC = () => {
       state.loadingProgress,
       state.setLoadingProgress,
       state.setIsLoadingDone,
+      state.isPredictionDone,
+      state.setIsPredictionDone,
       state.resetStates,
     ])
   )
@@ -92,9 +110,40 @@ const EndPanel: React.FC = () => {
     }
   )
 
+  const handleGRUProgress = (progress: GRUModelProgress) => {
+    if (progress) {
+      setLoadingProgress({
+        displayText: progress.displayText,
+        percent: progress.percent
+      })
+
+      if (progress.classifier !== undefined) {
+        setFinalAccidentFrameVehicleOneProbability(progress.classifier.vehicleOne);
+        setFinalAccidentFrameVehicleTwoProbability(progress.classifier.vehicleTwo);
+      }
+    }
+  };
+
+  const gruMutation = useMutation(
+    async (gruInput: (number | null)[][]) => await window.electronAPI.runGRUModel(gruInput),
+    {
+      onMutate: () => {
+        window.electronAPI.onRunGRUModelProgress(handleGRUProgress);
+        setLoadingText('Determining the colliding vehicles in the accident...');
+        setLoadingProgress({ displayText: '0%', percent: 0 });
+      },
+      onSuccess: (data) => {
+        console.log(`Python DeepSORT script exit code: ${data}`)
+        window.electronAPI.removeRunGRUModelProgressListener();
+
+        setLoadingProgress({ displayText: '100%', percent: 100 });
+        setIsPredictionDone(true);
+      }
+    }
+  )
+
   useEffect(() => {
-    if (selectedTabIndex === 3) {
-      resetStates();
+    if (isPredictionDone) {
       insertVideoMutation.mutate({
         path: videoPath,
         trimStart: sliderMarkers.start,
@@ -105,9 +154,129 @@ const EndPanel: React.FC = () => {
         deepSORTModel: finalDeepSORTModel,
         accidentFrame: finalAccidentFrame,
         accidentArea: finalAccidentArea,
-        accidentFrameVehicleOne: finalAccidentFrameVehicleOne,
-        accidentFrameVehicleTwo: finalAccidentFrameVehicleTwo
+        accidentFrameVehicleOne: finalAccidentFrameVehicleOne ? { ...finalAccidentFrameVehicleOne, probability: finalAccidentFrameVehicleOneProbability! } : undefined,
+        accidentFrameVehicleTwo: finalAccidentFrameVehicleTwo ? { ...finalAccidentFrameVehicleTwo, probability: finalAccidentFrameVehicleTwoProbability! } : undefined,
       });
+    }
+  }, [isPredictionDone]);
+
+  useEffect(() => {
+    if (selectedTabIndex === 3) {
+      resetStates();
+
+      let gruInput: (number | null)[][] = [];
+
+      if (
+        finalAccidentFrameVehicleOne !== undefined && 
+        finalAccidentFrameVehicleOne !== null  && 
+        finalAccidentFrameVehicleTwo !== undefined &&
+        finalAccidentFrameVehicleTwo !== null
+      ) {
+        let mostFinalAccidentFrameVehicleOne = finalAccidentFrameVehicleOne;
+        let mostFinalAccidentFrameVehicleTwo = finalAccidentFrameVehicleTwo;
+
+        if (
+          finalAccidentFrameVehicleOne.x > finalAccidentFrameVehicleTwo.x ||
+          (finalAccidentFrameVehicleOne.x === finalAccidentFrameVehicleTwo.x && finalAccidentFrameVehicleOne.y > finalAccidentFrameVehicleTwo.y) ||
+          (finalAccidentFrameVehicleOne.x === finalAccidentFrameVehicleTwo.x && finalAccidentFrameVehicleOne.y === finalAccidentFrameVehicleTwo.y && finalAccidentFrameVehicleOne.w < finalAccidentFrameVehicleTwo.w) ||
+          (finalAccidentFrameVehicleOne.x === finalAccidentFrameVehicleTwo.x && finalAccidentFrameVehicleOne.y === finalAccidentFrameVehicleTwo.y && finalAccidentFrameVehicleOne.w === finalAccidentFrameVehicleTwo.w && finalAccidentFrameVehicleOne.h < finalAccidentFrameVehicleTwo.h)
+        ) {
+          mostFinalAccidentFrameVehicleOne = finalAccidentFrameVehicleTwo;
+          mostFinalAccidentFrameVehicleTwo = finalAccidentFrameVehicleOne;
+
+          setFinalAccidentFrameVehicleOne(mostFinalAccidentFrameVehicleTwo);
+          setFinalAccidentFrameVehicleTwo(mostFinalAccidentFrameVehicleOne);
+        }
+
+        const vehicleOneDeepSORTObject = finalDeepSORTOutput.find((deepSORTObject) => deepSORTObject.id === mostFinalAccidentFrameVehicleOne.id);
+        const vehicleTwoDeepSORTObject = finalDeepSORTOutput.find((deepSORTObject) => deepSORTObject.id === mostFinalAccidentFrameVehicleTwo.id);
+
+        
+        const involvedVehicleFramesData: { [key: number]: BoundingBoxWithVehicle[] } = {};
+
+        for (const frameItem of vehicleOneDeepSORTObject!.frames) {
+          const frameData = involvedVehicleFramesData[frameItem.frame];
+          const currentVehicleFrame = {
+            vehicle: 1,
+            x: frameItem.x,
+            y: frameItem.y,
+            w: frameItem.w,
+            h: frameItem.h,
+            xn: frameItem.xn,
+            yn: frameItem.yn,
+            wn: frameItem.wn,
+            hn: frameItem.hn,
+          };
+
+          if (frameData) {
+            involvedVehicleFramesData[frameItem.frame].push(currentVehicleFrame);
+          } else {
+            involvedVehicleFramesData[frameItem.frame] = [currentVehicleFrame];
+          }
+        }
+
+        for (const frameItem of vehicleTwoDeepSORTObject!.frames) {
+          const frameData = involvedVehicleFramesData[frameItem.frame];
+          const currentVehicleFrame = {
+            vehicle: 2,
+            x: frameItem.x,
+            y: frameItem.y,
+            w: frameItem.w,
+            h: frameItem.h,
+            xn: frameItem.xn,
+            yn: frameItem.yn,
+            wn: frameItem.wn,
+            hn: frameItem.hn,
+          };
+
+          if (frameData) {
+            involvedVehicleFramesData[frameItem.frame].push(currentVehicleFrame);
+          } else {
+            involvedVehicleFramesData[frameItem.frame] = [currentVehicleFrame];
+          }
+        }
+
+        console.log(`Involved Vehicle Frames Data:`)
+        console.log(involvedVehicleFramesData);
+
+        const involvedVehicleFrames = Object.keys(involvedVehicleFramesData);
+        involvedVehicleFrames.sort();
+
+        const involvedVehicleFramesArray: BoundingBoxWithVehicle[][] = [];
+        for (const frame of involvedVehicleFrames) {
+          involvedVehicleFramesArray.push(involvedVehicleFramesData[parseInt(frame)])
+        }
+
+        gruInput = [];
+        for (const frameData of involvedVehicleFramesArray) {
+          const frameRow: (number | null)[] = [];
+
+          const vehicleOneFrameData = frameData.find((frameItem) => frameItem.vehicle === 1);
+          const vehicleTwoFrameData = frameData.find((frameItem) => frameItem.vehicle === 2);
+
+          if (vehicleOneFrameData) {
+            frameRow.push(vehicleOneFrameData.xn, vehicleOneFrameData.yn, vehicleOneFrameData.wn, vehicleOneFrameData.hn);
+          } else {
+            frameRow.push(null, null, null, null);
+          }
+
+          if (vehicleTwoFrameData) {
+            frameRow.push(vehicleTwoFrameData.xn, vehicleTwoFrameData.yn, vehicleTwoFrameData.wn, vehicleTwoFrameData.hn);
+          } else {
+            frameRow.push(null, null, null, null);
+          }
+
+          gruInput.push(frameRow);
+        }
+      }
+
+      console.log(`GRU Input: ${gruInput}`)
+
+      gruMutation.mutate(gruInput);
+    }
+
+    return () => {
+      window.electronAPI.removeRunGRUModelProgressListener;
     }
   }, [selectedTabIndex]);
   

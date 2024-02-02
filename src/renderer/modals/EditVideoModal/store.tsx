@@ -55,24 +55,30 @@ interface ModelState {
   finalAccidentModelConfidenceThreshold: number;
   finalAccidentModelIOUThreshold: number;
   finalDeepSORTModel: YOLOModel;
+  finalDeepSORTOutput: DeepSORTOutput;
   finalAccidentFrame?: number;
   finalAccidentArea?: BoundingBox;
   bestAccidentFrameVehicleOne?: BoundingBoxWithId;
   bestAccidentFrameVehicleTwo?: BoundingBoxWithId;
   finalAccidentFrameVehicleOne?: BoundingBoxWithId;
   finalAccidentFrameVehicleTwo?: BoundingBoxWithId;
+  finalAccidentFrameVehicleOneProbability?: number;
+  finalAccidentFrameVehicleTwoProbability?: number;
 }
 
 interface ModelAction {
   setFinalAccidentModelConfidenceThreshold: (finalAccidentModelConfidenceThreshold: number) => void;
   setFinalAccidentModelIOUThreshold: (finalAccidentModelIOUThreshold: number) => void;
   setFinalDeepSORTModel: (finalDeepSORTModel: YOLOModel) => void;
+  setFinalDeepSORTOutput: (finalDeepSORTOutput: DeepSORTOutput) => void;
   setFinalAccidentFrame: (finalAccidentFrame?: number) => void;
   setFinalAccidentArea: (finalAccidentArea?: BoundingBox) => void;
   setBestAccidentFrameVehicleOne: (bestAccidentFrameVehicleOne?: BoundingBoxWithId) => void;
   setBestAccidentFrameVehicleTwo: (bestAccidentFrameVehicleTwo?: BoundingBoxWithId) => void;
   setFinalAccidentFrameVehicleOne: (finalAccidentFrameVehicleOne?: BoundingBoxWithId) => void;
   setFinalAccidentFrameVehicleTwo: (finalAccidentFrameVehicleTwo?: BoundingBoxWithId) => void;
+  setFinalAccidentFrameVehicleOneProbability: (finalAccidentFrameVehicleOneProbability?: number) => void;
+  setFinalAccidentFrameVehicleTwoProbability: (finalAccidentFrameVehicleTwoProbability?: number) => void;
 }
 
 type EditVideoModalState = ModalState & ChangeState & SliderState & VideoMetadataState & ModelState;
@@ -97,12 +103,15 @@ const defaultState: EditVideoModalState = {
   finalAccidentModelConfidenceThreshold: 0,
   finalAccidentModelIOUThreshold: 0,
   finalDeepSORTModel: 'yolov8l.pt',
+  finalDeepSORTOutput: [],
   finalAccidentFrame: undefined,
   finalAccidentArea: undefined,
   bestAccidentFrameVehicleOne: undefined,
   bestAccidentFrameVehicleTwo: undefined,
   finalAccidentFrameVehicleOne: undefined,
   finalAccidentFrameVehicleTwo: undefined,
+  finalAccidentFrameVehicleOneProbability: undefined,
+  finalAccidentFrameVehicleTwoProbability: undefined,
 };
 
 const useEditVideoModalStore = create<EditVideoModalStore>((set) => ({
@@ -137,11 +146,14 @@ const useEditVideoModalStore = create<EditVideoModalStore>((set) => ({
   setFinalAccidentModelConfidenceThreshold: (finalAccidentModelConfidenceThreshold: number) => set({ finalAccidentModelConfidenceThreshold }),
   setFinalAccidentModelIOUThreshold: (finalAccidentModelIOUThreshold: number) => set({ finalAccidentModelIOUThreshold }),
   setFinalDeepSORTModel: (finalDeepSORTModel: YOLOModel) => set({ finalDeepSORTModel }),
+  setFinalDeepSORTOutput: (finalDeepSORTOutput: DeepSORTOutput) => set({ finalDeepSORTOutput }),
   setFinalAccidentFrame: (finalAccidentFrame?: number) => set({ finalAccidentFrame }),
   setFinalAccidentArea: (finalAccidentArea?: BoundingBox) => set({ finalAccidentArea }),
   setBestAccidentFrameVehicleOne: (bestAccidentFrameVehicleOne?: BoundingBoxWithId) => set({ bestAccidentFrameVehicleOne, finalAccidentFrameVehicleOne: bestAccidentFrameVehicleOne }),
   setBestAccidentFrameVehicleTwo: (bestAccidentFrameVehicleTwo?: BoundingBoxWithId) => set({ bestAccidentFrameVehicleTwo, finalAccidentFrameVehicleTwo: bestAccidentFrameVehicleTwo }),
   setFinalAccidentFrameVehicleOne: (finalAccidentFrameVehicleOne?: BoundingBoxWithId) => set({ finalAccidentFrameVehicleOne }),
   setFinalAccidentFrameVehicleTwo: (finalAccidentFrameVehicleTwo?: BoundingBoxWithId) => set({ finalAccidentFrameVehicleTwo }),
+  setFinalAccidentFrameVehicleOneProbability: (finalAccidentFrameVehicleOneProbability?: number) => set({ finalAccidentFrameVehicleOneProbability }),
+  setFinalAccidentFrameVehicleTwoProbability: (finalAccidentFrameVehicleTwoProbability?: number) => set({ finalAccidentFrameVehicleTwoProbability }),
 }));
 export default useEditVideoModalStore;

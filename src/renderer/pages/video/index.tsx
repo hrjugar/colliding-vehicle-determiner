@@ -17,6 +17,7 @@ const tabs = ["Overall", "Video", "Accident Detection", "Vehicle Identification"
 const VideoPage: React.FC = () => {
   const navigate = useNavigate();
   const video = useLoaderData() as VideoData;
+  console.log(video);
   
   const [
     selectedTabIndex,

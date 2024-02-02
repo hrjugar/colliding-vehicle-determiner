@@ -41,6 +41,7 @@ export function getSqlite3(filename = path.join(app.getPath('userData'), 'appdb.
           accidentFrameVehicleOneYN REAL,
           accidentFrameVehicleOneWN REAL,
           accidentFrameVehicleOneHN REAL,
+          accidentFrameVehicleOneProbability REAL,
           accidentFrameVehicleTwoId INTEGER,
           accidentFrameVehicleTwoX REAL,
           accidentFrameVehicleTwoY REAL,
@@ -49,7 +50,8 @@ export function getSqlite3(filename = path.join(app.getPath('userData'), 'appdb.
           accidentFrameVehicleTwoXN REAL,
           accidentFrameVehicleTwoYN REAL,
           accidentFrameVehicleTwoWN REAL,
-          accidentFrameVehicleTwoHN REAL
+          accidentFrameVehicleTwoHN REAL,
+          accidentFrameVehicleTwoProbability REAL
         )
     `)
     .run()

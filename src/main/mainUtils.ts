@@ -51,7 +51,8 @@ function convertDatabaseVideoData(video: DatabaseVideoData): VideoData {
       video.accidentFrameVehicleOneXN !== undefined && video.accidentFrameVehicleOneXN !== null &&
       video.accidentFrameVehicleOneYN !== undefined && video.accidentFrameVehicleOneYN !== null &&
       video.accidentFrameVehicleOneWN !== undefined && video.accidentFrameVehicleOneWN !== null &&
-      video.accidentFrameVehicleOneHN !== undefined && video.accidentFrameVehicleOneHN !== null 
+      video.accidentFrameVehicleOneHN !== undefined && video.accidentFrameVehicleOneHN !== null &&
+      video.accidentFrameVehicleOneProbability !== undefined && video.accidentFrameVehicleOneProbability !== null
     ) ? {
         id: video.accidentFrameVehicleOneId,
         x: video.accidentFrameVehicleOneX,
@@ -62,6 +63,7 @@ function convertDatabaseVideoData(video: DatabaseVideoData): VideoData {
         yn: video.accidentFrameVehicleOneYN,
         wn: video.accidentFrameVehicleOneWN,
         hn: video.accidentFrameVehicleOneHN,
+        probability: video.accidentFrameVehicleOneProbability
     } : undefined,
     accidentFrameVehicleTwo: 
     (
@@ -73,7 +75,8 @@ function convertDatabaseVideoData(video: DatabaseVideoData): VideoData {
       video.accidentFrameVehicleTwoXN !== undefined && video.accidentFrameVehicleTwoXN !== null &&
       video.accidentFrameVehicleTwoYN !== undefined && video.accidentFrameVehicleTwoYN !== null &&
       video.accidentFrameVehicleTwoWN !== undefined && video.accidentFrameVehicleTwoWN !== null &&
-      video.accidentFrameVehicleTwoHN !== undefined && video.accidentFrameVehicleTwoHN !== null 
+      video.accidentFrameVehicleTwoHN !== undefined && video.accidentFrameVehicleTwoHN !== null &&
+      video.accidentFrameVehicleTwoProbability !== undefined && video.accidentFrameVehicleTwoProbability !== null
     ) ? {
         id: video.accidentFrameVehicleTwoId,
         x: video.accidentFrameVehicleTwoX,
@@ -84,6 +87,7 @@ function convertDatabaseVideoData(video: DatabaseVideoData): VideoData {
         yn: video.accidentFrameVehicleTwoYN,
         wn: video.accidentFrameVehicleTwoWN,
         hn: video.accidentFrameVehicleTwoHN,
+        probability: video.accidentFrameVehicleTwoProbability
     } : undefined,
   }
 }
@@ -620,4 +624,52 @@ export function getDeepSORTModelResults(db: Database.Database, id: number | bigi
     const deepSORTModelResults = fs.readFileSync(path.join(app.getPath('userData'), 'videos', id.toString(), 'deepsort-output.json'), "utf-8");
     return JSON.parse(deepSORTModelResults);
   }
+}
+
+export async function runGRUModel(gruInput: (number | null)[][]) {
+  if (gruInput.length === 0) {
+    return Promise.resolve(-1);
+  }
+
+  let gruInputPath = path.join(
+    app.getPath('userData'),
+    'temp',
+    'gru-input.json'
+  )
+  
+  await fs.promises.writeFile(gruInputPath, JSON.stringify(gruInput));
+  
+  let scriptPath = path.join(
+    app.getAppPath(),
+    'python-scripts',
+    'gru',
+    'predict.py'
+  );
+
+  let rootFolderPath = app.getAppPath();
+
+  if (pythonProcess) {
+    pythonProcess.kill();
+  }
+  pythonProcess = spawn('python', [scriptPath, gruInputPath, rootFolderPath]);
+
+  return new Promise((resolve, reject) => {
+    pythonProcess.on('error', (err) => {
+      console.log("Python script error")
+      console.log(err)
+      reject(err);
+    })
+  
+    pythonProcess.stderr.on('data', (data) => {
+      console.log("Python script error")
+      console.log(data.toString());
+    })
+
+    pythonProcess.stderr.pipe(process.stderr);
+  
+    pythonProcess.on('exit', (code) => {
+      console.log(`Python exited with code ${code}`);
+      resolve(code);
+    })
+  })
 }

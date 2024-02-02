@@ -20,6 +20,7 @@ const IdentifyVehiclesPanel: React.FC = () => {
     isAccidentDetectionModelChanged,
     setIsAccidentDetectionModelChanged,
     setFinalDeepSORTModel,
+    setFinalDeepSORTOutput,
     finalAccidentFrame,
     finalAccidentArea,
     setBestAccidentFrameVehicleOne,
@@ -31,6 +32,7 @@ const IdentifyVehiclesPanel: React.FC = () => {
       state.isAccidentDetectionModelChanged,
       state.setIsAccidentDetectionModelChanged,
       state.setFinalDeepSORTModel,
+      state.setFinalDeepSORTOutput,
       state.finalAccidentFrame,
       state.finalAccidentArea,
       state.setBestAccidentFrameVehicleOne,
@@ -110,6 +112,7 @@ const IdentifyVehiclesPanel: React.FC = () => {
         window.electronAPI.removeRunDeepSORTModelProgressListener();
         setDeepSORTOutput(data);
         setFinalDeepSORTModel(selectedYOLOModel);
+        setFinalDeepSORTOutput(data);
 
         setTimeout(() => {
           copyVideoMutation.mutate();

@@ -8,8 +8,8 @@ interface VideoDataInput {
   deepSORTModel: YOLOModel;
   accidentFrame?: number;
   accidentArea?: BoundingBox;
-  accidentFrameVehicleOne?: BoundingBoxWithId;
-  accidentFrameVehicleTwo?: BoundingBoxWithId;
+  accidentFrameVehicleOne?: BoundingBoxWithIdAndProbability;
+  accidentFrameVehicleTwo?: BoundingBoxWithIdAndProbability;
 }
 
 interface VideoData extends VideoDataInput {
@@ -43,6 +43,7 @@ interface DatabaseVideoData {
   accidentFrameVehicleOneYN?: number;
   accidentFrameVehicleOneWN?: number;
   accidentFrameVehicleOneHN?: number;
+  accidentFrameVehicleOneProbability?: number;
   accidentFrameVehicleTwoId?: number;
   accidentFrameVehicleTwoX?: number;
   accidentFrameVehicleTwoY?: number;
@@ -52,6 +53,7 @@ interface DatabaseVideoData {
   accidentFrameVehicleTwoYN?: number;
   accidentFrameVehicleTwoWN?: number;
   accidentFrameVehicleTwoHN?: number;
+  accidentFrameVehicleTwoProbability?: number;
 }
 
 interface BoundingBox {
@@ -67,6 +69,14 @@ interface BoundingBox {
 
 interface BoundingBoxWithId extends BoundingBox {
   id: number | bigint;
+}
+
+interface BoundingBoxWithIdAndProbability extends BoundingBoxWithId {
+  probability: number;
+}
+
+interface BoundingBoxWithVehicle extends BoundingBox {
+  vehicle: number;
 }
 
 interface BoundingBoxWithConfidence extends BoundingBox {
@@ -86,3 +96,12 @@ interface DeepSORTObject {
 type DeepSORTOutput = DeepSORTObject[];
 
 type YOLOModel = "yolov8n.pt" | "yolov8s.pt" | "yolov8m.pt" | "yolov8l.pt" | "yolov8x.pt";
+
+interface GRUInput {
+  [key: number]: BoundingBoxWithId[];
+}
+
+interface GRUOutput {
+  vehicleOne: number;
+  vehicleTwo: number;
+}

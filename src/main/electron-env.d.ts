@@ -60,6 +60,10 @@ interface ElectronAPI {
 
   getAccidentDetectionModelResults(id: number | bigint): Promise<BoundingBoxWithConfidence[][]>,
   getDeepSORTModelResults(id: number | bigint): Promise<DeepSORTOutput>,
+
+  runGRUModel(gruInput: (number | null)[][]): Promise<number>,
+  onRunGRUModelProgress(callback: Function): void,
+  removeRunGRUModelProgressListener(): void,
 }
 
 // Used in Renderer process, expose in `preload.ts`
