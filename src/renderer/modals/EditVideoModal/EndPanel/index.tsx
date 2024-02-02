@@ -28,7 +28,7 @@ const EndPanel: React.FC = () => {
     finalAccidentFrameVehicleOneProbability,
     finalAccidentFrameVehicleTwoProbability,
     setFinalAccidentFrameVehicleOneProbability,
-    setFinalAccidentFrameVehicleTwoProbability
+    setFinalAccidentFrameVehicleTwoProbability,
   ] = useEditVideoModalStore(
     useShallow((state) => [
       state.videoPath,
@@ -50,7 +50,7 @@ const EndPanel: React.FC = () => {
       state.finalAccidentFrameVehicleOneProbability,
       state.finalAccidentFrameVehicleTwoProbability,
       state.setFinalAccidentFrameVehicleOneProbability,
-      state.setFinalAccidentFrameVehicleTwoProbability
+      state.setFinalAccidentFrameVehicleTwoProbability,
     ])
   )
 
@@ -118,8 +118,9 @@ const EndPanel: React.FC = () => {
       })
 
       if (progress.classifier !== undefined) {
-        setFinalAccidentFrameVehicleOneProbability(progress.classifier.vehicleOne);
-        setFinalAccidentFrameVehicleTwoProbability(progress.classifier.vehicleTwo);
+        console.log(`acquired GRU results: ${progress.classifier}`)
+        setFinalAccidentFrameVehicleOneProbability(progress.classifier["vehicleOne"]);
+        setFinalAccidentFrameVehicleTwoProbability(progress.classifier["vehicleTwo"]);
       }
     }
   };
@@ -144,7 +145,9 @@ const EndPanel: React.FC = () => {
 
   useEffect(() => {
     if (isPredictionDone) {
-      insertVideoMutation.mutate({
+      console.log("PREDICTION IS DONE");
+
+      const videoDataInput: VideoDataInput = {
         path: videoPath,
         trimStart: sliderMarkers.start,
         trimEnd: sliderMarkers.end,
@@ -154,9 +157,20 @@ const EndPanel: React.FC = () => {
         deepSORTModel: finalDeepSORTModel,
         accidentFrame: finalAccidentFrame,
         accidentArea: finalAccidentArea,
-        accidentFrameVehicleOne: finalAccidentFrameVehicleOne ? { ...finalAccidentFrameVehicleOne, probability: finalAccidentFrameVehicleOneProbability! } : undefined,
-        accidentFrameVehicleTwo: finalAccidentFrameVehicleTwo ? { ...finalAccidentFrameVehicleTwo, probability: finalAccidentFrameVehicleTwoProbability! } : undefined,
-      });
+      };
+
+      if (finalAccidentFrameVehicleOne === undefined || finalAccidentFrameVehicleTwo === undefined) {
+        insertVideoMutation.mutate(videoDataInput);
+        console.log(`videoDataInput without vehicles:`)
+        console.log(videoDataInput)
+      } else {
+        console.log(`acquired probabilities!`)
+        videoDataInput.accidentFrameVehicleOne = { ...finalAccidentFrameVehicleOne, probability: finalAccidentFrameVehicleOneProbability! };
+        videoDataInput.accidentFrameVehicleTwo = { ...finalAccidentFrameVehicleTwo, probability: finalAccidentFrameVehicleTwoProbability! };
+        console.log(`videoDataInput with probabilities:`)
+        console.log(videoDataInput)
+        insertVideoMutation.mutate(videoDataInput);          
+      }
     }
   }, [isPredictionDone]);
 
@@ -246,6 +260,9 @@ const EndPanel: React.FC = () => {
         for (const frame of involvedVehicleFrames) {
           involvedVehicleFramesArray.push(involvedVehicleFramesData[parseInt(frame)])
         }
+
+        console.log(`Involved Vehicle Frames Array:`)
+        console.log(involvedVehicleFramesArray);
 
         gruInput = [];
         for (const frameData of involvedVehicleFramesArray) {

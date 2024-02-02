@@ -21,6 +21,10 @@ export async function initSocket(win: BrowserWindow) {
       if (progress.frame !== undefined) {
         progress.frame = JSON.parse(progress.frame);
       }
+
+      if (progress.classifier !== undefined) {
+        progress.classifier = JSON.parse(progress.classifier);
+      }
       
       console.log(`message = ${msg.toString()}`);
       win.webContents.send(`model:${model}:progress`, progress);

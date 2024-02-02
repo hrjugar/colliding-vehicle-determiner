@@ -196,6 +196,7 @@ export async function insertVideo(db: Database.Database, video: VideoData) {
     accidentFrameVehicleOneYN,
     accidentFrameVehicleOneWN,
     accidentFrameVehicleOneHN,
+    accidentFrameVehicleOneProbability,
     accidentFrameVehicleTwoId,
     accidentFrameVehicleTwoX,
     accidentFrameVehicleTwoY,
@@ -204,7 +205,8 @@ export async function insertVideo(db: Database.Database, video: VideoData) {
     accidentFrameVehicleTwoXN,
     accidentFrameVehicleTwoYN,
     accidentFrameVehicleTwoWN,
-    accidentFrameVehicleTwoHN
+    accidentFrameVehicleTwoHN,
+    accidentFrameVehicleTwoProbability
   ) 
   VALUES (
     @path,
@@ -232,6 +234,7 @@ export async function insertVideo(db: Database.Database, video: VideoData) {
     @accidentFrameVehicleOneYN,
     @accidentFrameVehicleOneWN,
     @accidentFrameVehicleOneHN,
+    @accidentFrameVehicleOneProbability,
     @accidentFrameVehicleTwoId,
     @accidentFrameVehicleTwoX,
     @accidentFrameVehicleTwoY,
@@ -240,7 +243,8 @@ export async function insertVideo(db: Database.Database, video: VideoData) {
     @accidentFrameVehicleTwoXN,
     @accidentFrameVehicleTwoYN,
     @accidentFrameVehicleTwoWN,
-    @accidentFrameVehicleTwoHN
+    @accidentFrameVehicleTwoHN,
+    @accidentFrameVehicleTwoProbability
   )`).run({
     path: video.path,
     fps: video.fps,
@@ -267,6 +271,7 @@ export async function insertVideo(db: Database.Database, video: VideoData) {
     accidentFrameVehicleOneYN: video.accidentFrameVehicleOne?.yn,
     accidentFrameVehicleOneWN: video.accidentFrameVehicleOne?.wn,
     accidentFrameVehicleOneHN: video.accidentFrameVehicleOne?.hn,
+    accidentFrameVehicleOneProbability: video.accidentFrameVehicleOne?.probability,
     accidentFrameVehicleTwoId: video.accidentFrameVehicleTwo?.id,
     accidentFrameVehicleTwoX: video.accidentFrameVehicleTwo?.x,
     accidentFrameVehicleTwoY: video.accidentFrameVehicleTwo?.y,
@@ -276,6 +281,7 @@ export async function insertVideo(db: Database.Database, video: VideoData) {
     accidentFrameVehicleTwoYN: video.accidentFrameVehicleTwo?.yn,
     accidentFrameVehicleTwoWN: video.accidentFrameVehicleTwo?.wn,
     accidentFrameVehicleTwoHN: video.accidentFrameVehicleTwo?.hn,
+    accidentFrameVehicleTwoProbability: video.accidentFrameVehicleTwo?.probability,
   });
   const videoDataFolder = getVideoDataFolder(statement.lastInsertRowid);
   fs.mkdirSync(videoDataFolder);

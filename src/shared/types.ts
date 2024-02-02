@@ -104,4 +104,5 @@ interface GRUInput {
 interface GRUOutput {
   vehicleOne: number;
   vehicleTwo: number;
+  prediction: string;
 }

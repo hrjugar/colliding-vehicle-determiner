@@ -77,8 +77,8 @@ interface ModelAction {
   setBestAccidentFrameVehicleTwo: (bestAccidentFrameVehicleTwo?: BoundingBoxWithId) => void;
   setFinalAccidentFrameVehicleOne: (finalAccidentFrameVehicleOne?: BoundingBoxWithId) => void;
   setFinalAccidentFrameVehicleTwo: (finalAccidentFrameVehicleTwo?: BoundingBoxWithId) => void;
-  setFinalAccidentFrameVehicleOneProbability: (finalAccidentFrameVehicleOneProbability?: number) => void;
-  setFinalAccidentFrameVehicleTwoProbability: (finalAccidentFrameVehicleTwoProbability?: number) => void;
+  setFinalAccidentFrameVehicleOneProbability: (finalAccidentFrameVehicleOneProbability: number) => void;
+  setFinalAccidentFrameVehicleTwoProbability: (finalAccidentFrameVehicleTwoProbability: number) => void;
 }
 
 type EditVideoModalState = ModalState & ChangeState & SliderState & VideoMetadataState & ModelState;
