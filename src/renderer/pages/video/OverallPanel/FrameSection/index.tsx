@@ -38,6 +38,13 @@ const getFrameDarkenerStyle = (video: VideoData, hoveredArea: AreaType | null): 
 const FrameSection: React.FC = () => {
   const video = useLoaderData() as VideoData;
 
+  let collidingVehicle;
+  if (video.accidentFrameVehicleOne && video.accidentFrameVehicleTwo) {
+    collidingVehicle = video.accidentFrameVehicleOne.probability > video.accidentFrameVehicleTwo.probability ? "Vehicle One" : "Vehicle Two";
+  } else {
+    collidingVehicle = "None";
+  }
+
   const imageRef = useRef<HTMLImageElement>(null);
   const boundingBoxAreaRef = useRef<HTMLDivElement>(null);
   const [hoveredArea, setHoveredArea] = useState<AreaType | null>(null);
@@ -70,7 +77,7 @@ const FrameSection: React.FC = () => {
   return (
     <section className="w-full h-[calc(100vh_-_155px)]  flex flex-col">
       <div className="flex flex-col w-full flex-grow gap-4">
-        <h2 className="text-2xl font-medium text-color-primary">Colliding Vehicle: <span className="font-bold">Vehicle One</span></h2>
+        <h2 className="text-2xl font-medium text-color-primary">Colliding Vehicle: <span className="font-bold">{collidingVehicle}</span></h2>
 
         <div className="relative w-full flex-grow flex justify-center items-center h-0">
           <img 
