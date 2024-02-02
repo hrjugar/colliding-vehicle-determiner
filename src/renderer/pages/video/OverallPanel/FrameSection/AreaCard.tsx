@@ -53,13 +53,19 @@ const AreaCard: React.FC<AreaCardProps> = ({
       areaBox = video.accidentFrameVehicleOne!;
       areaName = "Vehicle One";
       boxClasses = "border-green-400 bg-green-400";
-      isCollidingVehicle = video.accidentFrameVehicleOne!.probability > video.accidentFrameVehicleTwo!.probability;
+      
+      if (video.accidentFrameVehicleOne && video.accidentFrameVehicleTwo) {
+        isCollidingVehicle = video.accidentFrameVehicleOne!.probability > video.accidentFrameVehicleTwo!.probability;
+      }
     break;
     case AreaType.VehicleTwo:
       areaBox = video.accidentFrameVehicleTwo!;
       areaName = "Vehicle Two";
       boxClasses = "border-blue-400 bg-blue-400";
-      isCollidingVehicle = video.accidentFrameVehicleTwo!.probability > video.accidentFrameVehicleOne!.probability;
+
+      if (video.accidentFrameVehicleOne && video.accidentFrameVehicleTwo) {
+        isCollidingVehicle = video.accidentFrameVehicleTwo!.probability > video.accidentFrameVehicleOne!.probability;
+      }
       break;
   }
 

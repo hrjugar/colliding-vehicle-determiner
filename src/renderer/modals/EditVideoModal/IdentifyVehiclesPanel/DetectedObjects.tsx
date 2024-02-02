@@ -58,6 +58,12 @@ const DetectedObjects: React.FC = () => {
   const allClassifications = getAllClassifications();
   console.log(hiddenClassifications);
 
+  const isBestAccidentFrameVehicle = (objId: number) => bestAccidentFrameVehicleOne?.id === objId || bestAccidentFrameVehicleTwo?.id === objId;
+  const isFinalAccidentFrameVehicle = (objId: number) => finalAccidentFrameVehicleOne?.id === objId || finalAccidentFrameVehicleTwo?.id === objId;
+  const isVehicle = (objClassification: string) => vehicleClassifications.includes(objClassification);
+  const isVehicleInAccidentFrame = (frames: DeepSORTFrame[]) => frames.some((frame) => frame.frame === finalAccidentFrame)
+
+
   return (
     <div className='card w-64 flex-grow min-h-0 flex flex-col'>
       <div className='card-header flex flex-row justify-between items-center'>
@@ -159,7 +165,7 @@ const DetectedObjects: React.FC = () => {
                   </svg>   
                 </div>   
               ): null}
-              {obj.id === bestAccidentFrameVehicleOne?.id || obj.id === bestAccidentFrameVehicleTwo?.id ? (
+              {isBestAccidentFrameVehicle(obj.id) ? (
                 <svg 
                 width="64" 
                 height="64" 
@@ -173,7 +179,7 @@ const DetectedObjects: React.FC = () => {
                 />
               </svg>                
               ) : null}
-              {obj.id === finalAccidentFrameVehicleOne?.id || obj.id === finalAccidentFrameVehicleTwo?.id ? (
+              {isFinalAccidentFrameVehicle(obj.id) ? (
                 <div title="Selected">
                   <svg 
                     width="64" 
@@ -190,9 +196,9 @@ const DetectedObjects: React.FC = () => {
                 </div>       
               ) : null}
 
-              {vehicleClassifications.includes(obj.classification) && 
+              {isVehicle(obj.classification) && 
               finalAccidentFrame !== undefined && finalAccidentFrame !== null &&
-              obj.frames.some((frame) => frame.frame === finalAccidentFrame) ? (
+              isVehicleInAccidentFrame(obj.frames) ? (
                 <button 
                   className="hidden group-hover:block ml-auto bg-transparent text-color-primary font-semibold text-xs opacity-60 hover:opacity-100"
                   onClick={() => {
@@ -204,12 +210,18 @@ const DetectedObjects: React.FC = () => {
                       if (finalAccidentFrameVehicleOne && finalAccidentFrameVehicleTwo) {
                         toast.error('There are already two vehicles selected as the involved accident. Please deselect one of them first.')
                       } else {
-                        const accidentFrameVehicleCoordinates = obj.frames[finalAccidentFrame - 1]
+                        const accidentFrameVehicleCoordinates = obj.frames.find((frame) => frame.frame === finalAccidentFrame)!;
+                        console.log("accident frame vehicle coordinates:")
+                        console.log(accidentFrameVehicleCoordinates);
+                        const newFinalAccidentFrameVehicle = { id: obj.id, ...accidentFrameVehicleCoordinates }
+                        console.log(`newAccidentFrameVehicle:`)
+                        console.log(newFinalAccidentFrameVehicle)
+                        console.log(`finalAccidentFrame: ${finalAccidentFrame}`)
 
                         if (finalAccidentFrameVehicleOne === undefined) {
-                          setFinalAccidentFrameVehicleOne({ id: obj.id, ...accidentFrameVehicleCoordinates });
-                        } else if (finalAccidentFrameVehicleTwo === undefined) {
-                          setFinalAccidentFrameVehicleTwo({ id: obj.id, ...accidentFrameVehicleCoordinates })
+                          setFinalAccidentFrameVehicleOne(newFinalAccidentFrameVehicle);
+                        } else {
+                          setFinalAccidentFrameVehicleTwo(newFinalAccidentFrameVehicle)
                         }
                       }
                     }

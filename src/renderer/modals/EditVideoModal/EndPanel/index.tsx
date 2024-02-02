@@ -11,6 +11,7 @@ const EndPanel: React.FC = () => {
   const [
     videoPath,
     selectedTabIndex,
+    selectTab,
     closeModal,
     setTabsDisabledState,
     fps,
@@ -33,6 +34,7 @@ const EndPanel: React.FC = () => {
     useShallow((state) => [
       state.videoPath,
       state.selectedTabIndex,
+      state.selectTab,
       state.closeModal,
       state.setTabsDisabledState,
       state.fps,
@@ -59,6 +61,7 @@ const EndPanel: React.FC = () => {
     setLoadingText,
     loadingProgress,
     setLoadingProgress,
+    isLoadingDone,
     setIsLoadingDone,
     isPredictionDone,
     setIsPredictionDone,
@@ -69,6 +72,7 @@ const EndPanel: React.FC = () => {
       state.setLoadingText,
       state.loadingProgress,
       state.setLoadingProgress,
+      state.isLoadingDone,
       state.setIsLoadingDone,
       state.isPredictionDone,
       state.setIsPredictionDone,
@@ -92,6 +96,7 @@ const EndPanel: React.FC = () => {
         setTimeout(() => {
           setIsLoadingDone(true);
           closeModal();
+          resetStates();
           navigate(`/videos/${id}`);
         }, 300);
       },
@@ -144,6 +149,12 @@ const EndPanel: React.FC = () => {
   )
 
   useEffect(() => {
+    if (isLoadingDone) {
+
+    }
+  }, [isLoadingDone]);
+
+  useEffect(() => {
     if (isPredictionDone) {
       console.log("PREDICTION IS DONE");
 
@@ -176,6 +187,14 @@ const EndPanel: React.FC = () => {
 
   useEffect(() => {
     if (selectedTabIndex === 3) {
+      // if (
+      //   (finalAccidentFrameVehicleOne !== undefined && finalAccidentFrameVehicleTwo === undefined) ||
+      //   (finalAccidentFrameVehicleOne === undefined && finalAccidentFrameVehicleTwo !== undefined)
+      // ) {
+      //   toast.error('Please select two vehicles involved in the accident.');
+      //   selectTab(2);
+      //   return;
+      // }
       resetStates();
 
       let gruInput: (number | null)[][] = [];
@@ -198,8 +217,8 @@ const EndPanel: React.FC = () => {
           mostFinalAccidentFrameVehicleOne = finalAccidentFrameVehicleTwo;
           mostFinalAccidentFrameVehicleTwo = finalAccidentFrameVehicleOne;
 
-          setFinalAccidentFrameVehicleOne(mostFinalAccidentFrameVehicleTwo);
-          setFinalAccidentFrameVehicleTwo(mostFinalAccidentFrameVehicleOne);
+          setFinalAccidentFrameVehicleOne(mostFinalAccidentFrameVehicleOne);
+          setFinalAccidentFrameVehicleTwo(mostFinalAccidentFrameVehicleTwo);
         }
 
         const vehicleOneDeepSORTObject = finalDeepSORTOutput.find((deepSORTObject) => deepSORTObject.id === mostFinalAccidentFrameVehicleOne.id);
@@ -293,7 +312,7 @@ const EndPanel: React.FC = () => {
     }
 
     return () => {
-      window.electronAPI.removeRunGRUModelProgressListener;
+      window.electronAPI.removeRunGRUModelProgressListener();
     }
   }, [selectedTabIndex]);
   
