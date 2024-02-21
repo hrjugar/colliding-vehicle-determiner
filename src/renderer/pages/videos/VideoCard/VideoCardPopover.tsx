@@ -12,7 +12,7 @@ const VideoCardPopover: React.FC<VideoCardPopoverProps> = ({ video, setIsRenamin
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
   
   return (
-    <div className="relative">
+    <div className="relative opacity-0 group-hover/video-card:opacity-100">
       <Popover className='relative flex flex-col justify-center items-center'>
         <Popover.Button 
           className='rounded-full hover:bg-gray-100 transition-colors p-1' 

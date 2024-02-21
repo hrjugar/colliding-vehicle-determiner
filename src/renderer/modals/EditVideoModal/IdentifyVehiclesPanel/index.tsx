@@ -16,6 +16,7 @@ import { getInvolvedVehicles } from './utils';
 const IdentifyVehiclesPanel: React.FC = () => {
   const [
     selectedTabIndex,
+    selectTab,
     setTabsDisabledState,
     isAccidentDetectionModelChanged,
     setIsAccidentDetectionModelChanged,
@@ -24,10 +25,13 @@ const IdentifyVehiclesPanel: React.FC = () => {
     finalAccidentFrame,
     finalAccidentArea,
     setBestAccidentFrameVehicleOne,
-    setBestAccidentFrameVehicleTwo
+    setBestAccidentFrameVehicleTwo,
+    setFinalAccidentFrameVehicleOne,
+    setFinalAccidentFrameVehicleTwo,
   ] = useEditVideoModalStore( 
     useShallow((state) => [
       state.selectedTabIndex,
+      state.selectTab,
       state.setTabsDisabledState,
       state.isAccidentDetectionModelChanged,
       state.setIsAccidentDetectionModelChanged,
@@ -37,6 +41,8 @@ const IdentifyVehiclesPanel: React.FC = () => {
       state.finalAccidentArea,
       state.setBestAccidentFrameVehicleOne,
       state.setBestAccidentFrameVehicleTwo,
+      state.setFinalAccidentFrameVehicleOne,
+      state.setFinalAccidentFrameVehicleTwo,
     ])
   )
 
@@ -153,15 +159,26 @@ const IdentifyVehiclesPanel: React.FC = () => {
     <Tab.Panel className="w-full h-full bg-white flex flex-col justify-start items-start overflow-y-auto gap-4 p-4">
       {isLoadingDone ? (
         <>
-          <button 
-            disabled={!isLoadingDone || !selectedObject || !finalAccidentFrame || !selectedObject.frames.some((frame) => frame.frame === finalAccidentFrame)}
-            className='disabled:pointer-events-none disabled:opacity-50 ml-auto hover:font-semibold'
-            onClick={() => {
-              if (finalAccidentFrame && selectedObject) {
-                setSelectedFrame(finalAccidentFrame);
-              }
-            }}
-          >Select accident frame</button>
+          <div className='w-full flex flex-row gap-4'>
+            <button
+              disabled={!isLoadingDone}
+              className='disabled:pointer-events-none disabled:opacity-50 ml-auto hover:font-semibold'
+              onClick={() => {
+                setFinalAccidentFrameVehicleOne(undefined);
+                setFinalAccidentFrameVehicleTwo(undefined);
+                selectTab(3)
+              }}
+            >Mark as invalid</button>
+            <button 
+              disabled={!isLoadingDone || !selectedObject || !finalAccidentFrame || !selectedObject.frames.some((frame) => frame.frame === finalAccidentFrame)}
+              className='disabled:pointer-events-none disabled:opacity-50 hover:font-semibold'
+              onClick={() => {
+                if (finalAccidentFrame && selectedObject) {
+                  setSelectedFrame(finalAccidentFrame);
+                }
+              }}
+            >Select accident frame</button>
+          </div>
           <div className='w-full flex flex-row gap-4 max-h-[60vh]'>
             <div className='flex flex-col gap-4 h-full'>
               <DetectedObjects />

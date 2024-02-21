@@ -223,26 +223,28 @@ const DetectAccidentPanel: React.FC = () => {
         hn: allPredictions[bestFrameIndex][bestPredictionIndex].hn,
       });
 
-      const startFrameIndex = selectedFrameIndex;
-      const endFrameIndex = bestFrameIndex;
-      const steps = Math.abs(endFrameIndex - startFrameIndex);
-      let currentStep = 0;
+      // const startFrameIndex = selectedFrameIndex;
+      // const endFrameIndex = bestFrameIndex;
+      // const steps = Math.abs(endFrameIndex - startFrameIndex);
+      // let currentStep = 0;
 
-      const animate = () => {
-        setSelectedFrameIndex(startFrameIndex + Math.round((endFrameIndex - startFrameIndex) * (currentStep / steps)));
-        currentStep++;
+      // const animate = () => {
+      //   setSelectedFrameIndex(startFrameIndex + Math.round((endFrameIndex - startFrameIndex) * (currentStep / steps)));
+      //   currentStep++;
 
-        if (currentStep <= steps) {
-          transitionAnimationFrameId.current = requestAnimationFrame(animate);
-        } else {
-          if (transitionAnimationFrameId.current) {
-            cancelAnimationFrame(transitionAnimationFrameId.current);
-            setIsFrameTransitionDone(true);
-          }
-        }
-      };
+      //   if (currentStep <= steps) {
+      //     transitionAnimationFrameId.current = requestAnimationFrame(animate);
+      //   } else {
+      //     if (transitionAnimationFrameId.current) {
+      //       cancelAnimationFrame(transitionAnimationFrameId.current);
+      //       setIsFrameTransitionDone(true);
+      //     }
+      //   }
+      // };
 
-      animate();
+      // animate();
+      setSelectedFrameIndex(bestFrameIndex);
+      setIsFrameTransitionDone(true);
     } else {
       setFinalAccidentFrame(undefined);
       setFinalAccidentArea(undefined);

@@ -14,14 +14,14 @@ export default function Navbar() {
           ]} 
           link={"/videos"}
         />
-        <NavLinkIcon 
+        {/* <NavLinkIcon 
           title="Analysis"
           tailwindGroup="analysis-icon"
           shapesCoordinates={[
             "M29.3333 5.33337V58.6667C15.7333 57.3334 5.33331 45.8667 5.33331 32C5.33331 18.1334 15.7333 6.66671 29.3333 5.33337ZM34.6666 5.33337V29.3334H58.6666C57.3333 16.5334 47.4666 6.66671 34.6666 5.33337ZM34.6666 34.6667V58.6667C47.2 57.3334 57.3333 47.4667 58.6666 34.6667H34.6666Z"
           ]} 
           link={"/analysis"}
-        />
+        /> */}
       </div>
 
       <div className="flex flex-col gap-2">

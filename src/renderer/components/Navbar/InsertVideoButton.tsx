@@ -6,19 +6,6 @@ import useEditVideoModalStore from "@renderer/modals/EditVideoModal/store";
 const InsertVideoButton: React.FC = () => {
   const openModal = useEditVideoModalStore((state) => state.openModal);
 
-  // const queryClient = useQueryClient();
-  // const mutation = useMutation(window.electronAPI.insertVideo, {
-  //   onSuccess: (data) => {
-  //     queryClient.invalidateQueries(QueryKey.Videos);
-  //     if (data) {
-  //       toast('Successfully added video.', {
-  //         type: 'success'
-  //       })
-  //     }
-  //   }
-  // })
-  
-
   const mutation = useMutation(window.electronAPI.findNewVideo, {
     onSuccess: (videoPath) => {
       if (videoPath) {
