@@ -35,17 +35,39 @@ const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
 
   const { isLoading, isError, data: isFileExisting } = useQuery<boolean>([QueryKey.IsFileExisting, video.path], () => window.electronAPI.isFileExisting(video.path))
   
-  const [ isRenaming, setIsRenaming ] = useState<boolean>(false);
+  const [isRenaming, setIsRenaming] = useState<boolean>(false);
+  const [isHovered, setIsHovered] = useState<boolean>(false);
 
   return (
-    <div className="relative">
+    <div className="relative w-[calc(50%_-_16px)] lg:w-[calc(33%_-_16px)] xl:w-[calc(25%_-_16px)] 2xl:w-[400px]">
       <div 
         title={video.path}
-        className='card group/video-card flex flex-col items-stretch p-2 mb-4 cursor-pointer  border-[2px] border-gray-300 hover:border-color-primary transition-all w-80 gap-1'
+        className='group/video-card flex flex-col cursor-pointer transition-all'
         onClick={() => navigate(`${video.id}`)}
+        onPointerEnter={() => setIsHovered(true)}
+        onPointerLeave={() => setIsHovered(false)}
       >
-        <img className="w-full h-48 bg-gray-400 opacity-90 group-hover/video-card:opacity-100 object-cover" src={`filehandler://thumbnail//${video.id}`}/>
-        <div className="flex flex-col items-start justify-start ">
+        <div className="w-full h-48 bg-black rounded-lg overflow-hidden">
+          {isHovered ? (
+            <video
+              className="w-full h-full object-scale-down aspect-video"
+              muted
+              autoPlay
+            >
+              <source 
+                type="video/mp4"
+                src={`http://localhost:3000/video?source=app&id=${video.id}`}
+              />
+            </video>
+          ) : (
+            <img 
+              className="w-full h-full opacity-90 object-cover aspect-video" 
+              src={`filehandler://thumbnail//${video.id}`}
+            />
+          )}
+        </div>
+
+        <div className="flex flex-col items-start justify-start">
           {isRenaming ? (
             <VideoCardRenamer video={video} setIsRenaming={setIsRenaming}/>
           ) : (
