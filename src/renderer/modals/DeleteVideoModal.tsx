@@ -72,7 +72,7 @@ const DeleteVideoModal: React.FC<DeleteVideoModalProps> = ({ video, isOpen, setI
               >
                 Delete
               </button>          
-          </div>
+            </div>
                
           </div>
         </Dialog.Panel>

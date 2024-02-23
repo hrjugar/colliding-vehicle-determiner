@@ -2,14 +2,15 @@ import { Popover } from "@headlessui/react"
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import DeleteVideoModal from "@renderer/modals/DeleteVideoModal";
+import RenameVideoModal from "@/renderer/modals/RenameVideoModal";
 
 interface VideoCardPopoverProps {
-  video: VideoData,
-  setIsRenaming: React.Dispatch<React.SetStateAction<boolean>>;
+  video: VideoData
 }
 
-const VideoCardPopover: React.FC<VideoCardPopoverProps> = ({ video, setIsRenaming }) => {
+const VideoCardPopover: React.FC<VideoCardPopoverProps> = ({ video }) => {
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
+  const [renameModalIsOpen, setRenameModalIsOpen] = useState<boolean>(false);
   
   return (
     <div className="relative opacity-0 group-hover/video-card:opacity-100">
@@ -23,7 +24,7 @@ const VideoCardPopover: React.FC<VideoCardPopoverProps> = ({ video, setIsRenamin
             height="64" 
             viewBox="0 0 64 64" 
             xmlns="http://www.w3.org/2000/svg"
-            className="text-color-primary w-6 h-6"
+            className="text-color-primary w-5 h-5"
           >
             <path 
               d="M32 42.6666C33.4145 42.6666 34.771 43.2285 35.7712 44.2287C36.7714 45.2289 37.3333 46.5855 37.3333 48C37.3333 49.4144 36.7714 50.771 35.7712 51.7712C34.771 52.7714 33.4145 53.3333 32 53.3333C30.5855 53.3333 29.229 52.7714 28.2288 51.7712C27.2286 50.771 26.6667 49.4144 26.6667 48C26.6667 46.5855 27.2286 45.2289 28.2288 44.2287C29.229 43.2285 30.5855 42.6666 32 42.6666ZM32 26.6666C33.4145 26.6666 34.771 27.2285 35.7712 28.2287C36.7714 29.2289 37.3333 30.5855 37.3333 32C37.3333 33.4144 36.7714 34.771 35.7712 35.7712C34.771 36.7714 33.4145 37.3333 32 37.3333C30.5855 37.3333 29.229 36.7714 28.2288 35.7712C27.2286 34.771 26.6667 33.4144 26.6667 32C26.6667 30.5855 27.2286 29.2289 28.2288 28.2287C29.229 27.2285 30.5855 26.6666 32 26.6666ZM32 10.6666C33.4145 10.6666 34.771 11.2285 35.7712 12.2287C36.7714 13.2289 37.3333 14.5855 37.3333 16C37.3333 17.4144 36.7714 18.771 35.7712 19.7712C34.771 20.7714 33.4145 21.3333 32 21.3333C30.5855 21.3333 29.229 20.7714 28.2288 19.7712C27.2286 18.771 26.6667 17.4144 26.6667 16C26.6667 14.5855 27.2286 13.2289 28.2288 12.2287C29.229 11.2285 30.5855 10.6666 32 10.6666Z"
@@ -41,7 +42,11 @@ const VideoCardPopover: React.FC<VideoCardPopoverProps> = ({ video, setIsRenamin
                 <button 
                   type="button"
                   className="group/video-card-rename-btn rounded-sm hover:bg-color-primary px-4 py-2 flex flex-row items-center gap-4 text-sm border-b-[1px] border-gray-200"
-                  onClick={(e) => { e.stopPropagation(); setIsRenaming(true); }}
+                  onClick={(e) => { 
+                    e.stopPropagation(); 
+                    setRenameModalIsOpen(true);
+                    close();
+                  }}
                   title="Rename Video"
                 >
                   <svg 
@@ -124,6 +129,12 @@ const VideoCardPopover: React.FC<VideoCardPopoverProps> = ({ video, setIsRenamin
         video={video} 
         isOpen={deleteModalIsOpen}
         setIsOpen={setDeleteModalIsOpen}
+      />
+
+      <RenameVideoModal 
+        video={video} 
+        isOpen={renameModalIsOpen}
+        setIsOpen={setRenameModalIsOpen}
       />
     </div>
   )

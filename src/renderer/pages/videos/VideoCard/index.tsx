@@ -35,14 +35,14 @@ const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
 
   const { isLoading, isError, data: isFileExisting } = useQuery<boolean>([QueryKey.IsFileExisting, video.path], () => window.electronAPI.isFileExisting(video.path))
   
-  const [isRenaming, setIsRenaming] = useState<boolean>(false);
+  // const [isRenaming, setIsRenaming] = useState<boolean>(false);
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
   return (
     <div className="relative w-[calc(50%_-_16px)] lg:w-[calc(33%_-_16px)] xl:w-[calc(25%_-_16px)] 2xl:w-[400px]">
       <div 
         title={video.path}
-        className='group/video-card flex flex-col cursor-pointer transition-all'
+        className='group/video-card flex flex-col cursor-pointer transition-all gap-1'
         onClick={() => navigate(`${video.id}`)}
         onPointerEnter={() => setIsHovered(true)}
         onPointerLeave={() => setIsHovered(false)}
@@ -67,15 +67,18 @@ const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
           )}
         </div>
 
-        <div className="flex flex-col items-start justify-start">
-          {isRenaming ? (
+        <div className="flex flex-col items-start justify-start pl-1">
+          {/* {isRenaming ? (
             <VideoCardRenamer video={video} setIsRenaming={setIsRenaming}/>
           ) : (
-            <div className="flex flex-row items-center justify-between w-full">
-              <p className='font-medium group-hover/video-card:font-semibold text-left w-full line-clamp-1 py-1 px-1 my-[1px]'>{getFileNameFromPath(video.path, true)}</p>
-              <VideoCardPopover video={video} setIsRenaming={setIsRenaming}/>
+          )} */}
+          <div className="flex flex-row items-start justify-between w-full">
+            <div className="flex flex-col items-start">
+              <p className='font-medium text-left w-full line-clamp-1 text-color-primary/75 group-hover/video-card:text-color-primary transition-colors'>{getFileNameFromPath(video.path, true)}</p>
+              <p className="text-sm text-gray-400/75 group-hover/video-card:text-gray-400 transition-colors">{video.timestamp}</p>
             </div>
-          )}
+            <VideoCardPopover video={video} />
+          </div>
         </div>
       </div>
 

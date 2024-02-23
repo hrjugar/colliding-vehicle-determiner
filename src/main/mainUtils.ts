@@ -89,6 +89,7 @@ function convertDatabaseVideoData(video: DatabaseVideoData): VideoData {
         hn: video.accidentFrameVehicleTwoHN,
         probability: video.accidentFrameVehicleTwoProbability
     } : undefined,
+    timestamp: video.timestamp
   }
 }
 
@@ -206,7 +207,8 @@ export async function insertVideo(db: Database.Database, video: VideoData) {
     accidentFrameVehicleTwoYN,
     accidentFrameVehicleTwoWN,
     accidentFrameVehicleTwoHN,
-    accidentFrameVehicleTwoProbability
+    accidentFrameVehicleTwoProbability,
+    timestamp
   ) 
   VALUES (
     @path,
@@ -244,7 +246,8 @@ export async function insertVideo(db: Database.Database, video: VideoData) {
     @accidentFrameVehicleTwoYN,
     @accidentFrameVehicleTwoWN,
     @accidentFrameVehicleTwoHN,
-    @accidentFrameVehicleTwoProbability
+    @accidentFrameVehicleTwoProbability,
+    CURRENT_TIMESTAMP
   )`).run({
     path: video.path,
     fps: video.fps,

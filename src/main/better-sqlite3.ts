@@ -51,10 +51,12 @@ export function getSqlite3(filename = path.join(app.getPath('userData'), 'appdb.
           accidentFrameVehicleTwoYN REAL,
           accidentFrameVehicleTwoWN REAL,
           accidentFrameVehicleTwoHN REAL,
-          accidentFrameVehicleTwoProbability REAL
+          accidentFrameVehicleTwoProbability REAL,
+          timestamp DATETIME
         )
     `)
     .run()
+  
   return database;
 }
 

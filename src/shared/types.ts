@@ -14,6 +14,7 @@ interface VideoDataInput {
 
 interface VideoData extends VideoDataInput {
   id: number | bigint;
+  timestamp?: string;
 }
 
 interface DatabaseVideoData {
@@ -54,6 +55,7 @@ interface DatabaseVideoData {
   accidentFrameVehicleTwoWN?: number;
   accidentFrameVehicleTwoHN?: number;
   accidentFrameVehicleTwoProbability?: number;
+  timestamp?: string;
 }
 
 interface BoundingBox {
