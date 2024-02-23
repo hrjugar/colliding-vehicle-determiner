@@ -2,7 +2,7 @@ import { Dialog } from "@headlessui/react";
 import { getFileNameFromPath } from "../globals/utils";
 import { useMutation, useQueryClient } from "react-query";
 import { QueryKey } from "../globals/enums";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 interface RenameVideoModalProps {
   video: VideoData,
@@ -22,7 +22,7 @@ const RenameVideoModal: React.FC<RenameVideoModalProps> = ({
     }
   })
 
-  const renameInputRef = useRef<HTMLInputElement>(null);
+  const [newFileName, setNewFileName] = useState<string>(getFileNameFromPath(video.path, true)!);
     
   return (
     <Dialog
@@ -43,7 +43,8 @@ const RenameVideoModal: React.FC<RenameVideoModalProps> = ({
           <div className='bg-white p-4 flex flex-col gap-4'>
             <input 
               className="border-[1.5px] border-gray-200 w-full rounded-lg px-4 py-2"
-              defaultValue={getFileNameFromPath(video.path, true)}
+              value={newFileName}
+              onChange={(e) => setNewFileName(e.target.value)}
             />
 
             <div className='flex flex-row justify-end gap-2 text-sm'>
@@ -56,7 +57,7 @@ const RenameVideoModal: React.FC<RenameVideoModalProps> = ({
               <button 
                 className='px-4 py-2 bg-color-primary text-white hover:bg-color-primary-inactive rounded-sm'
                 onClick={() => {
-                  renameMutation.mutate(renameInputRef.current?.value as string);
+                  renameMutation.mutate(newFileName);
                   setIsOpen(false)
                 }}
               >

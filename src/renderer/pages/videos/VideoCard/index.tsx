@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import VideoCardRenamer from "./VideoCardRenamer";
 import VideoCardPopover from "./VideoCardPopover";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface VideoCardProps {
   video: VideoData,
@@ -42,15 +43,15 @@ const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
     <div className="relative w-[calc(50%_-_16px)] lg:w-[calc(33%_-_16px)] xl:w-[calc(25%_-_16px)] 2xl:w-[400px]">
       <div 
         title={video.path}
-        className='group/video-card flex flex-col cursor-pointer transition-all gap-1'
-        onClick={() => navigate(`${video.id}`)}
+        className='group/video-card flex flex-col transition-all rounded-lg shadow-around hover:shadow-around-dark'
+        // onClick={() => navigate(`${video.id}`)}
         onPointerEnter={() => setIsHovered(true)}
         onPointerLeave={() => setIsHovered(false)}
       >
-        <div className="w-full h-48 bg-black rounded-lg overflow-hidden">
+        <div className="w-full h-48 bg-black rounded-t-lg overflow-hidden">
           {isHovered ? (
             <video
-              className="w-full h-full object-scale-down aspect-video"
+              className="w-full h-full object-scale-down aspect-video opacity-50"
               muted
               autoPlay
             >
@@ -67,17 +68,28 @@ const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
           )}
         </div>
 
-        <div className="flex flex-col items-start justify-start pl-1">
+        <div className="absolute top-2 right-2">
+          <VideoCardPopover video={video} />
+        </div>
+
+        <div className="flex flex-col items-start justify-start">
           {/* {isRenaming ? (
             <VideoCardRenamer video={video} setIsRenaming={setIsRenaming}/>
           ) : (
           )} */}
-          <div className="flex flex-row items-start justify-between w-full">
+          <div className="flex flex-row items-center justify-between w-full bg-white px-4 py-1 rounded-b-lg">
             <div className="flex flex-col items-start">
               <p className='font-medium text-left w-full line-clamp-1 text-color-primary/75 group-hover/video-card:text-color-primary transition-colors'>{getFileNameFromPath(video.path, true)}</p>
               <p className="text-sm text-gray-400/75 group-hover/video-card:text-gray-400 transition-colors">{video.timestamp}</p>
             </div>
-            <VideoCardPopover video={video} />
+
+            <Link 
+              to={`${video.id}`}
+              className={`text-color-primary hover:text-color-primary-inactive text-sm ${isHovered ? 'opacity-100' : 'opacity-[15%]'} transition-colors`}
+            >
+              View
+            </Link>
+            {/* <VideoCardPopover video={video} /> */}
           </div>
         </div>
       </div>

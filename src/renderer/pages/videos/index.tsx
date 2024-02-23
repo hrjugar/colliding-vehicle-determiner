@@ -4,6 +4,7 @@ import { QueryKey } from "@renderer/globals/enums";
 import { useEffect, useState } from "react";
 import useVideosPageStore from "./store";
 import { useShallow } from "zustand/react/shallow";
+import InsertVideoButton from "./InsertVideoButton";
 
 const VideosPage: React.FC = () => {
   const { isLoading, isError, data: videos, error } = useQuery<VideoData[]>(QueryKey.Videos, window.electronAPI.selectAllVideos);
@@ -38,12 +39,12 @@ const VideosPage: React.FC = () => {
   }, [currentSearchText]);
 
   return (
-    <div className='page'>
-      <div className="w-full flex flex-row items-stretch pb-6 px-4 pointer-events-none">
-        <h1 className="flex-1 text-left text-2xl font-semibold draggable pt-4">Videos</h1>
+    <div className='page bg-slate-100'>
+      <div className="w-full flex flex-row items-stretch pb-6 px-6 pointer-events-none bg-gradient-to-b from-color-primary to-[#040619]">
+        <h1 className="flex-1 text-left text-2xl font-semibold draggable pt-4 text-white">Library</h1>
         
         <div className="flex-grow flex flex-col justify-center items-stretch pointer-events-auto no-drag pt-4">
-          <div className={`h-full border-[1px] rounded-full flex flex-row items-center pl-3 pr-4 gap-2 ${videos && videos.length > 0 ? 'bg-slate-100' : 'pointer-events-none bg-gray-100 opacity-50'}`}>
+          <div className={`h-full border-[1px] rounded-full flex flex-row items-center pl-3 pr-4 gap-2 ${videos && videos.length > 0 ? 'bg-white' : 'pointer-events-none bg-gray-100 opacity-50'}`}>
             <svg 
               width="64" 
               height="64" 
@@ -107,7 +108,7 @@ const VideosPage: React.FC = () => {
           <p>No videos found.</p>
         </div>
       ) : (
-        <div className='flex flex-row flex-wrap content-start gap-4 pl-4 pb-4 w-full h-full overflow-y-auto'>
+        <div className='flex flex-row flex-wrap content-start gap-4 pl-4 py-4 w-full h-full overflow-y-auto'>
           {filteredVideos?.map((video) => {
             return (
               <VideoCard key={video.id} video={video} />
@@ -115,6 +116,8 @@ const VideosPage: React.FC = () => {
           })}
         </div>
       )}
+      
+      <InsertVideoButton />
     </div>
   );
 };

@@ -21,7 +21,7 @@ export default function WindowButtonGroup() {
       {/* <div className="pointer-events-none draggable w-[calc(100%_-_16rem)]"></div> */}
       <div className="flex flex-row justify-end items-center pointer-events-auto">
         <button 
-          className="p-4 bg-transparent hover:bg-gray-200 cursor-pointer"
+          className="group p-4 bg-transparent hover:bg-gray-200 cursor-pointer"
           onClick={() => window.electronAPI.minimizeWindow()}
         >
           <svg
@@ -33,13 +33,13 @@ export default function WindowButtonGroup() {
           >
             <path 
               d="M0 40 H64 z"
-              className="fill-current stroke-[4] stroke-color-primary"
+              className="fill-current stroke-[4] stroke-white group-hover:stroke-color-primary"
             />
           </svg>
         </button>
 
         <button 
-          className="p-4 bg-transparent hover:bg-gray-200 cursor-pointer"
+          className="group p-4 bg-transparent hover:bg-gray-200 cursor-pointer"
           onClick={() => window.electronAPI.maximizeWindow()}
         >
           <svg 
@@ -47,7 +47,7 @@ export default function WindowButtonGroup() {
             height="64" 
             viewBox="0 0 64 64" 
             xmlns="http://www.w3.org/2000/svg"
-            className="w-3 h-3 text-transparent stroke-[4] stroke-color-primary"
+            className="w-3 h-3 text-transparent stroke-[4] stroke-white group-hover:stroke-color-primary"
           >
             {isMaximized ? (
               <path 
@@ -57,7 +57,7 @@ export default function WindowButtonGroup() {
             ) : (
               <path 
                 d="M0 0 V 64 H64 V0 Z" 
-                className="fill-current stroke-[8] stroke-black"
+                className="fill-current stroke-[8] stroke-white group-hover:stroke-color-primary"
               />
             )}
           </svg>
@@ -76,7 +76,7 @@ export default function WindowButtonGroup() {
           >
             <path 
               d="M0 0 L64 64 M64 0 L0 64 Z"
-              className="fill-current stroke-[4] stroke-color-primary group-hover/titlebar-close-btn:stroke-white"
+              className="fill-current stroke-[4] stroke-white group-hover/titlebar-close-btn:stroke-primary"
             />
           </svg>
         </button>

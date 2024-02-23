@@ -16,7 +16,7 @@ const VideoCardPopover: React.FC<VideoCardPopoverProps> = ({ video }) => {
     <div className="relative opacity-0 group-hover/video-card:opacity-100">
       <Popover className='relative flex flex-col justify-center items-center'>
         <Popover.Button 
-          className='rounded-full hover:bg-gray-100 transition-colors p-1' 
+          className='rounded-full bg-gray-200 hover:bg-gray-300 transition-colors p-1' 
           title="Menu"
         >
           <svg 

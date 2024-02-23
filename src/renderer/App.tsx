@@ -10,7 +10,7 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Navbar />
+      {/* <Navbar /> */}
       <WindowButtonGroup />
       <main className='w-full min-h-screen bg-white'>
         <Outlet />
