@@ -1,5 +1,4 @@
 import { getFileNameFromPath } from "@renderer/globals/utils";
-import PageHeader from "@renderer/components/PageHeader";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import VideoPlayerSection from "./VideoPlayerSection";
 import FrameSection from "./OverallPanel/FrameSection";
@@ -36,7 +35,7 @@ const VideoPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="page flex flex-col gap-4">
+    <div className="page pt-4 flex flex-col gap-4">
       <div className="no-drag flex flex-col items-start px-6 gap-1">
         <div 
           className="group text-sm flex flex-row items-center gap-2 cursor-pointer"

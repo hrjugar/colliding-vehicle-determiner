@@ -16,9 +16,10 @@ export default function WindowButtonGroup() {
 
   return createPortal(
     (
-    <div id="window-button-group" className="fixed top-0 right-0 flex flex-row justify-end h-min w-[calc(100%_-_4rem)] ">
-      <div className="pointer-events-none draggable w-[calc(100%_-_16rem)]"></div>
-      <div className="flex flex-row justify-end items-center">
+    <div id="window-button-group" className="fixed top-0 right-0 flex flex-row justify-end h-min w-min pointer-events-none z-[999]">
+      {/* <div className="w-[calc(100%_-_16rem)]"></div> */}
+      {/* <div className="pointer-events-none draggable w-[calc(100%_-_16rem)]"></div> */}
+      <div className="flex flex-row justify-end items-center pointer-events-auto">
         <button 
           className="p-4 bg-transparent hover:bg-gray-200 cursor-pointer"
           onClick={() => window.electronAPI.minimizeWindow()}

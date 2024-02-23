@@ -4,7 +4,6 @@ import { Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import WindowButtonGroup from './components/WindowButtonGroup';
-import PageHeader from './components/PageHeader';
 
 const queryClient = new QueryClient();
 
