@@ -43,8 +43,8 @@ const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
     <div className="relative">
       <div 
         title={video.path}
-        className='group/video-card flex flex-col transition-all rounded-lg shadow-around hover:shadow-around-dark'
-        // onClick={() => navigate(`${video.id}`)}
+        className='group/video-card cursor-pointer flex flex-col transition-all rounded-lg shadow-around hover:shadow-around-dark'
+        onClick={() => navigate(`${video.id}`)}
         onPointerEnter={() => setIsHovered(true)}
         onPointerLeave={() => setIsHovered(false)}
       >
@@ -83,12 +83,12 @@ const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
               <p className="text-sm text-gray-400/75 group-hover/video-card:text-gray-400 transition-colors">{video.timestamp}</p>
             </div>
 
-            <Link 
+            {/* <Link 
               to={`${video.id}`}
               className={`text-color-primary hover:text-color-primary-inactive text-sm ${isHovered ? 'opacity-100' : 'opacity-[15%]'} transition-colors`}
             >
               View
-            </Link>
+            </Link> */}
             {/* <VideoCardPopover video={video} /> */}
           </div>
         </div>
