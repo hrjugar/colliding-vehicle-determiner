@@ -40,7 +40,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video } : VideoCardProps) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
   return (
-    <div className="relative w-[calc(50%_-_16px)] lg:w-[calc(33%_-_16px)] xl:w-[calc(25%_-_16px)] 2xl:w-[400px]">
+    <div className="relative">
       <div 
         title={video.path}
         className='group/video-card flex flex-col transition-all rounded-lg shadow-around hover:shadow-around-dark'

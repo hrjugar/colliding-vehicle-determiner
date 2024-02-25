@@ -479,7 +479,7 @@ export function killPythonProcess() {
 
 export function runAccidentDetectionModel(confidenceThreshold: number, iouThreshold: number) {
   let scriptPath = path.join(
-    app.getAppPath(),
+    path.dirname(app.getAppPath()),
     'python-scripts',
     'accident-detection',
     'predict.py'
@@ -525,7 +525,7 @@ export function runAccidentDetectionModel(confidenceThreshold: number, iouThresh
 
 export function runDeepSORTModel(yoloModel: string) {
   let venvPythonPath = path.join(
-    app.getAppPath(),
+    path.dirname(app.getAppPath()),
     'python-scripts',
     'yolov8-deepsort',
     'venv',
@@ -533,7 +533,7 @@ export function runDeepSORTModel(yoloModel: string) {
     'python'
   )
   let scriptPath = path.join(
-    app.getAppPath(),
+    path.dirname(app.getAppPath()),
     'python-scripts',
     'yolov8-deepsort',
     'ultralytics_yolov8_deepsort',
@@ -649,7 +649,7 @@ export async function runGRUModel(gruInput: (number | null)[][]) {
   await fs.promises.writeFile(gruInputPath, JSON.stringify(gruInput));
   
   let scriptPath = path.join(
-    app.getAppPath(),
+    path.dirname(app.getAppPath()),
     'python-scripts',
     'gru',
     'predict.py'

@@ -40,10 +40,10 @@ const VideosPage: React.FC = () => {
 
   return (
     <div className='page bg-slate-100'>
-      <div className="w-full flex flex-row items-stretch pb-6 px-6 pointer-events-none bg-gradient-to-b from-color-primary to-[#040619]">
-        <h1 className="flex-1 text-left text-2xl font-semibold draggable pt-4 text-white">Library</h1>
+      <div className="w-full flex flex-row items-stretch px-6 py-4 pointer-events-none bg-gradient-to-b from-color-primary to-[#040619]">
+        <h1 className="flex-1 text-left text-2xl font-medium draggable text-white">Library</h1>
         
-        <div className="flex-grow flex flex-col justify-center items-stretch pointer-events-auto no-drag pt-4">
+        <div className="flex-grow flex flex-col justify-center items-stretch pointer-events-auto no-drag">
           <div className={`h-full border-[1px] rounded-full flex flex-row items-center pl-3 pr-4 gap-2 ${videos && videos.length > 0 ? 'bg-white' : 'pointer-events-none bg-gray-100 opacity-50'}`}>
             <svg 
               width="64" 
@@ -108,7 +108,7 @@ const VideosPage: React.FC = () => {
           <p>No videos found.</p>
         </div>
       ) : (
-        <div className='flex flex-row flex-wrap content-start gap-4 pl-4 py-4 w-full h-full overflow-y-auto'>
+        <div className='w-full grid grid-cols-[repeat(auto-fill,_minmax(340px,_1fr))] justify-items-stretch gap-4 p-4 overflow-y-auto'>
           {filteredVideos?.map((video) => {
             return (
               <VideoCard key={video.id} video={video} />

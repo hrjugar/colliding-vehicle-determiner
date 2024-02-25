@@ -96,6 +96,14 @@ button {
   /* background-color: rgb(243 244 246 / var(--tw-bg-opacity)); */
 }
 
+.videos-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  justify-items: center;
+  width: 100%;
+}
+
 @layer components {
   .card {
     @apply bg-white rounded-sm shadow-around hover:shadow-around-dark transition-shadow;
