@@ -41,25 +41,15 @@ const VideosPage: React.FC = () => {
   return (
     <div className='page bg-slate-100'>
       <div className="w-full flex flex-row items-stretch px-6 py-4 pointer-events-none bg-gradient-to-b from-color-primary to-[#040619]">
-        <h1 className="flex-1 text-left text-2xl font-medium draggable text-white">Library</h1>
+        <div className="flex-1 flex flex-row justify-start items-center draggable">
+          <h1 className="text-left text-xl font-medium text-slate-100">Library</h1>
+        </div>
         
         <div className="flex-grow flex flex-col justify-center items-stretch pointer-events-auto no-drag">
-          <div className={`h-full border-[1px] rounded-full flex flex-row items-center pl-3 pr-4 gap-2 ${videos && videos.length > 0 ? 'bg-white' : 'pointer-events-none bg-gray-100 opacity-50'}`}>
-            <svg 
-              width="64" 
-              height="64" 
-              viewBox="0 0 64 64" 
-              xmlns="http://www.w3.org/2000/svg"
-              className='w-4 h-4 text-color-primary/75'
-            >
-              <path 
-                d="M25.3333 8C29.9304 8 34.3392 9.82618 37.5899 13.0768C40.8405 16.3274 42.6667 20.7362 42.6667 25.3333C42.6667 29.6267 41.0933 33.5733 38.5067 36.6133L39.2267 37.3333H41.3333L54.6667 50.6667L50.6667 54.6667L37.3333 41.3333V39.2267L36.6133 38.5067C33.4681 41.1914 29.4686 42.6664 25.3333 42.6667C20.7362 42.6667 16.3274 40.8405 13.0768 37.5899C9.82618 34.3392 8 29.9304 8 25.3333C8 20.7362 9.82618 16.3274 13.0768 13.0768C16.3274 9.82618 20.7362 8 25.3333 8ZM25.3333 13.3333C18.6667 13.3333 13.3333 18.6667 13.3333 25.3333C13.3333 32 18.6667 37.3333 25.3333 37.3333C32 37.3333 37.3333 32 37.3333 25.3333C37.3333 18.6667 32 13.3333 25.3333 13.3333Z"
-                className='fill-current'
-              />
-            </svg>            
+          <div className={`h-full rounded-full flex flex-row items-center px-6 gap-2 ${videos && videos.length > 0 ? 'bg-white/25' : 'pointer-events-none bg-gray-100 opacity-50'}`}>        
             <input 
               type="text" 
-              className="bg-transparent w-full text-left text-sm"
+              className="bg-transparent w-full text-center py-2 placeholder-white/25 text-white/75"
               onChange={(e) => setCurrentSearchText(e.target.value)}
               value={currentSearchText}
               placeholder="Search..."
@@ -69,13 +59,13 @@ const VideosPage: React.FC = () => {
                 width="64"
                 height="64"
                 viewBox="0 0 64 64"
-                className="w-2.5 h-2.5 cursor-pointer"
+                className="w-3 h-3 cursor-pointer"
                 xmlns="http://www.w3.org/2000/svg"
                 onClick={() => setCurrentSearchText("")}
               >
                 <path 
                   d="M0 0 L64 64 M64 0 L0 64 Z"
-                  className="fill-current stroke-[6] stroke-color-primary group-hover/titlebar-close-btn:stroke-white"
+                  className="fill-current stroke-[8] stroke-white/75"
                 />
               </svg>
             ) : null}
@@ -108,7 +98,7 @@ const VideosPage: React.FC = () => {
           <p>No videos found.</p>
         </div>
       ) : (
-        <div className='w-full grid grid-cols-[repeat(auto-fill,_minmax(340px,_1fr))] justify-items-stretch gap-4 p-4 overflow-y-auto'>
+        <div className='w-full grid grid-cols-[repeat(auto-fill,_minmax(340px,_1fr))] justify-items-stretch gap-8 p-8 overflow-y-auto'>
           {filteredVideos?.map((video) => {
             return (
               <VideoCard key={video.id} video={video} />
