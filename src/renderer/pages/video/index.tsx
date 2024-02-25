@@ -1,16 +1,15 @@
 import { getFileNameFromPath } from "@renderer/globals/utils";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import VideoPlayerSection from "./VideoPlayerSection";
-import FrameSection from "./OverallPanel/FrameSection";
 import { Tab } from "@headlessui/react";
 import React, { useEffect } from "react";
-import OverallPanel from "./OverallPanel";
 import VideoPanel from "./VideoPanel";
 import useVideoPageStore from "./store";
-import { useShallow } from "zustand/react/shallow";
 import AccidentDetectionPanel from "./AccidentDetectionPanel";
 import VehicleIdentificationPanel from "./VehicleIdentificationPanel";
 import { Link } from "react-router-dom";
+import OverallPanel from "./OverallPanel";
+import useGlobalStore from "@/renderer/globals/store";
 
 const tabs = ["Overall", "Video", "Accident Detection", "Vehicle Identification"]
 
@@ -31,8 +30,11 @@ const VideoPage: React.FC = () => {
     ]
   )
 
+  const [setIsWindowButtonGroupColorLight] = useGlobalStore((state) => [state.setIsWindowButtonGroupColorLight]);
+
   useEffect(() => {
     resetStates();
+    setIsWindowButtonGroupColorLight(false);
   }, []);
 
   return (
@@ -78,11 +80,14 @@ const VideoPage: React.FC = () => {
           <div className="">&nbsp;</div>
         </div>
 
-        <Tab.Panels className={`w-full flex-grow p-4 overflow-y-auto bg-slate-100`}>
-          <OverallPanel />
-          <VideoPanel />
-          <AccidentDetectionPanel />
-          <VehicleIdentificationPanel />
+        <Tab.Panels className={`w-full flex-grow flex flex-col overflow-y-auto bg-slate-100`}>
+          <h2 className="text-left text-2xl font-medium w-[calc(100%_-_128px)] px-8 p-4 draggable">{getFileNameFromPath(video.path)}</h2>
+          <div className="w-full flex-grow flex flex-col overflow-y-auto">
+            <OverallPanel />
+            <VideoPanel />
+            <AccidentDetectionPanel />
+            <VehicleIdentificationPanel />
+          </div>
         </Tab.Panels>
       </Tab.Group>
     </div>

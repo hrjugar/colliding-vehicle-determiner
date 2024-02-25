@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import useVideosPageStore from "./store";
 import { useShallow } from "zustand/react/shallow";
 import InsertVideoButton from "./InsertVideoButton";
+import useGlobalStore from "@/renderer/globals/store";
 
 const VideosPage: React.FC = () => {
   const { isLoading, isError, data: videos, error } = useQuery<VideoData[]>(QueryKey.Videos, window.electronAPI.selectAllVideos);
@@ -24,8 +25,11 @@ const VideosPage: React.FC = () => {
     ])
   )
 
+  const [setIsWindowButtonGroupColorLight] = useGlobalStore((state) => [state.setIsWindowButtonGroupColorLight]);
+
   useEffect(() => {
     resetStates();
+    setIsWindowButtonGroupColorLight(true);
   }, []);
 
   useEffect(() => {

@@ -96,7 +96,7 @@ const AccidentDetectionPanel: React.FC = () => {
   }, [isPredictionDone]);
   
   return (
-    <Tab.Panel className={`h-full flex flex-col flex-grow`}>
+    <Tab.Panel className={`h-full flex flex-col flex-grow px-8`}>
       {isLoadingDone ? (
         <div className="flex flex-col gap-2 flex-grow pb-4">
           <button

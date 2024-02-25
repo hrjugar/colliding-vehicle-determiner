@@ -20,7 +20,7 @@ const VideoPanel: React.FC = () => {
 
 
   return (
-    <Tab.Panel className="w-full h-full">
+    <Tab.Panel className="w-full h-full px-8 pb-4">
       <VideoPlayer
         videoSrc={`http://localhost:3000/video?source=app&id=${video.id}`}
         duration={duration}

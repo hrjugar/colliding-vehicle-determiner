@@ -54,7 +54,7 @@ const VehicleIdentificationPanel: React.FC = () => {
   }, [video]);
   
   return (
-    <Tab.Panel className="w-full h-full flex flex-col justify-start items-start overflow-y-auto gap-4">
+    <Tab.Panel className="w-full h-full flex flex-col justify-start items-start overflow-y-auto px-8 pb-4 gap-4">
       {isLoadingDone ? (
         <>
           <button 
