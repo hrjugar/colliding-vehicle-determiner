@@ -38,11 +38,12 @@ const VideoCardPopover: React.FC<VideoCardPopoverProps> = ({ video }) => {
         >
           {({ close }) => {
             return (
-              <div className="flex flex-col items-stretch whitespace-nowrap bg-white border-[1px] border-gray-200 shadow-lg">
+              <div className="flex flex-col items-stretch whitespace-nowrap bg-white shadow-lg">
                 <button 
                   type="button"
-                  className="group/video-card-rename-btn rounded-sm hover:bg-color-primary px-4 py-2 flex flex-row items-center gap-4 text-sm border-b-[1px] border-gray-200"
-                  onClick={(e) => { 
+                  className="group/video-card-rename-btn hover:bg-color-primary px-4 py-2 flex flex-row items-center gap-4 text-sm"
+                  onClick={(e) => {
+                    e.preventDefault();
                     e.stopPropagation(); 
                     setRenameModalIsOpen(true);
                     close();
@@ -66,8 +67,9 @@ const VideoCardPopover: React.FC<VideoCardPopoverProps> = ({ video }) => {
 
                 <button 
                   type="button"
-                  className="group/video-card-folder-btn rounded-sm hover:bg-color-primary px-4 py-2 flex flex-row items-center gap-4 text-sm border-b-[1px] border-gray-200"
+                  className="group/video-card-folder-btn hover:bg-color-primary px-4 py-2 flex flex-row items-center gap-4 text-sm"
                   onClick={(e) => {
+                    e.preventDefault();
                     e.stopPropagation();
                     window.electronAPI.openVideoFolder(video.path)
                     close();
@@ -91,10 +93,9 @@ const VideoCardPopover: React.FC<VideoCardPopoverProps> = ({ video }) => {
 
                 <button
                   type="button"
-                  className="group/video-card-delete-btn rounded-sm hover:bg-red-600 px-4 py-2 flex flex-row items-center gap-4 text-sm border-b-[1px] border-gray-200"
-                  // onClick={() => deleteMutation.mutate(video.id)}
-                  // onClick={() => openModal(ModalType.DeleteVideo, { video })}
+                  className="group/video-card-delete-btn hover:bg-red-600 px-4 py-2 flex flex-row items-center gap-4 text-sm"
                   onClick={(e) => {
+                    e.preventDefault();
                     e.stopPropagation();
                     setDeleteModalIsOpen(true)
                     close()
@@ -114,7 +115,7 @@ const VideoCardPopover: React.FC<VideoCardPopoverProps> = ({ video }) => {
                     />
                   </svg>          
 
-                  <span className="group-hover/video-card-delete-btn:text-white">Delete</span>
+                  <span className="group-hover/video-card-delete-btn:text-white text-color-primary">Delete</span>
                 </button>             
               </div>
             )

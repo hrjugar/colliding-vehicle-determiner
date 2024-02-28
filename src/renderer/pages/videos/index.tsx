@@ -82,11 +82,11 @@ const VideosPage: React.FC = () => {
       </div>
       
       {isLoading ? (
-        <div className="flex flex-row flex-wrap content-start gap-4 pl-4 pb-4 w-full h-full overflow-y-auto">
+        <div className="w-full grid grid-cols-[repeat(auto-fill,_minmax(340px,_1fr))] justify-items-stretch gap-8 p-8 overflow-y-auto">
           {Array.from({ length: 16 }).map((_, index) => (
             <div 
               key={`loading-video-card-${index}`}
-              className="flex flex-col gap-2 relative w-[calc(50%_-_16px)] lg:w-[calc(33%_-_16px)] xl:w-[calc(25%_-_16px)] 2xl:w-[400px] animate-pulse"
+              className="flex flex-col gap-2 relative animate-pulse"
             >
               <div className="w-full h-48 bg-gray-200 rounded-lg" />
               <div className="w-1/2 h-4 bg-gray-200 rounded-md"/>
