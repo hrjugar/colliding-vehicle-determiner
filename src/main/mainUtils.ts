@@ -637,8 +637,15 @@ export function getAccidentDetectionModelResults(db: Database.Database, id: numb
 export function getDeepSORTModelResults(db: Database.Database, id: number | bigint) {
   const video: any = db.prepare(`SELECT * FROM videos WHERE id = ?`).get(id);
   if (video) {
-    const deepSORTModelResults = fs.readFileSync(path.join(app.getPath('userData'), 'videos', id.toString(), 'deepsort-output.json'), "utf-8");
-    return JSON.parse(deepSORTModelResults);
+    const deepSORTModelResultsFile = path.join(app.getPath('userData'), 'videos', id.toString(), 'deepsort-output.json');
+    if (fs.existsSync(deepSORTModelResultsFile)) {
+      const deepSORTModelResults = fs.readFileSync(deepSORTModelResultsFile, "utf-8");
+      return JSON.parse(deepSORTModelResults);
+    } else {
+      return null;
+    }
+  } else {
+    return null;
   }
 }
 

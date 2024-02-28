@@ -19,6 +19,7 @@ const DetectAccidentPanel: React.FC = () => {
     setTabsDisabledState,
     setIsAccidentDetectionModelChanged,
     selectedTabIndex,
+    selectTab,
     isTrimmedPortionChanged,
     setIsTrimmedPortionChanged,
     setFinalAccidentModelConfidenceThreshold,
@@ -35,6 +36,7 @@ const DetectAccidentPanel: React.FC = () => {
       state.setTabsDisabledState,
       state.setIsAccidentDetectionModelChanged,
       state.selectedTabIndex,
+      state.selectTab,
       state.isTrimmedPortionChanged,
       state.setIsTrimmedPortionChanged,
       state.setFinalAccidentModelConfidenceThreshold,
@@ -245,15 +247,20 @@ const DetectAccidentPanel: React.FC = () => {
       // animate();
       setSelectedFrameIndex(bestFrameIndex);
       setIsFrameTransitionDone(true);
+
+      setIsLoadingDone(true);
+      setTabsDisabledState(false);
     } else {
       setFinalAccidentFrame(undefined);
       setFinalAccidentArea(undefined);
       setFinalAccidentFrameVehicleOne(undefined);
       setFinalAccidentFrameVehicleTwo(undefined);
-    }
 
-    setIsLoadingDone(true);
-    setTabsDisabledState(false);
+      setIsLoadingDone(true);
+      setTabsDisabledState(false);
+
+      selectTab(3);
+    }
   }
 
   const rerunModel = () => {
