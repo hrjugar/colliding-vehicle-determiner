@@ -171,6 +171,12 @@ export async function createThumbnailFromId(db: Database.Database, id: number | 
 }
 
 export async function insertVideo(db: Database.Database, video: VideoData) {
+  const currTimestamp = new Date().toLocaleString('en-US',{hour12:false}).split(", ");
+  let [newMDY, newTime] = currTimestamp;
+  let [month, day, year] = newMDY.split('/');
+  let finalTimestampString = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')} ${newTime}`;
+
+  // console.log(`INSERT VIDEO CURRENT DATETIME: ${new Date().toISOString().slice(0, 19).replace('T', ' ')}`);
   const statement = db.prepare(`INSERT INTO videos (
     path,
     fps,
@@ -247,7 +253,7 @@ export async function insertVideo(db: Database.Database, video: VideoData) {
     @accidentFrameVehicleTwoWN,
     @accidentFrameVehicleTwoHN,
     @accidentFrameVehicleTwoProbability,
-    CURRENT_TIMESTAMP
+    @timestamp
   )`).run({
     path: video.path,
     fps: video.fps,
@@ -285,6 +291,7 @@ export async function insertVideo(db: Database.Database, video: VideoData) {
     accidentFrameVehicleTwoWN: video.accidentFrameVehicleTwo?.wn,
     accidentFrameVehicleTwoHN: video.accidentFrameVehicleTwo?.hn,
     accidentFrameVehicleTwoProbability: video.accidentFrameVehicleTwo?.probability,
+    timestamp: finalTimestampString
   });
   const videoDataFolder = getVideoDataFolder(statement.lastInsertRowid);
   fs.mkdirSync(videoDataFolder);
